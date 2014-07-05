@@ -16,8 +16,6 @@ angular.module('AppToDate', [
   $ionicPlatform.ready(function() {
     StatusBar.styleDefault();
   });
-  
-  
 })
 
 .config(function($stateProvider, $urlRouterProvider, $compileProvider) {
