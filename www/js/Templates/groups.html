@@ -1,0 +1,18 @@
+<ion-view title="Groups">
+        <ion-content padding="true">
+          <label class="item item-input">
+    		<input type="text" placeholder="Group Title">
+ 		 </label><br/>
+ 		 <ul class="list">
+  			<li class="item item-checkbox" ng-repeat="contact in contacts">
+	    		<label class="checkbox" >
+	      			<input type="checkbox" style="margin-left:-10px; margin-bottom:15px" ng-click="toggle(contact.id)">
+	    		</label>
+	    		{{contact.displayName}}
+  			</li>
+      </ul>
+      <button class="button button-block button-positive" ng-click="createGroup()">
+      Create Group
+      </button>  
+      </ion-content>
+</ion-view>

@@ -1,0 +1,90 @@
+<!-- 
+  This template gets placed in the Pet tab's <ion-nav-view> directive.
+  It was wired up in the app config (app.js) 
+  The 'pets' data comes from its $scope within PetIndexCtrl (controller.js)
+-->
+<ion-view title="{{navTitle}}">
+<ion-content>
+<div role="main" class="container theme-showcase">
+          <header>
+            <h1 class="center-block"><img src="images/logo.png" alt="AppToDate" /></h1>
+          </header>
+          <section>
+              <form role="form" class="margin-top3" name="login">
+                <div class="center-block margin-bottom error" data-ng-show="errorMessage">
+                      <h4>{{errorMessage}}</h4>
+                </div>
+                <!-- Text input-->
+                <div class="form-group no-label">                 
+                  <input type="email" class="form-control" id="email" placeholder="Email" required="" ng-model="user.username">
+                </div>
+
+                <!-- Password input-->
+                <div class="form-group no-label">                 
+                  <input type="password" class="form-control" id="password" placeholder="Password" required="" ng-model="user.password">
+                </div>
+
+                
+                <!-- Button login -->
+                <button type="submit" class="btn btn-primary btn-lg btn-block margin-top btn-green margin-top3"
+                	data-ng-disabled="login.$invalid" ng-click="signIn(user)">Login</button>
+                
+                <!-- Button facebook -->
+
+                <div class="btn-group btn-facebook margin-top6">
+                  <span class="btn btn-default btn-facebook-left btn-blue"><img  src="images/f-icon.png" alt="" /></span>
+                  
+                  <a href="#" id="facebook" class="btn btn-default btn-facebook-right btn-blue" ng-click="facebookConnect('Facebook')">Sign in with Facebook</a>
+                </div>
+                
+                <!-- divider -->
+                <hr class="margin-top3" />
+                <div class="center-block margin-bottom"><h2>Don't have an account?</h2>
+                      <h4>It takes a second to Sign up</h4>
+                </div>
+                 <!-- Button Register -->
+                
+                    <a href="#/register" id="register" name="register" class="btn btn-primary btn-lg btn-block btn-skyblue" data-ng-click="register()">Register</a>
+                 
+            </form>
+            </section>
+        </div>
+
+		<!-- 
+  <div class="bar-header bar-light" style="height:150px">
+      <img src="img/ionic.png" />
+  </div><br>
+
+  <!--<div class="list" >
+  <label class="item item-input">
+    
+    <input type="text" placeholder="Email" ng-model="login.Email" />
+  </label>
+  <label class="item item-input">
+     
+    <input type="password" placeholder="Password" ng-model="login.Password" />
+  </label>
+  <button class="button button-block button-positive" ng-click="signIn()">
+  Sign In
+  </button>
+  <button class="button button-block button-positive" ng-click="facebookConnect('Facebook')">
+  facebook Connect
+  </button>
+  <button class="button button-block button-positive" ng-click="yahooConnect()">
+  Yahoo Connect
+  </button>
+  <button class="button button-block button-positive" ng-click="googleConnect('Google')">
+  Gmail Connect
+  </button>
+  <button class="button button-block button-positive" ng-click="liveConnect('Windows live')">
+  Live Connect
+  </button>
+  <a class="button button-block button-positive" ui-sref="register">
+  Register
+  </a> -->
+  <!--<button class="button button-block icon-center ion-calendar button-positive">Favorites</button>-->
+  <!--</div>-->
+  <!--Login Page
+  <a ng-href="#/register">Go to Register</a>-->
+  </ion-content>
+</ion-view>

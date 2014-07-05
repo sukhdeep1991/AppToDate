@@ -1,0 +1,66 @@
+<ion-view title="{{navTitle}}"> <ion-content>
+<div role="main" class="container theme-showcase">
+	<section>
+		<form role="form" id="details">
+			<div class="center-block margin-bottom error"
+				data-ng-show="errorMessage">
+				<h4>{{errorMessage}}</h4>
+			</div>
+
+			<div class="form-group no-label">
+				<label for="title"></label> <input type="text"
+					class="form-control" id="title" placeholder="Title" required=""
+					ng-model="event.title">
+			</div>
+
+			<div class="form-group no-label">
+				<textarea class="form-control" id="notes" placeholder="Notes"
+					ng-model="event.notes"></textarea>
+			</div>
+
+			<div class="form-group no-label">
+				<input type="date" class="form-control" id="date" placeholder="Date"
+					ng-model="event.date" placeholder="Date">
+			</div>
+			<div class="form-group form-control-left margin-top">
+				<div class="form-left-spinner">
+					<label for="textinput">Start</label>
+					<div class="input-append spinner" data-trigger="spinner">
+						<input type="time" data-rule="quantity" id="startTime"
+							ng-model="event.startTime">
+					</div>
+				</div>
+				<div class="form-left-spinner">
+					<label for="textinput">End</label>
+					<div class="input-append spinner" data-trigger="spinner">
+						<input type="time" data-rule="quantity" id="endTime"
+							ng-model="event.endTime">
+					</div>
+				</div>
+			</div>
+
+			<div style="clear: both"></div>
+			<div class="form-group margin-top3">
+				<div class="fileinput fileinput-new input-group"
+					data-provides="fileinput">
+					<div class="form-control margin-bottom" data-trigger="fileinput">
+						<i class="glyphicon glyphicon-file fileinput-exists"></i> <span
+							class="fileinput-filename"></span>
+					</div>
+					<span class="input-group-addon btn btn-default btn-file"><span
+						class="fileinput-new">Upload Image</span><span
+						class="fileinput-exists">Change</span><input type="file"
+						name="..."></span> <a href="#"
+						class="input-group-addon btn btn-default fileinput-exists"
+						data-dismiss="fileinput">Remove</a>
+				</div>
+			</div>
+
+			<!-- Button Create Event -->
+			<button type="submit"
+				class="btn btn-primary btn-lg btn-block margin-top btn-green margin-top3"
+				ng-click="createEvent(event)">Create Event</button>
+		</form>
+	</section>
+</div>
+</ion-content> </ion-view>

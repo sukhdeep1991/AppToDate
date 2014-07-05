@@ -1,0 +1,39 @@
+/* Empty. Add your own CSS if you like */
+
+	.circular {
+	width: 300px;
+	height: 300px;
+	border-radius: 150px;
+	-webkit-border-radius: 150px;
+	-moz-border-radius: 150px;
+	background: url(../img/ionic.png) no-repeat;
+	}
+
+.circular img {
+	opacity: 0;
+	filter: alpha(opacity=0);
+	}
+	
+.inner.padded div {
+	padding-left: 20px;
+	border-top: solid #dee 1px;
+}
+
+div.phone, div.email {
+background-repeat: no-repeat;
+background-position: right center;
+background-origin: content-box;
+padding-right: 5px;
+}
+div.phone{
+background-image: url('../images/phone.png');
+}
+div.email{
+background-image: url('../images/email.png');
+}
+/* div.scroll-bar.scroll-bar-v { */
+/* display: none; */
+/* } */
+/* ion-nav-view, ion-view, ion-content{ */
+/* 	display:block; */
+/* } */

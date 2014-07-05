@@ -1,0 +1,48 @@
+<ion-view title="{{navTitle}}">
+  <ion-content >
+  <div role="main" class="container theme-showcase">
+          <header>
+            <h1 class="center-block"><img src="images/logo.png" alt="AppToDate" /></h1>
+          </header>
+          <section>
+              <form role="form" class="margin-top3" name="register">
+                <div>
+                 {{errorMessage}}
+                </div>
+                <!-- Text input-->
+                 <div class="form-group no-label">
+                  <input type="text" class="form-control" id="name" placeholder="Name" required="" ng-model="user.person.FirstName" required>
+                </div>
+
+                <div class="form-group no-label">
+                  <input type="email" class="form-control" id="email" placeholder="Email" required="" ng-model="user.username" required>
+                </div>
+
+                <div class="form-group no-label">
+                  <input type="number" class="form-control" id="phone" placeholder="Phone" ng-model="user.phone" required>
+                </div>
+
+                <!-- Password input-->
+                <div class="form-group  no-label">
+                  <input type="password" class="form-control" id="password" placeholder="Password" required="" ng-model="user.password" required>
+                </div>
+                <!-- Password input-->
+                <div class="form-group no-label">
+                  <input type="password" class="form-control" id="confirm-password" placeholder="Confirm Password" required="" ng-model="user.confirm_password" required>
+                </div>
+
+                <!-- Button login -->
+                <button type="submit" class="btn btn-primary btn-lg btn-block btn-skyblue margin-top110" ng-click="Register(user)"
+                data-ng-disabled="register.$invalid">Register</button>
+                
+                <!-- Button facebook -->
+                
+                <a href="#/login" id="login" name="login" class="btn btn-primary btn-lg btn-block btn-red margin-top2">Back to Login</a>
+                <!-- Button login -->
+                 
+                                
+            </form>
+            </section>
+        </div>
+  </ion-content>
+</ion-view>

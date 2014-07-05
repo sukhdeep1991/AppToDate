@@ -1,0 +1,27 @@
+
+<ion-view title="My Calendar"> <ion-content>
+<div class="search-box">
+	<section>
+		<form role="form">
+			<!-- Text input Search-->
+			<div class="form-group">
+				<label for="textinput"></label> <input type="text"
+					class="form-control search" id="Search"
+					placeholder="Search by event name" required="">
+			</div>
+		</form>
+	</section>
+</div>
+<a href="#/event/new" id="register" name="Create Event"
+	class="btn btn-primary btn-lg btn-block btn-skyblue">Create
+	Event</a>
+<div role="main" class="margin-top6">
+	<section>
+		<div id='calendar' style="position: relative"></div>
+	</section>
+</div>
+<link rel='stylesheet'
+	href='js/fullcalendar-2.0.0/lib/jquery-ui.min.css' />
+<link href='js/fullcalendar-2.0.0/fullcalendar.css' rel='stylesheet' />
+
+</ion-content> </ion-view>

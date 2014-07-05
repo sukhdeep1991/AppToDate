@@ -1,0 +1,9 @@
+{
+    "lib": {
+        "www": {
+            "id": "com.example.AppToDate",
+            "version": "3.5.0",
+            "uri": "https://github.com/phonegap/phonegap-app-app-to-date/archive/3.5.0.tar.gz"
+        }
+    }
+}

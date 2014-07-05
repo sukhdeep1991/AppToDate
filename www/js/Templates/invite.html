@@ -1,0 +1,56 @@
+<ion-view title="invite"> <ion-content padding="true">
+<div class="search-box">
+	<section>
+		<form role="form">
+			<!-- Text input Search-->
+
+			<div class="form-group has-feedback">
+				<label for="textinput"></label> <input type="text"
+					class="form-control search" id="search"
+					placeholder="Search by name" ng-model="searchKey"
+					data-ng-change="searchKeyChanged(searchKey)"> <span
+					class="glyphicon glyphicon-search form-control-feedback"></span>
+			</div>
+
+		</form>
+		<br/>
+		<a id="invite" name="Invite"
+			class="btn btn-primary btn-lg btn-block btn-skyblue"
+			data-ng-click="sendInvites(contacts)">Invite</a>
+	</section>
+</div>
+<div role="main" class="margin-top6">
+	<section>
+		<div id='contacts'>
+			<div class="table-responsive">
+				<table class="table">
+
+					<tbody>
+						<tr ng-repeat="contact in contacts | filter : searchKey | orderBy: 'displayName' | limitTo: limit" 
+						data-ng-show="contact.phoneNumbers.length > 0 || contact.emails.length > 0">
+							<td class="contact-text-left">
+								<div>
+									{{contact.displayName}}
+									<div class="inner padded">
+										<div class="phone" ng-repeat="phone in contact.phoneNumbers">
+											<input type="checkbox" id="{{phone.value}}" data-ng-model="phone.isSelected">
+											<label for="{{phone.value}}">{{phone.value}}</label>
+										</div>
+										<div class="email" ng-repeat="email in contact.emails">
+											<input type="checkbox" id="{{email.value}}" data-ng-model="email.isSelected">
+											<label for="{{email.value}}">{{email.value}}</label>
+										</div>
+									</div>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<a id="invite" name="Invite"
+			class="btn btn-primary btn-lg btn-block btn-skyblue"
+			data-ng-click="loadMore()">Load more ...</a>
+			</div>
+		</div>
+	</section>
+</div>
+</ion-content> </ion-view>

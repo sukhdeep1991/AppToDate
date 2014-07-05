@@ -1,0 +1,23 @@
+<ion-view title="Invite People">
+        <ion-content>
+		<div role="main" class="container theme-showcase">
+          <header>
+            <h1 class="center-block"><img src="images/logo.png" alt="AppToDate" /></h1>
+          </header>
+          <section>          
+            <div class="dashboard-top-bg margin-top" data-ng-click="ChangeProfilePic()">
+                 <img class="img-responsive" ng-src="{{imageSrc}}" alt=""/>  
+             </div>
+             <h3 class="text-center">Welcome {{userDetails.first_name}} !</h3> 
+             <div class="invite-people margin-top" ng-click="invitePeopleClicked()">
+              <img src="images/invite-people.png"  alt=""/> 
+              <h4>Invite People</h4>
+             </div>
+             <div class="calender margin-bottom" ng-click="NavigateToCalendar()" >
+              <img src="images/calender.png" alt=""/> 
+              <h4>Go to Calendar</h4>
+             </div>
+          </section>
+        </div>
+        </ion-content>
+      </ion-view>
