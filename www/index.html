@@ -67,7 +67,7 @@
 </head>
 <body ng-app="AppToDate" animation="slide-left-right-ios7"
 	data-ng-controller="parentController">
-	<nav data-ng-show="userDetails">
+	<nav data-ng-show="userDetails" style="display:none">
 		<!--Top Navigation -->
 		<div class="navbar navbar-inverse">
 			<div class="container padding-none">
@@ -97,6 +97,9 @@
 			</div>
 		</div>
 	</nav>
+	<div class="loading-widget" data-ng-show="showLoader">
+		<img class="img-center" alt="Loading..." ng-src="{{spinnerImgSrc}}">
+	</div>
 	<ion-nav-view></ion-nav-view>
 	<!-- jQuery Framework-->
 	<!-- Include all compiled plugins (below), or include individual files as needed -->

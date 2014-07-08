@@ -14,6 +14,7 @@ angular.module('AppToDate.Controllers')
 	  if(!data || !data.username || !data.password){
 		  return;
 	  }
+	  $scope.setShowLoader(true);
 	  Authentication.oa.login(data).then(function(response){
 		  if(response){
 			  $scope.setUserDetails(response);
@@ -21,15 +22,18 @@ angular.module('AppToDate.Controllers')
 		  } else {
 			  $scope.showErrorMessage("Username/password combination does not exist.");
 		  }
+		  $scope.setShowLoader(false);
 	  }, function(data){
 		  console.log("Login failded due to : " + JSON.stringify(data));
 		  $scope.showErrorMessage("Username/password combination does not exist.");
+		  $scope.setShowLoader(false);
 	  });	  
   } 
   
   $scope.facebookLogin = function(){
 	  console.log("Loging into facebook");
 	  var fbLoginSuccess = function (userData) {
+		  $scope.setShowLoader(true);
 		  console.log("Login successfull : " + JSON.stringify(userData));
 		  $scope.$apply(function(){
 			  registerService.facebookRegister(userData).then(function(response){
@@ -39,10 +43,12 @@ angular.module('AppToDate.Controllers')
 					} else {
 						$scope.showErrorMessage('Could not register user');
 					}
+				    $scope.setShowLoader(false);
 				},
 				function(errorData){
 					$scope.showErrorMessage('Could not register user');
 					console.log("Registering request failed : " + JSON.stringify(errorData));
+				    $scope.setShowLoader(false);
 				});			  
 		  });
 		  
@@ -55,7 +61,9 @@ angular.module('AppToDate.Controllers')
 
 		facebookConnectPlugin.login(["email"],
 		    fbLoginSuccess,
-		    function (error) { alert("" + error) }
+		    function (error) { 
+				console.log("Error occured" + error); 
+			}
 		);
 	  
 //	  FB.login(function(response){

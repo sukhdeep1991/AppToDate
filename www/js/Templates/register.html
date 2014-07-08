@@ -10,28 +10,39 @@
                  {{errorMessage}}
                 </div>
                 <!-- Text input-->
-                 <div class="form-group no-label">
-                  <input type="text" class="form-control" id="name" placeholder="Name" required="" ng-model="user.person.FirstName" required>
+                 <div class="form-group no-label has-feedback">
+                  <input type="text" class="form-control" name="name" id="name" placeholder="Name" required="" ng-model="user.person.FirstName" required>
+                  <span
+					class="glyphicon form-control-feedback" data-ng-class="{'input-invalid': register.name.$invalid, 'input-valid': !register.name.$invalid}"></span>
                 </div>
 
-                <div class="form-group no-label">
-                  <input type="email" class="form-control" id="email" placeholder="Email" required="" ng-model="user.username" required>
+                <div class="form-group no-label has-feedback">
+                  <input type="email" class="form-control" name="email" id="email" placeholder="Email" required="" ng-model="user.username" required>
+                  <span
+					class="glyphicon form-control-feedback" data-ng-class="{'input-invalid': register.email.$invalid, 'input-valid': !register.email.$invalid}"></span>
                 </div>
 
-                <div class="form-group no-label">
-                  <input type="number" class="form-control" id="phone" placeholder="Phone" ng-model="user.phone" required>
+                <div class="form-group no-label has-feedback">
+                  <input type="number" class="form-control" name="phone" id="phone" placeholder="Phone" ng-model="user.phone" required>
+                  <span
+					class="glyphicon form-control-feedback" data-ng-class="{'input-invalid': register.phone.$invalid, 'input-valid': !register.phone.$invalid}"></span>
                 </div>
 
                 <!-- Password input-->
-                <div class="form-group  no-label">
-                  <input type="password" class="form-control" id="password" placeholder="Password" required="" ng-model="user.password" required>
+                <div class="form-group  no-label has-feedback">
+                  <input type="password" class="form-control" name="password" id="password" placeholder="Password" required="" ng-model="user.password" required>
+                  <span
+					class="glyphicon form-control-feedback" data-ng-class="{'input-invalid': register.password.$invalid, 'input-valid': !register.password.$invalid}"></span>
                 </div>
                 <!-- Password input-->
-                <div class="form-group no-label">
-                  <input type="password" class="form-control" id="confirm-password" placeholder="Confirm Password" required="" ng-model="user.confirm_password" required>
+                <div class="form-group no-label has-feedback">
+                  <input type="password" class="form-control" name="confirm" id="confirm-password" placeholder="Confirm Password" required="" 
+                  	ng-model="user.confirm_password" required match-field="password">
+                  <span
+					class="glyphicon form-control-feedback" data-ng-class="{'input-invalid': register.confirm.$invalid, 'input-valid': !register.confirm.$invalid}"></span>
                 </div>
 
-                <!-- Button login -->
+                <!-- Button register -->
                 <button type="submit" class="btn btn-primary btn-lg btn-block btn-skyblue margin-top110" ng-click="Register(user)"
                 data-ng-disabled="register.$invalid">Register</button>
                 

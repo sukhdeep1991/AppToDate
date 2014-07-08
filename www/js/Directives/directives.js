@@ -27,3 +27,16 @@ angular.module('AppToDate.Directives',[])
     }
   }
 })
+.directive('matchField', [function () {
+    return {
+        require: 'ngModel',
+        link: function (scope, elem, attrs, ctrl) {
+            var matchField = '#' + attrs.matchField;
+            elem.add(matchField).on('keyup', function () {
+                scope.$apply(function () {
+                    ctrl.$setValidity('matchField', elem.val() === $(matchField).val());
+                });
+            });
+        }
+    }
+}]);

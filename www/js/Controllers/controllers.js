@@ -1,6 +1,8 @@
 angular.module('AppToDate.Controllers',['AppToDate.Services'])
 .controller('parentController', function($scope, imageService){
-	$scope.imageSrc = "img/ionic.png";
+	$scope.imageSrc = "images/profile-icon.png";
+	$scope.spinnerImgSrc = "images/spinner.gif";
+	$scope.showLoader = false;
 	
 	$scope.showErrorMessage = function(message){
 		$scope.errorMessage = message;
@@ -35,5 +37,7 @@ angular.module('AppToDate.Controllers',['AppToDate.Services'])
 		}
 	}
 	
-	
+	$scope.setShowLoader = function(toggle){
+		$scope.showLoader = toggle;
+	}
 });

@@ -47,7 +47,7 @@
 					</tbody>
 				</table>
 				<a id="invite" name="Invite"
-			class="btn btn-primary btn-lg btn-block btn-skyblue"
+			class="btn btn-primary btn-lg btn-block btn-skyblue" data-ng-show="(contacts | filter : searchKey).length > limit"
 			data-ng-click="loadMore()">Load more ...</a>
 			</div>
 		</div>

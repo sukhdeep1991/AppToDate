@@ -90,6 +90,7 @@ AppToDateDB.prototype = function() {
     }
 
   var insertLoginDetail=function(data){
+	  var deferred = $.Deferred();
     db.transaction(function(tx) {
           tx.executeSql('SELECT * FROM Login WHERE (user_id=? and email=? and auth_provider=?)', [data.user_id,data.username,data.auth_provider], 
             function(t,r){
@@ -101,10 +102,11 @@ AppToDateDB.prototype = function() {
                 		[data.access_token, data.login_time, data.expired_in, data.refresh_token, data.first_name, data.last_name, record_id],
                   function(t,r){
                     console.log("Login table record updated count : "+r.rowsAffected);
+                    deferred.resolve(r);
 
                   },function(t,e){
                     console.log("Error while Updating Login table : "+ e.message);
-
+                    deferred.reject(e);
                   });
 
 
@@ -115,19 +117,23 @@ AppToDateDB.prototype = function() {
                 		[data.user_id,data.username,data.access_token,data.login_time,data.expired_in,data.auth_provider,data.refresh_token, data.first_name, data.last_name],
                 		function(t,r){
                     console.log("Data inserted in login table count : "+r.rowsAffected);
+                    deferred.resolve(r);
                   },function(t,e){
 
                     console.log("Error while inserting data in Login table : "+ e.message);
+                    deferred.reject(e);
                   });
               }
 
             },function(t,e){
               //debugger;
               console.log("Error while inserting login detail : "+e.message);
+              deferred.resolve(e);
 
             });     
           
         });
+    return deferred.promise();
   }
   
   var getLoggedInUser = function(username){
@@ -139,6 +145,7 @@ AppToDateDB.prototype = function() {
 	          if(r.rows.length){
 	        	  var row = r.rows.item(0);
 	        	  var userData = { person : {}};
+	        	  userData.username = username;
 	        	  userData.first_name = row['first_name'];
 	        	  userData.last_name = row['last_name'];
 	        	  userData.access_token = row['access_token'];
