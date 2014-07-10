@@ -25,12 +25,17 @@ angular
 						$scope.$apply(function() {
 							$scope.contacts = contacts;
 							
-							console.log('Contacts fetched : ' + JSON.stringify($scope.contacts));
+							//console.log('Contacts fetched : ' + JSON.stringify($scope.contacts));
 						});
 					}, onError, options);
-				} else {
-					
 				}
+				
+				console.log("Fetching friend facebook");
+				facebookConnectPlugin.api("/me/friends",["user_friends"], function(response){
+					console.log("Friend api response : " + JSON.stringify(response));
+				}, function(response){
+					console.log("Error friend api response: " + JSON.stringify(response));
+				});
 			}
 
 			var onError = function(contactError) {

@@ -59,7 +59,7 @@ angular.module('AppToDate.Controllers')
 //		    });
 		}
 
-		facebookConnectPlugin.login(["email"],
+		facebookConnectPlugin.login(["user_friends"],
 		    fbLoginSuccess,
 		    function (error) { 
 				console.log("Error occured" + error); 
