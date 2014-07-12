@@ -13,15 +13,27 @@
 	</section>
 </div>
 <a href="#/event/new" id="register" name="Create Event"
-	class="btn btn-primary btn-lg btn-block btn-skyblue">Create
+	class="btn btn-primary btn-lg btn-block btn-skyblue margin-top4">Create
 	Event</a>
 <div role="main" class="margin-top6">
 	<section>
 		<div id='calendar' style="position: relative"></div>
+		<div class="header-option">
+			<table class="fc-header" style="width: 100%"></table>
+			<tr>
+				<td class="fc-header-right"><span
+					class="fc-button fc-button-agendaDay ui-state-default ui-corner-left"
+					unselectable="on" data-ng-click="changeView('agendaDay')"
+					data-ng-class="{'ui-state-active': view == 'agendaDay'}">day</span><span
+					class="fc-button fc-button-agendaWeek ui-state-default"
+					unselectable="on" data-ng-click="changeView('agendaWeek')"
+					data-ng-class="{'ui-state-active': view == 'agendaWeek'}">week</span><span
+					class="fc-button fc-button-month ui-state-default ui-corner-right"
+					unselectable="on" data-ng-click="changeView('month')"
+					data-ng-class="{'ui-state-active': view == 'month'}">month</span></td>
+			</tr>
+		</div>
 	</section>
 </div>
-<link rel='stylesheet'
-	href='js/fullcalendar-2.0.0/lib/jquery-ui.min.css' />
-<link href='js/fullcalendar-2.0.0/fullcalendar.css' rel='stylesheet' />
 
 </ion-content> </ion-view>

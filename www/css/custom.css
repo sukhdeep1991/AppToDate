@@ -1929,7 +1929,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#6a81ad', end
 }
 #calendar{position:static !important;}
 .fc-header{ bottom: 0;
-    position: absolute;
+/*     position: absolute; */
     width: 100%;
     z-index: 99;}
 .fc-header-right{text-align:left!important;width: 100% }

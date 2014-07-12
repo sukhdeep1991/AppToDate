@@ -34,6 +34,18 @@ angular.module('AppToDate.Services')
 	            });
 
 	            return deferred.promise;
+	        },
+	        
+	        getPicture: function(fromGallary, onSuccess, onError){
+	        	navigator.camera
+				.getPicture(
+						onSuccess,
+						onError,
+						{
+							quality : 50,
+							destinationType : navigator.camera.DestinationType.FILE_URI,
+							sourceType : fromGallary ? navigator.camera.PictureSourceType.PHOTOLIBRARY : undefined
+						});
 	        }
 	  }
 	    

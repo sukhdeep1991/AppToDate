@@ -1,7 +1,36 @@
 angular.module('AppToDate.Controllers')
-.controller('createEventCtrl', function($scope, $filter, $location, imageService, eventService) {
+.controller('createEventCtrl', function($scope, $filter, $location, imageService, eventService, googleMapService) {
 	$scope.navTitle = "Create Event";
 	$scope.minDate = new Date();
+	$scope.mapLoaded = false;
+	$scope.tab = 'details';
+	//$scope.event = {file: "test"}
+	
+	$scope.uploadImage = function(){
+		imageService.getPicture(true, function(imageURI){
+			$scope.event = $scope.event || {};
+			$scope.event.file = imageURI;
+		}, function(e){
+			console.log("Error occured while uploading the image");
+		});
+	}
+	
+	$scope.loadEventDetails = function(){
+		$scope.tab = 'details';
+	}
+	
+	$scope.loadAttendees = function(){
+		$scope.tab = 'attendees';
+	}
+	$scope.loadGoogleMap = function(){
+		$scope.tab = 'location';
+		if(!$scope.mapLoaded){
+			googleMapService.showMapInDiv('map', function(position){
+				$scope.mapLoaded = true;	
+				console.log("Current positions : " + JSON.stringify(position));
+			});
+		}
+	}
 	
 	$scope.createEvent = function(event){
 		event.start = new Date($filter('date')(event.date, 'MM-dd-yyyy'));

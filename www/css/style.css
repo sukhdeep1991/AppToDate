@@ -55,6 +55,16 @@ span.glyphicon.form-control-feedback.input-invalid {
 background-image: url('../images/cross-red.png');
 background-repeat: no-repeat;
 }
+
+.form-control .fileinput-filename{
+	width: 80px;
+	text-overflow: ellipsis;
+}
+
+#map{
+	width: 100%;
+	height: 400px;
+}
 /* div.scroll-bar.scroll-bar-v { */
 /* display: none; */
 /* } */

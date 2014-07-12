@@ -1,66 +1,96 @@
-<ion-view title="{{navTitle}}"> <ion-content>
-<div role="main" class="container theme-showcase">
-	<section>
-		<form role="form" id="details">
-			<div class="center-block margin-bottom error"
-				data-ng-show="errorMessage">
-				<h4>{{errorMessage}}</h4>
-			</div>
+<ion-view title="{{navTitle}}"> <ion-content> <!-- Nav tabs -->
+<ul class="nav nav-tabs events" id="tab">
+	<li data-ng-class="{'active' : tab == 'details'}"><a href=""
+		data-ng-click="loadEventDetails()">Details</a></li>
+	<li data-ng-class="{'active' : tab == 'attendees'}"><a href=""
+		data-ng-click="loadAttendees()">Attendees</a></li>
+	<li data-ng-class="{'active' : tab == 'location'}"><a href=""
+		data-ng-click="loadGoogleMap()">Location</a></li>
+</ul>
+<!-- Tab panes -->
+<div class="tab-content">
 
-			<div class="form-group no-label">
-				<label for="title"></label> <input type="text"
-					class="form-control" id="title" placeholder="Title" required=""
-					ng-model="event.title">
-			</div>
-
-			<div class="form-group no-label">
-				<textarea class="form-control" id="notes" placeholder="Notes"
-					ng-model="event.notes"></textarea>
-			</div>
-
-			<div class="form-group no-label">
-				<input type="date" class="form-control" id="date" placeholder="Date"
-					ng-model="event.date" placeholder="Date">
-			</div>
-			<div class="form-group form-control-left margin-top">
-				<div class="form-left-spinner">
-					<label for="textinput">Start</label>
-					<div class="input-append spinner" data-trigger="spinner">
-						<input type="time" data-rule="quantity" id="startTime"
-							ng-model="event.startTime">
+	<div role="main" class="container theme-showcase">
+		<div class="tab-pane" data-ng-show="tab == 'details'">
+			<section>
+				<form role="form" id="details">
+					<div class="center-block margin-bottom error"
+						data-ng-show="errorMessage">
+						<h4>{{errorMessage}}</h4>
 					</div>
-				</div>
-				<div class="form-left-spinner">
-					<label for="textinput">End</label>
-					<div class="input-append spinner" data-trigger="spinner">
-						<input type="time" data-rule="quantity" id="endTime"
-							ng-model="event.endTime">
-					</div>
-				</div>
-			</div>
 
-			<div style="clear: both"></div>
-			<div class="form-group margin-top3">
-				<div class="fileinput fileinput-new input-group"
-					data-provides="fileinput">
-					<div class="form-control margin-bottom" data-trigger="fileinput">
-						<i class="glyphicon glyphicon-file fileinput-exists"></i> <span
-							class="fileinput-filename"></span>
+					<div class="form-group no-label">
+						<label for="title"></label> <input type="text"
+							class="form-control" id="title" placeholder="Title" required=""
+							ng-model="event.title">
 					</div>
-					<span class="input-group-addon btn btn-default btn-file"><span
-						class="fileinput-new">Upload Image</span><span
-						class="fileinput-exists">Change</span><input type="file"
-						name="..."></span> <a href="#"
-						class="input-group-addon btn btn-default fileinput-exists"
-						data-dismiss="fileinput">Remove</a>
-				</div>
-			</div>
 
-			<!-- Button Create Event -->
-			<button type="submit"
-				class="btn btn-primary btn-lg btn-block margin-top btn-green margin-top3"
-				ng-click="createEvent(event)">Create Event</button>
-		</form>
-	</section>
+					<div class="form-group no-label">
+						<textarea class="form-control" id="notes" placeholder="Notes"
+							ng-model="event.notes"></textarea>
+					</div>
+
+					<div class="form-group no-label">
+						<input type="date" class="form-control" id="date"
+							placeholder="Date" ng-model="event.date" placeholder="Date">
+					</div>
+					<div class="form-group form-control-left margin-top">
+						<div class="form-left-spinner">
+							<label for="textinput">Start</label>
+							<div class="input-append spinner" data-trigger="spinner">
+								<input type="time" data-rule="quantity" id="startTime"
+									ng-model="event.startTime">
+							</div>
+						</div>
+						<div class="form-left-spinner">
+							<label for="textinput">End</label>
+							<div class="input-append spinner" data-trigger="spinner">
+								<input type="time" data-rule="quantity" id="endTime"
+									ng-model="event.endTime">
+							</div>
+						</div>
+					</div>
+
+					<div style="clear: both"></div>
+					<div class="form-group margin-top3">
+						<div class="fileinput fileinput-new input-group"
+							data-provides="fileinput">
+							<div class="form-control margin-bottom" data-trigger="fileinput">
+								<i class="glyphicon glyphicon-file"
+									data-ng-class="{'fileinput-exists': !event.file}"></i> <span
+									class="fileinput-filename">{{event.file}}</span>
+							</div>
+							<span class="input-group-addon btn btn-default btn-file">
+								<span data-ng-hide="event.file">Upload Image</span> <span
+								data-ng-show="event.file">Change</span> <input type="text"
+								readonly="readonly" data-ng-click="uploadImage()">
+							</span> <a href="" class="input-group-addon btn btn-default"
+								data-ng-show="event.file" data-ng-click="event.file = undefined">Remove</a>
+						</div>
+					</div>
+				</form>
+			</section>
+		</div>
+		<div class="tab-pane" data-ng-show="tab == 'attendees'">
+			<h1>In progress</h1>
+		</div>
+		<div class="tab-pane" data-ng-show="tab == 'location'">
+			<section>
+				<form>
+					<div class="form-group has-feedback">
+						<label for="textinput"></label> <input type="text"
+							class="form-control" id="enterlocation"
+							placeholder="Enter Location" required=""> <span
+							class="glyphicon glyphicon-search form-control-feedback"></span>
+					</div>
+
+					<div class="margin-top2" id="map"></div>
+				</form>
+			</section>
+		</div>
+		<a href="#" id="upload-photo"
+			class="btn btn-primary btn-lg btn-block btn-skylight margin-top4"
+			data-ng-click="createEvent(event)">Create Event</a>
+	</div>
 </div>
 </ion-content> </ion-view>

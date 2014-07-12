@@ -10,30 +10,14 @@ function($scope, imageService) {
 	$scope.cancelBtnText = "Later";
 
 	$scope.UploadPic = function() {
-		navigator.camera
-				.getPicture(
-						cameraSuccess,
-						cameraError,
-						{
-							quality : 50,
-							destinationType : navigator.camera.DestinationType.FILE_URI,
-							sourceType : navigator.camera.PictureSourceType.PHOTOLIBRARY
-						});
-
+		imageService.getPicture(true, onSuccess, onError);
 	}
 
 	$scope.capturePic = function() {
-		navigator.camera
-				.getPicture(
-						cameraSuccess,
-						cameraError,
-						{
-							quality : 50,
-							destinationType : navigator.camera.DestinationType.NATIVE_URI
-						});
+		imageService.getPicture(false, onSuccess, onError);
 	}
 	
-	function cameraSuccess(imageURL) {		
+	function onSuccess(imageURL) {		
 		$scope.setUserImage(imageURL);
 		imageService.saveOrUpdateUserImage($scope.userDetails.user_id, imageURL).then(
 				function(data) {
@@ -43,7 +27,7 @@ function($scope, imageService) {
 				});
 	}
 	
-	function cameraError(message) {
+	function onError(message) {
 		alert('Failed because: ' + message);
 
 	}
