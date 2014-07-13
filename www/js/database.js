@@ -48,15 +48,41 @@ AppToDateDB.prototype = function() {
     	          },function(t,e){
     	            console.log("Error while creating Events table : "+e.message);
     	          });
-          //tx.executeSql('INSERT INTO Login (user_id, email, access_token,expires_in,auth_provider) VALUES (?, ?, ?,?,?)', ['123456','sprajjobid@gmail.com','132asdasd','23423','Facebook']);
+          /*Add column if not exists*/
+          tx.executeSql('SELECT location_title FROM Events LIMIT 1', [], 
+            function(t,r){
+        	  console.log("Column exists");
+          }, function(err){
+        	  console.log("Column does not exist");
+        	  console.log("Creating columns");
+	          tx.executeSql('ALTER TABLE Events ADD COLUMN location_title TEXT', [], 
+	                  function(t,r){
+	              	  console.log("location_title column added");
+                }, function(err){
+              	  console.log("Error : location_title column added");
+                });
+	          tx.executeSql('ALTER TABLE Events ADD COLUMN lat TEXT', [], 
+	                  function(t,r){
+              	  console.log("lat column added");
+              }, function(err){
+            	  console.log("Error : lat column added");
+                });
+	          tx.executeSql('ALTER TABLE Events ADD COLUMN lng TEXT', [], 
+	                  function(t,r){
+              	  console.log("lng column added");
+              }, function(err){
+            	  console.log("Error : lng column added");
+                });
+          })
+          
         });
 	}
 	
     var insertEvent = function(event){
     	console.log('Inserting into events ' + JSON.stringify(event));
     	db.transaction(function(tx) {
-	    	tx.executeSql('INSERT INTO Events (user_id, title, notes,start,end,image_url) VALUES (?, ?, ?,?,?,?)', 
-	        		[event.user_id, event.title, event.notes, event.start, event.end, event.image_url],
+	    	tx.executeSql('INSERT INTO Events (user_id, title, notes,start,end,image_url, location_title, lat, lng) VALUES (?, ?, ?,?,?,?, ?, ?, ?)', 
+	        		[event.user_id, event.title, event.notes, event.start, event.end, event.image_url, event.location_title, event.lat, event.lng],
 	        		function(t,r){
 	            console.log("Data inserted in Events table count : "+r.rowsAffected);
 	          },function(t,e){
@@ -78,6 +104,25 @@ AppToDateDB.prototype = function() {
                 		events.push(r.rows.item(i));
                 	}
                 	deferred.resolve(events);
+                } else {
+                	deferred.resolve([]);
+                }
+            }, function(t,e){
+            	console.log("Error while selecting events data : "+ e.message);
+            	deferred.reject(e);
+            });
+    	});            
+        return deferred.promise();
+    }
+    
+    var getEventById = function(eventId){
+    	var deferred = $.Deferred();
+    	db.transaction(function(tx) {
+            tx.executeSql('SELECT * FROM Events WHERE (id=?)', [eventId], 
+              function(t,r){
+                if(r.rows.length){
+                	console.log("event found");
+                	deferred.resolve(r.rows.item(0));
                 } else {
                 	deferred.resolve([]);
                 }
@@ -300,7 +345,8 @@ AppToDateDB.prototype = function() {
     getUserImage: getUserImage,
     getLoggedInUser : getLoggedInUser,
     insertEvent: insertEvent,
-    getUserEvents: getUserEvents
+    getUserEvents: getUserEvents,
+    getEventById: getEventById
   }
 }();
 return window.AppToDate=AppToDateDB;

@@ -16,7 +16,7 @@ function($scope, $filter, $location, eventService) {
 		angular.element('#calendar').fullCalendar('changeView',
 				view);
 	}
-
+	
 	// angular.element(document.querySelector('#calendar'))
 	var calendar = angular.element(document
 			.querySelector('#calendar'));
@@ -29,6 +29,9 @@ function($scope, $filter, $location, eventService) {
 							console.log("Events fetched : "
 									+ JSON.stringify(data));
 							$scope.events = data;
+							$scope.events.map(function(event){
+								event.url = "#/event/" + event.id;
+							});
 							calendar.fullCalendar({
 								theme : true,
 								header : {

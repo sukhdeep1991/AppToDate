@@ -31,6 +31,22 @@ angular.module('AppToDate.Services')
             });
 
             return deferred.promise;
+		},
+		
+		getEvent : function(eventId){
+			var deferred = $q.defer();
+
+            $.when(DB.getEventById(eventId)).then(
+              function(data) {
+                console.log("event found successfully : " + JSON.stringify(data));
+                deferred.resolve(data);
+              },
+              function(errorMsg) {
+                console.log("Error while fetching event");
+                deferred.reject(errorMsg);
+            });
+
+            return deferred.promise;
 		}
 	}
 });

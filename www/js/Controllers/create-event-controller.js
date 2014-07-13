@@ -4,12 +4,15 @@ angular.module('AppToDate.Controllers')
 	$scope.minDate = new Date();
 	$scope.mapLoaded = false;
 	$scope.tab = 'details';
-	//$scope.event = {file: "test"}
 	
 	$scope.uploadImage = function(){
 		imageService.getPicture(true, function(imageURI){
-			$scope.event = $scope.event || {};
-			$scope.event.file = imageURI;
+			console.log("Setting image for event: "+ imageURI);
+			$scope.$apply(function(){
+				$scope.event = $scope.event || {};
+				$scope.event.file = imageURI;
+			});
+			
 		}, function(e){
 			console.log("Error occured while uploading the image");
 		});
@@ -26,6 +29,7 @@ angular.module('AppToDate.Controllers')
 		$scope.tab = 'location';
 		if(!$scope.mapLoaded){
 			googleMapService.showMapInDiv('map', function(position){
+				googleMapService.setLocationSearchbox('enterlocation');
 				$scope.mapLoaded = true;	
 				console.log("Current positions : " + JSON.stringify(position));
 			});
@@ -47,14 +51,19 @@ angular.module('AppToDate.Controllers')
 		event.end.setHours(time[0], time[1]);
 		
 		//Extract the utc string from the date time
-		event.start = new Date( event.start.getTime() - (event.start.getTimezoneOffset() * 60000));
-		event.end = new Date( event.end.getTime() - (event.end.getTimezoneOffset() * 60000));
+		//event.start = new Date( event.start.getTime() - (event.start.getTimezoneOffset() * 60000));
+		//event.end = new Date( event.end.getTime() - (event.end.getTimezoneOffset() * 60000));
 		
 		console.log("setting hours to end date" + JSON.stringify(time));
 		
 		console.log("Event to create : " +JSON.stringify(event));
 		
 		event.user_id = $scope.userDetails.user_id;
+		var mapPosition = googleMapService.getCurrentMapLocation();
+		event.lat = mapPosition.lat;
+		event.lng = mapPosition.lng;
+		event.image_url = event.file;
+		event.location_title = angular.element("#enterlocation").val();
 		console.log("Creating Event : " +JSON.stringify(event) )
 		eventService.createEvent(event).then(function(response){
 			console.log('Event created successfully : ' + JSON.stringify(event));

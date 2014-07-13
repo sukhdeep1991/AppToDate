@@ -3,7 +3,10 @@ angular.module('AppToDate.Controllers')
 .controller('loginCtrl', 
   function($scope,$state,$rootScope,LoaderService,sessionService,Authentication, $location, registerService) {
 	
-	$scope.setUserDetails(undefined);
+	if($scope.userDetail){
+		$location.path('/register');
+		return;
+	}
 	
   $scope.register = function(){
 	  $location.path('/register');

@@ -65,6 +65,10 @@ background-repeat: no-repeat;
 	width: 100%;
 	height: 400px;
 }
+
+#viewEvent{
+	height: 570px;
+}
 /* div.scroll-bar.scroll-bar-v { */
 /* display: none; */
 /* } */

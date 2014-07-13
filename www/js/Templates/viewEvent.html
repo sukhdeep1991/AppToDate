@@ -1,0 +1,51 @@
+<ion-view title="{{navTitle}}"> <ion-content> <!-- Nav tabs -->
+<ul class="nav nav-tabs events" id="tab">
+	<li data-ng-class="{'active' : tab == 'details'}"><a href=""
+		data-ng-click="loadEventDetails()">Details</a></li>
+	<li data-ng-class="{'active' : tab == 'attendees'}"><a href=""
+		data-ng-click="loadAttendees()">Attendees</a></li>
+	<li data-ng-class="{'active' : tab == 'location'}"><a href=""
+		data-ng-click="loadGoogleMap()">Location</a></li>
+</ul>
+<!-- Tab panes -->
+<div class="tab-content">
+
+	<div role="main" class="container theme-showcase" id="viewEvent">
+		<div class="tab-pane" data-ng-show="tab == 'details'">
+			<section>
+				<h4 class="margin-top" data-ng-bind="event.title"></h4>
+				<p class="margin-top" data-ng-bind="event.notes"></p>
+
+
+				<div class="event-box">
+					<hr />
+					<h3>Event Time</h3>
+					<p class="time">{{ event.start | date : 'short'}}</p>
+				</div>
+			</section>
+		</div>
+		<div class="tab-pane" data-ng-show="tab == 'attendees'">
+			<h1>In progress</h1>
+		</div>
+		<div class="tab-pane" data-ng-show="tab == 'location'">
+			<section>
+				<div class="form-group has-feedback">
+					<h4 class="margin-top" data-ng-bind="event.location_title"></h4>
+				</div>
+				<div class="margin-top2" id="map"></div>
+			</section>
+		</div>
+		<div class="bottom-box">
+			<hr />
+			<h2>Are you Attending event?</h2>
+
+			<div class="btn-group btn-bottom">
+				<button type="button" class="btn btn-default btn-left">May
+					be</button>
+				<button type="button" class="btn btn-default btn-middle">Yes</button>
+				<button type="button" class="btn btn-default btn-right">No</button>
+			</div>
+		</div>
+	</div>
+</div>
+</ion-content> </ion-view>

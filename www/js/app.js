@@ -99,6 +99,11 @@ angular.module('AppToDate', [
 		templateUrl: "js/Templates/event.html",
         controller: 'createEventCtrl'
       })
+      .state('viewEvent', {
+          url: "/event/:id",
+  		templateUrl: "js/Templates/viewEvent.html",
+          controller: 'viewEventCtrl'
+        })
 
 
   $urlRouterProvider.otherwise('/login');
