@@ -6,7 +6,7 @@
           </header>
           <section>          
             <div class="dashboard-top-bg margin-top" data-ng-click="ChangeProfilePic()">
-                 <img class="img-responsive" ng-src="{{imageSrc}}" alt=""/>  
+                 <img id="profilePic" class="img-responsive" ng-src="{{imageSrc}}" alt=""/>  
              </div>
              <h3 class="text-center">Welcome {{userDetails.first_name}} !</h3> 
              <div class="invite-people margin-top" ng-click="invitePeopleClicked()">

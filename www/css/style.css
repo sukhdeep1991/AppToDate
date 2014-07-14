@@ -69,9 +69,12 @@ background-repeat: no-repeat;
 #viewEvent{
 	height: 570px;
 }
-#profilePic{
-	width: 150px;
-	height: 150px;
+.edit-profile{
+    line-height:180px;
+    text-align:center;
+}
+.edit-profile img{
+	vertical-align: middle;
 }
 /* div.scroll-bar.scroll-bar-v { */
 /* display: none; */

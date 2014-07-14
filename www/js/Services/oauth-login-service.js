@@ -16,42 +16,32 @@ angular.module('AppToDate.Services')
 	return {
 		login: function(user){
 			var deferred = $q.defer();
-			$.when(DB.getLoggedInUser(user.username)).then(
-              function(userData) {
-            	if(userData){
-	                console.log('Found the user');
-	                user.accessToken = userData.access_token;
-	    			user.person = {
-	    				"clientId": userData.user_id
-	    			};
-	    			httpResource.loadUrl("authentication/login", "POST", user).success(function(data){
-	    				userData.access_token = appConfig.accessToken;
-	    				userData.expired_in = data.TokenExpiryTime;
-	    				userData.refresh_token = data.RefreshToken;
-	    				appConfig.authorizationToken = data.AuthorizationToken;
-	    				
-	    				$.when(DB.insertLoginDetail(userData)).then(
-	    	              function(data) {
-	    	                console.log("Saved login information in db : " + JSON.stringify(userData));
-	    					deferred.resolve(userData);
-	    	              },
-	    	              function(errorMsg) {
-	    	                console.log("Error while saving login information");
-	    					deferred.resolve(false);
-	    	            });	
-	    			}).error(function(data, status) {
-	    				console.log("Login failed: " + JSON.stringify(user));
-	    				deferred.reject(data);
-	    			});
-              	} else {
-              		console.log('user not found');
-                  	deferred.resolve(false);              		
-              	}
-              },
-              function(errorMsg) {
-                console.log("Error while saving login information");
-				deferred.resolve(false);
-            });
+            console.log('Authenticating user');
+            user.accessToken = appConfig.accessToken;
+			httpResource.loadUrl("authentication/login", "POST", user).success(function(data){
+				console.log("User authenticated")
+				var userData = {};
+				userData.user_id = data.PersonId;
+				userData.first_name = data.Person.FirstName;
+				userData.last_name = data.Person.LastName;
+				userData.access_token = appConfig.accessToken;
+				userData.expired_in = data.TokenExpiryTime;
+				userData.refresh_token = data.RefreshToken;
+				appConfig.authorizationToken = data.AuthorizationToken;
+				
+				$.when(DB.insertLoginDetail(userData)).then(
+	              function(data) {
+	                console.log("Saved login information in db : " + JSON.stringify(userData));
+					deferred.resolve(userData);
+	              },
+	              function(errorMsg) {
+	                console.log("Error while saving login information");
+					deferred.resolve(false);
+	            });	
+			}).error(function(data, status) {
+				console.log("Login failed: " + JSON.stringify(user));
+				deferred.reject(data);
+			});
 			return deferred.promise;			
 		},
 	}
