@@ -69,6 +69,10 @@ background-repeat: no-repeat;
 #viewEvent{
 	height: 570px;
 }
+#profilePic{
+	width: 150px;
+	height: 150px;
+}
 /* div.scroll-bar.scroll-bar-v { */
 /* display: none; */
 /* } */

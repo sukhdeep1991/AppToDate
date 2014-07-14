@@ -3,7 +3,6 @@ angular
 .controller(
 		'profilePicCtrl',
 function($scope, imageService) {
-	$scope.profilePic = "images/profile-pic.png";
 	$scope.navTitle = "Profile Pic";
 	$scope.uploadBtnText = "Upload New";
 	$scope.captureBtnText = "Capture New";
