@@ -2019,10 +2019,9 @@ left: 28%;
 .hideMsg{display:none;}
 .group{height: 400px;
     overflow: auto;}
-#calendar{position:static !important;  height: 450px;
+#calendar{position:static !important; 
     overflow: auto;}
 .fc-header{ bottom: 0;
-    position: absolute;
     width: 100%;
     z-index: 99;}
 .fc-header-right{text-align:left!important;width: 100% }
@@ -3489,7 +3488,7 @@ opacity:1 !important;}
  .table-responsive.table-bg >.table{background:#fff; }
  .table-responsive.table-bg >.table>tbody>tr>td{border-bottom: 1px solid #ddd;border-top: 0 !important}
 .event-box h3{color:#747474;font-size: 18px;font-weight: bold;}
-.event-box p.time{color:#3366cc;font-size:24px;}
+.event-box p.time{color:#3366cc;font-size:18px;}
 .bottom-box{bottom: 0;
     position: absolute;
     text-align: center;

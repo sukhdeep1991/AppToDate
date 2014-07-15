@@ -73,16 +73,16 @@
 </head>
 <body ng-app="AppToDate" animation="slide-left-right-ios7"
 	data-ng-controller="parentController">
-	<nav data-ng-show="userDetails" style="display:none">
+	<nav data-ng-show="userDetails">
 		<!--Top Navigation -->
 		<div class="navbar navbar-inverse">
 			<div class="container padding-none">
 				<div class="navbar-header">
 					<div class="navBar-right navbar-toggle collapsed"
 						data-target=".navbar-collapse" data-toggle="collapse"></div>
-					<a href="#" class="navbar-brand btn-back text-center">Back</a> <a
-						href="#" class="navbar-brand btn-home text-center">Home</a>
-					<h4 class="navbar-heading text-center">Events</h4>
+					<a href="" class="navbar-brand btn-back text-center" data-ng-click="goBack()"></a> <a
+						href="#/home" class="navbar-brand btn-home text-center"></a>
+					<h4 class="navbar-heading text-center"></h4>
 
 				</div>
 				<div class="navbar-collapse collapse" style="height: 1px;">
@@ -103,6 +103,7 @@
 			</div>
 		</div>
 	</nav>
+	<div class="nav-margin"></div>
 	<div class="loading-widget" data-ng-show="showLoader">
 		<img class="img-center" alt="Loading..." ng-src="{{spinnerImgSrc}}">
 	</div>

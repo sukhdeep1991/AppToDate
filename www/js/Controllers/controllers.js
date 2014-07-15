@@ -1,8 +1,18 @@
 angular.module('AppToDate.Controllers',['AppToDate.Services'])
-.controller('parentController', function($scope, imageService){
-	$scope.imageSrc = "images/1.jpg";
+.controller('parentController', function($scope, imageService, $location){
+	$scope.imageSrc = "images/profile-icon.png";
 	$scope.spinnerImgSrc = "images/spinner.gif";
 	$scope.showLoader = false;
+	var history = [];
+	//Keep pushing into the history
+	$scope.$on("$locationChangeStart", function(e, currentLocation, previousLocation){
+		history.push(currentLocation.substring(currentLocation.lastIndexOf('#/')+1));
+	});
+	
+	$scope.goBack = function(){
+		var prevUrl = history.length > 1 ? history.splice(-2)[0] : "/";
+        $location.path(prevUrl);
+	}
 	
 	$scope.showErrorMessage = function(message){
 		$scope.errorMessage = message;
@@ -18,6 +28,8 @@ angular.module('AppToDate.Controllers',['AppToDate.Services'])
 		console.log("New image src is  :: " + $scope.imageSrc);
 		
 	}
+	
+	//$scope.userDetails = {};
 	
 	$scope.setUserDetails = function(userData){
 		$scope.userDetails = userData;

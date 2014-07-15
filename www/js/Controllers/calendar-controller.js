@@ -30,6 +30,7 @@ function($scope, $filter, $location, eventService) {
 									+ JSON.stringify(data));
 							$scope.events = data;
 							$scope.events.map(function(event){
+								event.start = new Date(event.start);
 								event.url = "#/event/" + event.id;
 							});
 							calendar.fullCalendar({

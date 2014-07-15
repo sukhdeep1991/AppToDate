@@ -75,6 +75,18 @@ background-repeat: no-repeat;
 }
 .edit-profile img{
 	vertical-align: middle;
+	width:100%;
+}
+.fc-header-title{
+	font-size: 10px;
+}
+nav {
+	position: fixed;
+	width: 100%;
+	z-index: 100000;
+}
+.nav-margin{
+	height: 40px;
 }
 /* div.scroll-bar.scroll-bar-v { */
 /* display: none; */

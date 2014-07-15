@@ -4,6 +4,7 @@ angular.module('AppToDate.Controllers')
   function($scope,$state,$rootScope,LoaderService,sessionService,Authentication, $location, registerService) {
 	
 	if($scope.userDetail){
+		console.log("User already logged in");
 		$location.path('/register');
 		return;
 	}
