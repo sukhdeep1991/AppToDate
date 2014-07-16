@@ -43,6 +43,6 @@ angular.module('AppToDate.Services')
 				deferred.reject(data);
 			});
 			return deferred.promise;			
-		},
+		}
 	}
 });

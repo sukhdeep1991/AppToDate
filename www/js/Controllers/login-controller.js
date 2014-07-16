@@ -18,6 +18,53 @@ angular.module('AppToDate.Controllers')
 	  if(!data || !data.username || !data.password){
 		  return;
 	  }
+	  callLoginService(data);
+  } 
+  
+  $scope.facebookLogin = function(){
+	  console.log("Loging into facebook");
+	  var fbLoginSuccess = function (userData) {
+		  $scope.setShowLoader(true);
+		  console.log("Login successfull : " + JSON.stringify(userData));
+		  $scope.$apply(function(){
+			  	var user = {};
+			  	user.Person = {
+					FirstName: userData.user.first_name,
+					LastName: userData.user.last_name,
+					timeZoneInfo: "UTC"
+				};
+			  	user.username = userData.user.email;
+			  	user.phone = "0";
+			  	user.type = 1;
+				callLoginService(user)
+				
+//			  registerService.facebookRegister(userData).then(function(response){
+//					if(response){
+//						$scope.setUserDetails(response);
+//						$location.path('/home');					
+//					} else {
+//						$scope.showErrorMessage('Could not register user');
+//					}
+//				    $scope.setShowLoader(false);
+//				},
+//				function(errorData){
+//					$scope.showErrorMessage('Could not register user');
+//					console.log("Registering request failed : " + JSON.stringify(errorData));
+//				    $scope.setShowLoader(false);
+//				});			  
+		  });
+		}
+
+		facebookConnectPlugin.login(["user_friends"],
+		    fbLoginSuccess,
+		    function (error) { 
+				console.log("Error occured" + error); 
+			}
+		);
+  }
+  
+  var callLoginService = function(data)
+  {
 	  $scope.setShowLoader(true);
 	  Authentication.oa.login(data).then(function(response){
 		  if(response){
@@ -31,49 +78,7 @@ angular.module('AppToDate.Controllers')
 		  console.log("Login failded due to : " + JSON.stringify(data));
 		  $scope.showErrorMessage("Username/password combination does not exist.");
 		  $scope.setShowLoader(false);
-	  });	  
-  } 
-  
-  $scope.facebookLogin = function(){
-	  console.log("Loging into facebook");
-	  var fbLoginSuccess = function (userData) {
-		  $scope.setShowLoader(true);
-		  console.log("Login successfull : " + JSON.stringify(userData));
-		  $scope.$apply(function(){
-			  registerService.facebookRegister(userData).then(function(response){
-					if(response){
-						$scope.setUserDetails(response);
-						$location.path('/home');					
-					} else {
-						$scope.showErrorMessage('Could not register user');
-					}
-				    $scope.setShowLoader(false);
-				},
-				function(errorData){
-					$scope.showErrorMessage('Could not register user');
-					console.log("Registering request failed : " + JSON.stringify(errorData));
-				    $scope.setShowLoader(false);
-				});			  
-		  });
-		  
-//		    facebookConnectPlugin.getAccessToken(function(token) {
-//		        alert("Token: " + token);
-//		    }, function(err) {
-//		        alert("Could not get access token: " + err);
-//		    });
-		}
-
-		facebookConnectPlugin.login(["user_friends"],
-		    fbLoginSuccess,
-		    function (error) { 
-				console.log("Error occured" + error); 
-			}
-		);
-	  
-//	  FB.login(function(response){
-//		  console.log("Login successfull : " + JSON.stringify(response));
-//		  $location.path('/home');
-//		});
+	  });
   }
 })
 
