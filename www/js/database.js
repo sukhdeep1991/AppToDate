@@ -82,7 +82,8 @@ AppToDateDB.prototype = function() {
     	console.log('Inserting into events ' + JSON.stringify(event));
     	db.transaction(function(tx) {
 	    	tx.executeSql('INSERT INTO Events (user_id, title, notes,start,end,image_url, location_title, lat, lng) VALUES (?, ?, ?,?,?,?, ?, ?, ?)', 
-	        		[event.user_id, event.title, event.notes, event.start, event.end, event.image_url, event.location_title, event.lat, event.lng],
+	        		[event.user_id, event.title, event.notes, event.start, event.end, event.imageUrl, 
+	        		 event.location.displayName, event.location.latitude, event.location.longitude],
 	        		function(t,r){
 	            console.log("Data inserted in Events table count : "+r.rowsAffected);
 	          },function(t,e){

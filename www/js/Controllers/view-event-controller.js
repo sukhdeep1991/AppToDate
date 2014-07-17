@@ -48,12 +48,9 @@ function($scope, $filter, $location, imageService,
 	$scope.loadGoogleMap = function() {
 		$scope.tab = 'location';
 		if (!$scope.mapLoaded) {
-			googleMapService.showMapInDiv('map', function(
-					position) {
-				googleMapService.setLatLng($scope.event);
+			googleMapService.showMapInDiv('map', function() {
+				googleMapService.setLatLng($scope.event.lat, $scope.event.lng);
 				$scope.mapLoaded = true;
-				console.log("Current positions : "
-						+ JSON.stringify(position));
 			});
 		}
 	}

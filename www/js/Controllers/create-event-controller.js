@@ -28,10 +28,10 @@ angular.module('AppToDate.Controllers')
 	$scope.loadGoogleMap = function(){
 		$scope.tab = 'location';
 		if(!$scope.mapLoaded){
-			googleMapService.showMapInDiv('map', function(position){
+			googleMapService.showMapInDiv('map', function(){
 				googleMapService.setLocationSearchbox('enterlocation');
 				$scope.mapLoaded = true;	
-				console.log("Current positions : " + JSON.stringify(position));
+				//console.log("Current positions : " + JSON.stringify());
 			});
 		}
 	}
@@ -57,13 +57,15 @@ angular.module('AppToDate.Controllers')
 		console.log("setting hours to end date" + JSON.stringify(time));
 		
 		console.log("Event to create : " +JSON.stringify(event));
-		
+		event.duration = (event.end - event.start) != 0 ? (event.end - event.start)/60000 : 0; 
 		event.user_id = $scope.userDetails.user_id;
 		var mapPosition = googleMapService.getCurrentMapLocation();
-		event.lat = mapPosition.lat;
-		event.lng = mapPosition.lng;
-		event.image_url = event.file;
-		event.location_title = angular.element("#enterlocation").val();
+		event.imageUrl = event.file;
+		event.location = {
+			displayName: angular.element("#enterlocation").val(),
+			latitude: mapPosition.lat,
+			longitude: mapPosition.lng
+		} 
 		console.log("Creating Event : " +JSON.stringify(event) )
 		eventService.createEvent(event).then(function(response){
 			console.log('Event created successfully : ' + JSON.stringify(event));

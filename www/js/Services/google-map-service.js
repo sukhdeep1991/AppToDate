@@ -3,39 +3,53 @@ angular.module('AppToDate.Services')
 	var map;
 	var markers = [];
 	
+	var loadMap = function(divId){
+		console.log("Showing map in div: "+ divId);
+		var mapcanvas = document.createElement('div');
+	    mapcanvas.id = 'mapcanvas';
+	    mapcanvas.style.height = '100%';
+	    mapcanvas.style.width = '100%';
+	    
+	    document.getElementById(divId).appendChild(mapcanvas);
+	    var latlng = new google.maps.LatLng(28.38, 77.12);
+	    var myOptions = {
+	      zoom: 15,
+	      mapTypeControl: false,
+		  center: latlng,
+	      navigationControlOptions: {style: google.maps.NavigationControlStyle.SMALL},
+	      mapTypeId: google.maps.MapTypeId.ROADMAP
+	    };
+	    map = new google.maps.Map(document.getElementById("mapcanvas"), myOptions);
+		console.log("Shown map in div: "+ divId);
+	}
+	
 	return {
 		showMapInDiv: function(divId, onSuccess){
 			if (navigator.geolocation) {
-				  console.log("Showing map in div: "+ divId);
-				  navigator.geolocation.getCurrentPosition(function(position){
-					  var mapcanvas = document.createElement('div');
-					  mapcanvas.id = 'mapcanvas';
-					  mapcanvas.style.height = '100%';
-					  mapcanvas.style.width = '100%';
-					    
-					  document.getElementById(divId).appendChild(mapcanvas);
-					  
-					  var latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-					  var myOptions = {
-					    zoom: 15,
-					    center: latlng,
-					    mapTypeControl: false,
-					    navigationControlOptions: {style: google.maps.NavigationControlStyle.SMALL},
-					    mapTypeId: google.maps.MapTypeId.ROADMAP
-					  };
-					  map = new google.maps.Map(document.getElementById("mapcanvas"), myOptions);
-					  
-					  var marker = new google.maps.Marker({
-					      position: latlng, 
-					      map: map, 
-					      title:"You are here! (at least within a "+position.coords.accuracy+" meter radius)"
-					  });
-				      markers.push(marker);
-					  console.log("Shown map in div: "+ divId);
-					  onSuccess(position);
-				  }, function(error){
-					  console.log("Error occured while getting the location: " + JSON.stringify(error));
-				  });				  
+				  loadMap(divId);
+				  console.log("Shown map in div: "+ divId);
+				  onSuccess();
+				  var service = this;
+//				  navigator.geolocation.getCurrentPosition(function(position){
+//					  var latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+// 					  var myOptions = {
+//					    zoom: 15,
+//					    center: latlng,
+//					    mapTypeControl: false,
+//					    navigationControlOptions: {style: google.maps.NavigationControlStyle.SMALL},
+//					    mapTypeId: google.maps.MapTypeId.ROADMAP
+//					  };
+//					  map = new google.maps.Map(document.getElementById("mapcanvas"), myOptions);
+//					  
+//					  var marker = new google.maps.Marker({
+//					      position: latlng, 
+//					      map: map, 					      
+//					      title:"You are here! (at least within a "+position.coords.accuracy+" meter radius)"
+//					  });
+//				      markers.push(marker);
+//				  }, function(error){
+//					  console.log("Error occured while getting the location: " + JSON.stringify(error));
+//				  });				  
 			} else {
 			  error('not supported');
 			}
@@ -91,6 +105,12 @@ angular.module('AppToDate.Services')
 		},
 		
 		getCurrentMapLocation: function(){
+			if(!map || !map.getBounds()){
+				return {
+					lat: 0,
+					lng: 0
+				}
+			}
 			var bounds = map.getBounds();
 			return {
 				lat: bounds.getCenter().lat(),
@@ -98,7 +118,7 @@ angular.module('AppToDate.Services')
 			}
 		},
 		
-		setLatLng: function(event){
+		setLatLng: function(lat, lng){
 			for (var i = 0, marker; marker = markers[i]; i++) {
 		      marker.setMap(null);
 		    }
@@ -106,7 +126,7 @@ angular.module('AppToDate.Services')
 		    // For each place, get the icon, place name, and location.
 		    markers = [];
 			var bounds = new google.maps.LatLngBounds();
-			var latlng = new google.maps.LatLng(event.lat, event.lng);
+			var latlng = new google.maps.LatLng(lat, lng);
 			bounds.extend(latlng);
 			var marker = new google.maps.Marker({
 		      position: latlng, 
