@@ -30,26 +30,26 @@ angular.module('AppToDate.Services')
 				  console.log("Shown map in div: "+ divId);
 				  onSuccess();
 				  var service = this;
-//				  navigator.geolocation.getCurrentPosition(function(position){
-//					  var latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-// 					  var myOptions = {
-//					    zoom: 15,
-//					    center: latlng,
-//					    mapTypeControl: false,
-//					    navigationControlOptions: {style: google.maps.NavigationControlStyle.SMALL},
-//					    mapTypeId: google.maps.MapTypeId.ROADMAP
-//					  };
-//					  map = new google.maps.Map(document.getElementById("mapcanvas"), myOptions);
-//					  
-//					  var marker = new google.maps.Marker({
-//					      position: latlng, 
-//					      map: map, 					      
-//					      title:"You are here! (at least within a "+position.coords.accuracy+" meter radius)"
-//					  });
-//				      markers.push(marker);
-//				  }, function(error){
-//					  console.log("Error occured while getting the location: " + JSON.stringify(error));
-//				  });				  
+				  navigator.geolocation.getCurrentPosition(function(position){
+					  var latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+ 					  var myOptions = {
+					    zoom: 15,
+					    center: latlng,
+					    mapTypeControl: false,
+					    navigationControlOptions: {style: google.maps.NavigationControlStyle.SMALL},
+					    mapTypeId: google.maps.MapTypeId.ROADMAP
+					  };
+					  map = new google.maps.Map(document.getElementById("mapcanvas"), myOptions);
+					  
+					  var marker = new google.maps.Marker({
+					      position: latlng, 
+					      map: map, 					      
+					      title:"You are here! (at least within a "+position.coords.accuracy+" meter radius)"
+					  });
+				      markers.push(marker);
+				  }, function(error){
+					  console.log("Error occured while getting the location: " + JSON.stringify(error));
+				  });				  
 			} else {
 			  error('not supported');
 			}
