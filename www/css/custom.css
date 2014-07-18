@@ -2009,7 +2009,7 @@ left: 28%;
 }
 .collapsed{background:url(../images/btn-off.png) 10px 10px no-repeat !important;height:20px;width:20px;text-indent: -999999px;}
 
-.search{height: 50px; border-radius: 0;border:0;border-bottom:2px solid #3366cc;}
+.search{height: 50px; border-radius: 0;border:0;}
 
 .fc-header .fc-button {
     margin-bottom: 0 !important;

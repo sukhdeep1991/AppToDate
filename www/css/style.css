@@ -19,7 +19,7 @@
 	border-top: solid #dee 1px;
 }
 
-div.phone, div.email {
+div.phone, div.email{
 background-repeat: no-repeat;
 background-position: right center;
 background-origin: content-box;
@@ -87,6 +87,25 @@ nav {
 }
 .nav-margin{
 	height: 40px;
+}
+.event-search{
+	width:82%;
+	display: inline-block;
+}
+a.add{
+	background-image: url('../images/plus.png');
+	padding: 12px 25px;
+	background-repeat: no-repeat;
+	background-position: center;
+	vertical-align: -4px;
+	left: -25px;
+	border-left: 2px solid #3366cc;
+}
+div.search-box.event{
+	border-bottom: 2px solid #3366cc;
+}
+.event-search .form-control{
+	background-color: inherit !important;
 }
 /* div.scroll-bar.scroll-bar-v { */
 /* display: none; */

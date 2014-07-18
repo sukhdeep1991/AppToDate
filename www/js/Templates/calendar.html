@@ -1,18 +1,18 @@
 
 <ion-view title="My Calendar"> <ion-content>
-<div class="search-box">
+<div class="search-box event">
 	<section>
 		<form role="form">
 			<!-- Text input Search-->
-			<div class="form-group">
+			<div class="form-group has-feedback event-search">
 				<input type="text" class="form-control search" id="Search"
-					placeholder="Search by event name" required="">
+					placeholder="Search by event name" required=""><span
+					class="glyphicon glyphicon-search form-control-feedback"></span>
 			</div>
+			<a href="#/event/new" class="add"></a>
 		</form>
 	</section>
 </div>
-<a href="#/event/new" id="register" name="Create Event"
-	class="btn btn-primary btn-lg btn-block btn-skyblue">Create Event</a>
 <div role="main">
 	<section>
 		<div id='calendar' style="position: relative"></div>
