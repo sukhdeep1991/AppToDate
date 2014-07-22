@@ -34,18 +34,19 @@ angular.module('AppToDate.Controllers',['AppToDate.Services'])
 	$scope.setUserDetails = function(userData){
 		$scope.userDetails = userData;
 		if($scope.userDetails && $scope.userDetails.user_id){
-			console.log("Fetching user image");
-			imageService.getUserImage($scope.userDetails.user_id).then(
-					function(data) {
-						if (data) {
-							console.log("Image found :" + data);
-							$scope.setUserImage(data);
-						} else {
-							console.log("Image not found :" + data);
-						}
-					}, function(data) {
-						console.log("Error while fetching image");
-					});
+			$scope.setUserImage(appConfig.apiUrl + "Image/Get?clientId=" + $scope.userDetails.user_id);
+//			console.log("Fetching user image");
+//			imageService.getUserImage($scope.userDetails.user_id).then(
+//					function(data) {
+//						if (data) {
+//							console.log("Image found :" + data);
+//							$scope.setUserImage(data);
+//						} else {
+//							console.log("Image not found :" + data);
+//						}
+//					}, function(data) {
+//						console.log("Error while fetching image");
+//					});
 		}
 	}
 	
