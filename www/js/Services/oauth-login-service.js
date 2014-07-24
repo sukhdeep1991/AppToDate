@@ -21,6 +21,7 @@ angular.module('AppToDate.Services')
 			httpResource.loadUrl("authentication/login", "POST", user).success(function(data){
 				console.log("User authenticated")
 				var userData = {};
+				userData.id = data.Person.Id;
 				userData.user_id = data.Person.ClientId;
 				userData.first_name = data.Person.FirstName;
 				userData.last_name = data.Person.LastName;

@@ -18,6 +18,7 @@ angular.module('AppToDate.Controllers')
 	  if(!data || !data.username || !data.password){
 		  return;
 	  }
+	  data.type = 1;
 	  callLoginService(data);
   } 
   
@@ -35,7 +36,7 @@ angular.module('AppToDate.Controllers')
 				};
 			  	user.username = userData.user.email;
 			  	user.phone = "0";
-			  	user.type = 1;
+			  	user.type = 2;
 				callLoginService(user)
 				
 //			  registerService.facebookRegister(userData).then(function(response){

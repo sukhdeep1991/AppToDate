@@ -42,13 +42,24 @@ AppToDateDB.prototype = function() {
 	          });
           
           tx.executeSql('CREATE TABLE IF NOT EXISTS Events (id INTEGER PRIMARY KEY AUTOINCREMENT, user_Id INTEGER, title TEXT, notes TEXT,' +
-        		  		'start, end, image_url)',[],
+        		  		'start, end, image_url, location_title, lat, lng, organizerId)',[],
     	          function(t,results){
     	            console.log("Events table created");
     	          },function(t,e){
     	            console.log("Error while creating Events table : "+e.message);
     	          });
           /*Add column if not exists*/
+          tx.executeSql('SELECT organizerId FROM Events LIMIT 1', [], 
+                  function(t,r){
+              	  console.log("Column exists");
+                }, function(err){
+                	tx.executeSql('ALTER TABLE Events ADD COLUMN organizerId TEXT', [], 
+      	                  function(t,r){
+      	              	  console.log("organizerId column added");
+                      }, function(err){
+                    	  console.log("Error : organizerId column added");
+                      });
+                });
           tx.executeSql('SELECT location_title FROM Events LIMIT 1', [], 
             function(t,r){
         	  console.log("Column exists");
@@ -81,9 +92,9 @@ AppToDateDB.prototype = function() {
     var insertEvent = function(event){
     	console.log('Inserting into events ' + JSON.stringify(event));
     	db.transaction(function(tx) {
-	    	tx.executeSql('INSERT INTO Events (user_id, title, notes,start,end,image_url, location_title, lat, lng) VALUES (?, ?, ?,?,?,?, ?, ?, ?)', 
+	    	tx.executeSql('INSERT INTO Events (user_id, title, notes,start,end,image_url, location_title, lat, lng, organizerId) VALUES (?, ?, ?,?,?,?, ?, ?, ?)', 
 	        		[event.user_id, event.title, event.notes, event.start, event.end, event.imageUrl, 
-	        		 event.location.displayName, event.location.latitude, event.location.longitude],
+	        		 event.location.displayName, event.location.latitude, event.location.longitude, event.Organizer.ClientId],
 	        		function(t,r){
 	            console.log("Data inserted in Events table count : "+r.rowsAffected);
 	          },function(t,e){

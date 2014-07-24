@@ -58,14 +58,18 @@ angular.module('AppToDate.Controllers')
 		
 		console.log("Event to create : " +JSON.stringify(event));
 		event.duration = (event.end - event.start) != 0 ? (event.end - event.start)/60000 : 0; 
-		event.user_id = $scope.userDetails.user_id;
 		var mapPosition = googleMapService.getCurrentMapLocation();
 		event.imageUrl = event.file;
 		event.location = {
 			displayName: angular.element("#enterlocation").val(),
 			latitude: mapPosition.lat,
 			longitude: mapPosition.lng
-		} 
+		};
+		event.Organizer = {
+			"TimeZoneInfo": "UTC",
+			"Id": $scope.userDetails.id,
+			"ClientId": $scope.userDetails.user_id
+		};
 		console.log("Creating Event : " +JSON.stringify(event) )
 		eventService.createEvent(event).then(function(response){
 			console.log('Event created successfully : ' + JSON.stringify(event));

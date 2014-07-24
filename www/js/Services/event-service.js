@@ -1,19 +1,21 @@
 angular.module('AppToDate.Services')
-.factory('eventService',function($http,$q,$filter, $location, $window){
+.factory('eventService',function(httpResource,$q,$filter, $location, $window){
 	return {
 		createEvent : function(event){
 			var deferred = $q.defer();
-
-            $.when(DB.insertEvent(event)).then(
-              function(data) {
-                console.log("event saved successfully : " + JSON.stringify(event));
-                deferred.resolve(event);
-              },
-              function(errorMsg) {
-                console.log("Error while saving event");
-                deferred.reject(errorMsg);
-            });
-
+			httpResource.loadUrl("Calendar/Create", "POST", event).success(function(eventData){
+	            $.when(DB.insertEvent(event)).then(
+	              function(data) {
+	                console.log("event saved successfully : " + JSON.stringify(event));
+	                deferred.resolve(event);
+	              },
+	              function(errorMsg) {
+	                console.log("Error while saving event");
+	                deferred.reject(errorMsg);
+	            });
+			}).error(function(data){
+				console.log("Error occured while saving the event : "+ JSON.stringify(data));
+			});
             return deferred.promise;
 		},
 		
