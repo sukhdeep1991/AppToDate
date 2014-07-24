@@ -58,6 +58,7 @@
 <script src="js/Controllers/create-event-controller.js"></script>
 <script src="js/Controllers/create-event-attendees-controller.js"></script>
 <script src="js/Controllers/view-event-controller.js"></script>
+<script src="js/Controllers/upgrade-controller.js"></script>
 
 <script type="text/javascript">
 	var DB = new AppToDate();
@@ -76,7 +77,7 @@
 </head>
 <body ng-app="AppToDate" animation="slide-left-right-ios7"
 	data-ng-controller="parentController">
-	<nav data-ng-show="userDetails">
+	<nav data-ng-show="!userDetails">
 		<!--Top Navigation -->
 		<div class="navbar navbar-inverse">
 			<div class="container padding-none">
@@ -99,6 +100,8 @@
 								<img class="img-responsive" ng-src="{{imageSrc}}" alt="" />
 							</div>
 							<a href="#/profile">Profile</a></li>
+						<li>
+							<a href="#/upgrade">Upgrade</a></li>
 
 					</ul>
 				</div>

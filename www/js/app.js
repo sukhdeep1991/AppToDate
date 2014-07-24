@@ -136,6 +136,11 @@ angular.module('AppToDate', [
   		templateUrl: "js/Templates/viewEvent.html",
           controller: 'viewEventCtrl'
         })
+        .state('upgrade', {
+            url: "/upgrade",
+    		templateUrl: "js/Templates/upgrade.html",
+            controller: 'upgradeCtrl'
+          })
 
 
   $urlRouterProvider.otherwise('/login');
