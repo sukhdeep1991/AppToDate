@@ -13,40 +13,47 @@
 	<div role="main" class="container theme-showcase">
 		<div class="tab-pane" data-ng-show="tab == 'details'">
 			<section>
-				<form role="form" id="details">
+				<form role="form" id="details" name="eventForm">
 					<div class="center-block margin-bottom error"
 						data-ng-show="errorMessage">
 						<h4>{{errorMessage}}</h4>
 					</div>
 
-					<div class="form-group no-label">
-						<label for="title"></label> <input type="text"
-							class="form-control" id="title" placeholder="Title" required=""
-							ng-model="event.title">
+					<div class="form-group has-feedback margin-top3">
+						<input type="text" name="title" class="form-control" id="title"
+							placeholder="Title" required="" ng-model="event.title"> <span
+							class="glyphicon form-control-feedback"
+							data-ng-class="{'input-invalid': eventForm.title.$invalid, 'input-valid': !eventForm.title.$invalid}"></span>
 					</div>
 
-					<div class="form-group no-label">
-						<textarea class="form-control" id="notes" placeholder="Notes"
-							ng-model="event.notes"></textarea>
+					<div class="form-group no-label has-feedback">
+						<textarea class="form-control" id="notes" name="notes"
+							placeholder="Notes" ng-model="event.notes"></textarea>
 					</div>
 
-					<div class="form-group no-label">
-						<input type="date" class="form-control" id="date"
-							placeholder="Date" ng-model="event.date" placeholder="Date">
+					<div class="form-group no-label has-feedback">
+						<input type="date" class="form-control" name="date" id="date"
+							placeholder="Date" ng-model="event.date" placeholder="Date"
+							required><span class="glyphicon form-control-feedback"
+							data-ng-class="{'input-invalid': eventForm.date.$invalid, 'input-valid': !eventForm.date.$invalid}"></span>
 					</div>
 					<div class="form-group form-control-left margin-top">
-						<div class="form-left-spinner">
+						<div class="form-left-spinner has-feedback">
 							<label for="textinput">Start</label>
 							<div class="input-append spinner" data-trigger="spinner">
-								<input type="time" data-rule="quantity" id="startTime"
-									ng-model="event.startTime">
+								<input type="time" name="start" data-rule="quantity"
+									id="startTime" ng-model="event.startTime" required><span
+									class="glyphicon form-control-feedback"
+									data-ng-class="{'input-invalid': eventForm.start.$invalid, 'input-valid': !eventForm.start.$invalid}"></span>
 							</div>
 						</div>
-						<div class="form-left-spinner">
+						<div class="form-left-spinner has-feedback">
 							<label for="textinput">End</label>
 							<div class="input-append spinner" data-trigger="spinner">
-								<input type="time" data-rule="quantity" id="endTime"
-									ng-model="event.endTime">
+								<input type="time" name="end" data-rule="quantity" id="endTime"
+									ng-model="event.endTime" required><span
+									class="glyphicon form-control-feedback"
+									data-ng-class="{'input-invalid': eventForm.end.$invalid, 'input-valid': !eventForm.end.$invalid}"></span>
 							</div>
 						</div>
 					</div>
@@ -240,7 +247,27 @@
 		</div>
 		<a href="" id="upload-photo"
 			class="btn btn-primary btn-lg btn-block btn-skylight margin-top4"
-			data-ng-click="createEvent(event)">Create Event</a>
+			data-ng-disabled="eventForm.$invalid"
+			data-ng-click="showReminderModal()">Create Event</a>
 	</div>
 </div>
+<!-- Dialog model for remind before -->
+<div modal="showModal" close="cancel()">
+	<div class="modal-header">
+		<h4>Reminder</h4>
+	</div>
+	<div class="modal-body">
+		<p>Remind me about event before</p>
+		<div class="form-group no-label">
+			<select data-ng-model="event.remindBefore" style="margin: auto">
+				<option data-ng-repeat="value in timeSpans" value="{{value}}">{{value}}</option>
+			</select> minutes
+		</div>
+	</div>
+	<div class="modal-footer">
+		<button class="btn btn-success" ng-click="createEvent(event)">Set
+			Reminder</button>
+	</div>
+</div>
+
 </ion-content> </ion-view>

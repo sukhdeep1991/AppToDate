@@ -4,12 +4,16 @@ angular.module('AppToDate.Controllers')
 	$scope.minDate = new Date();
 	$scope.mapLoaded = false;
 	$scope.tab = 'details';
+	$scope.event = {
+		remindBefore: "5"
+	};
+	$scope.timeSpans = ['5', '10', '15', '20', '25', '30', '35', '40', '45', '50', '55', '60'];
+	$scope.showModal = false;
 	
 	$scope.uploadImage = function(){
 		imageService.getPicture(true, function(imageURI){
 			console.log("Setting image for event: "+ imageURI);
 			$scope.$apply(function(){
-				$scope.event = $scope.event || {};
 				$scope.event.file = imageURI;
 			});
 			
@@ -30,10 +34,13 @@ angular.module('AppToDate.Controllers')
 		if(!$scope.mapLoaded){
 			googleMapService.showMapInDiv('map', function(){
 				googleMapService.setLocationSearchbox('enterlocation');
-				$scope.mapLoaded = true;	
-				//console.log("Current positions : " + JSON.stringify());
+				$scope.mapLoaded = true;
 			});
 		}
+	}
+	
+	$scope.showReminderModal = function(){
+		$scope.showModal = true;
 	}
 	
 	$scope.createEvent = function(event){
@@ -60,6 +67,7 @@ angular.module('AppToDate.Controllers')
 		event.duration = (event.end - event.start) != 0 ? (event.end - event.start)/60000 : 0; 
 		var mapPosition = googleMapService.getCurrentMapLocation();
 		event.imageUrl = event.file;
+		event.user_id = $scope.userDetails.user_id;
 		event.location = {
 			displayName: angular.element("#enterlocation").val(),
 			latitude: mapPosition.lat,
@@ -75,10 +83,10 @@ angular.module('AppToDate.Controllers')
 			console.log('Event created successfully : ' + JSON.stringify(event));
 			//prepare calendar options
 			var calOptions = window.plugins.calendar.getCalendarOptions();
-			calOptions.firstReminderMinutes = 5;		
+			calOptions.firstReminderMinutes = event.remindBefore;		
 			
-			window.plugins.calendar.createEvent(event.title,event.location,event.notes,
-					event.start,event.end,success,error);
+			window.plugins.calendar.createEventWithOptions(event.title,event.location,event.notes,
+					event.start,event.end,calOptions,success,error);
 			
 			$location.path('/calendar');
 		}, 

@@ -10,42 +10,43 @@ angular.module('AppToDate', [
                             'AppToDate.Controllers',
                             'AppToDate.Services',
                             'AppToDate.Directives',
-                            'AppToDate.Filters'])
+                            'AppToDate.Filters',
+                            'ui.bootstrap.modal'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
     StatusBar.styleDefault();
   //Admob show banner
-    admob.createBannerView(
-  	     {
-  	       'publisherId': 'ca-app-pub-9570512162432804/8372030973',
-  	       'adSize': admob.AD_SIZE.SMART_BANNER,
-  	       'positionAtTop' : true
-  	     },
-  	     function(response){
-  	    	 console.log("Success calling admob.createBannerView : " + JSON.stringify(response));
-  	    	 admob.requestAd(
-  	    		     {
-  	    		       'isTesting': true,
-  	    		     },
-  	    		     function(requestAdResponse){
-  	    		    	 console.log("Success calling admob.requestAd : " + JSON.stringify(requestAdResponse));
-  	    		     },
-  	    		     function(error){
-  	    		    	 console.log("Error occurred while calling admob.requestAd : " + JSON.stringify(error));
-  	    		     }
-  	    		 );
-  	     },
-  	     function(error){
-  	    	 console.log("Error occurred while calling admob.createBannerView : " + JSON.stringify(error));
-  	     }
-  	 );
-    document.addEventListener('onDismissScreen', function(data){
-    	console.log("On dismiss screen response");
-    });
-    document.addEventListener('onReceiveAd', function(data){
-    	console.log("onReceiveAd response");
-    });
+//    admob.createBannerView(
+//  	     {
+//  	       'publisherId': 'ca-app-pub-9570512162432804/8372030973',
+//  	       'adSize': admob.AD_SIZE.SMART_BANNER,
+//  	       'positionAtTop' : true
+//  	     },
+//  	     function(response){
+//  	    	 console.log("Success calling admob.createBannerView : " + JSON.stringify(response));
+//  	    	 admob.requestAd(
+//  	    		     {
+//  	    		       'isTesting': true,
+//  	    		     },
+//  	    		     function(requestAdResponse){
+//  	    		    	 console.log("Success calling admob.requestAd : " + JSON.stringify(requestAdResponse));
+//  	    		     },
+//  	    		     function(error){
+//  	    		    	 console.log("Error occurred while calling admob.requestAd : " + JSON.stringify(error));
+//  	    		     }
+//  	    		 );
+//  	     },
+//  	     function(error){
+//  	    	 console.log("Error occurred while calling admob.createBannerView : " + JSON.stringify(error));
+//  	     }
+//  	 );
+//    document.addEventListener('onDismissScreen', function(data){
+//    	console.log("On dismiss screen response");
+//    });
+//    document.addEventListener('onReceiveAd', function(data){
+//    	console.log("onReceiveAd response");
+//    });
   });
 })
 

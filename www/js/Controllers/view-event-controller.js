@@ -49,9 +49,8 @@ function($scope, $filter, $location, imageService,
 		$scope.tab = 'location';
 		if (!$scope.mapLoaded) {
 			googleMapService.showMapInDiv('map', function() {
-				googleMapService.setLatLng($scope.event.lat, $scope.event.lng);
 				$scope.mapLoaded = true;
-			});
+			}, $scope.event);
 		}
 	}
 });
