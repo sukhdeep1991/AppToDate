@@ -43,9 +43,7 @@ angular.module('AppToDate.Services')
 	            function(error){
 	            	console.log("Error while fetching deviceId: " + JSON.stringify(error));
 		            deferred.reject(error);
-	            }
-	            		
-		
+	            });
 	}
 	
 	return {
