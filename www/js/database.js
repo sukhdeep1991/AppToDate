@@ -86,9 +86,50 @@ AppToDateDB.prototype = function() {
               }, function(err){
             	  console.log("Error : lng column added");
                 });
-          })
+          });
+          
+          tx.executeSql('CREATE TABLE IF NOT EXISTS DeviceId (id INTEGER PRIMARY KEY AUTOINCREMENT, device_id TEXT)',[],
+	          function(t,results){
+	            console.log("DeviceId table created");
+	          },function(t,e){
+	            console.log("Error while creating DeviceId table : "+e.message);
+	          });
           
         });
+	}
+	
+	var insertDeviceId = function(deviceId){
+    	console.log('Inserting into DeviceId ' + JSON.stringify(deviceId));
+    	db.transaction(function(tx) {
+			tx.executeSql('INSERT INTO DeviceId (device_id) VALUES (?)', 
+	        		[deviceId],
+	        		function(t,r){
+	            console.log("Data inserted in DeviceId table count : "+r.rowsAffected);
+	          },function(t,e){
+	
+	            console.log("Error while inserting data in DeviceId table : "+ e.message);
+	          });
+    	});
+	}
+	
+	var selectDeviceId = function(){
+		var deferred = $.Deferred();
+    	db.transaction(function(tx) {
+            tx.executeSql('SELECT device_id FROM DeviceId LIMIT 1', [], 
+              function(t,r){
+                if(r.rows.length){
+                	console.log("device_id found");
+                	var row = r.rows.item(0);
+                	deferred.resolve(row['device_id']);
+                } else {
+                	deferred.resolve(null);
+                }
+            }, function(t,e){
+            	console.log("Error while selecting DeviceId data : "+ e.message);
+            	deferred.reject(e);
+            });
+    	});            
+        return deferred.promise();
 	}
 	
     var insertEvent = function(event){
@@ -360,7 +401,9 @@ AppToDateDB.prototype = function() {
     getLoggedInUser : getLoggedInUser,
     insertEvent: insertEvent,
     getUserEvents: getUserEvents,
-    getEventById: getEventById
+    getEventById: getEventById,
+    insertDeviceId: insertDeviceId,
+    selectDeviceId: selectDeviceId
   }
 }();
 return window.AppToDate=AppToDateDB;

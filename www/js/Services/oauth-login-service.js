@@ -18,31 +18,46 @@ angular.module('AppToDate.Services')
 			var deferred = $q.defer();
             console.log('Authenticating user');
             user.accessToken = appConfig.accessToken;
-			httpResource.loadUrl("authentication/login", "POST", user).success(function(data){
-				console.log("User authenticated")
-				var userData = {};
-				userData.id = data.Person.Id;
-				userData.user_id = data.Person.ClientId;
-				userData.first_name = data.Person.FirstName;
-				userData.last_name = data.Person.LastName;
-				userData.access_token = appConfig.accessToken;
-				userData.expired_in = data.TokenExpiryTime;
-				userData.refresh_token = data.RefreshToken;
-				appConfig.authorizationToken = data.AuthorizationToken;
-				
-				$.when(DB.insertLoginDetail(userData)).then(
-	              function(data) {
-	                console.log("Saved login information in db : " + JSON.stringify(userData));
-					deferred.resolve(userData);
-	              },
-	              function(errorMsg) {
-	                console.log("Error while saving login information");
-					deferred.resolve(false);
-	            });	
-			}).error(function(data, status) {
-				console.log("Login failed: " + JSON.stringify(user));
-				deferred.reject(data);
-			});
+            $.when(DB.selectDeviceId()).then(
+	            function(deviceId) {
+	            	if(deviceId){
+	            		console.log("DeviceId found: " + JSON.stringify(deviceId) + " : Setting to login info");
+	            		user.deviceId = deviceId;
+	            		httpResource.loadUrl("authentication/login", "POST", user).success(function(data){
+	        				console.log("User authenticated")
+	        				var userData = {};
+	        				userData.id = data.Person.Id;
+	        				userData.user_id = data.Person.ClientId;
+	        				userData.first_name = data.Person.FirstName;
+	        				userData.last_name = data.Person.LastName;
+	        				userData.access_token = appConfig.accessToken;
+	        				userData.expired_in = data.TokenExpiryTime;
+	        				userData.refresh_token = data.RefreshToken;
+	        				appConfig.authorizationToken = data.AuthorizationToken;
+	        				
+	        				$.when(DB.insertLoginDetail(userData)).then(
+	        	              function(savedData) {
+	        	                console.log("Saved login information in db : " + JSON.stringify(userData));
+	        					deferred.resolve(userData);
+	        	              },
+	        	              function(errorMsg) {
+	        	                console.log("Error while saving login information");
+	        					deferred.resolve(false);
+	        	            });	
+	        			}).error(function(data, status) {
+	        				console.log("Login failed: " + JSON.stringify(user));
+	        				deferred.reject(data);
+	        			});
+	             	} else {
+	             		console.log("DeviceId not found cannot login");
+	             		deferred.reject(deviceId);
+	             	}
+	            },
+	            function(errorMsg) {
+	              console.log("Error while fetching deviceId: " + JSON.stringify(errorMsg));
+	              deferred.reject(errorMsg);
+	          });
+			
 			return deferred.promise;			
 		}
 	}
