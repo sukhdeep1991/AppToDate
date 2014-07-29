@@ -46,7 +46,7 @@ angular.module('AppToDate.Controllers')
 				group.groupPersonAssociations = selectedFriends;
 				group.Owner = {
 						'ClientId': $scope.userDetails.user_id,
-						'FirstName' : $scpope.userDetails.first_name,
+						'FirstName' : $scope.userDetails.first_name,
 						'LastName': $scope.userDetails.last_name
 				}
 				userService.createGroup(group).then(function(response){

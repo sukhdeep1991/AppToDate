@@ -1,10 +1,10 @@
 <ion-view title="{{navTitle}}"> <ion-content> <!-- Nav tabs -->
 <ul class="nav nav-tabs events" id="tab">
-	<li data-ng-class="{'active' : tab == 'details'}"><a href=""
+	<li data-ng-class="{'active' : tab == 'details'}"><a
 		data-ng-click="loadEventDetails()">Details</a></li>
-	<li data-ng-class="{'active' : tab == 'attendees'}"><a href=""
+	<li data-ng-class="{'active' : tab == 'attendees'}"><a
 		data-ng-click="loadAttendees()">Attendees</a></li>
-	<li data-ng-class="{'active' : tab == 'location'}"><a href=""
+	<li data-ng-class="{'active' : tab == 'location'}"><a
 		data-ng-click="loadGoogleMap()">Location</a></li>
 </ul>
 <!-- Tab panes -->
@@ -71,7 +71,7 @@
 								<span data-ng-hide="event.file">Upload Image</span> <span
 								data-ng-show="event.file">Change</span> <input type="text"
 								readonly="readonly" data-ng-click="uploadImage()">
-							</span> <a href="" class="input-group-addon btn btn-default"
+							</span> <a class="input-group-addon btn btn-default"
 								data-ng-show="event.file" data-ng-click="event.file = undefined">Remove</a>
 						</div>
 					</div>
@@ -116,7 +116,8 @@
 										data-ng-class="{'margin-top3': $index == 0, 'margin-top-checkbox': $index != 0}"
 										data-ng-repeat="contact in contacts | filter: {'first_name' : searchAttendees.contact}">
 										<label> <input type="checkbox"
-											data-ng-model="contact.isSelected"> {{contact.first_name}}
+											data-ng-model="contact.isSelected">
+											{{contact.first_name}}
 										</label>
 									</div>
 								</form>
@@ -181,7 +182,7 @@
 				</form>
 			</section>
 		</div>
-		<a href="" id="upload-photo"
+		<a id="upload-photo"
 			class="btn btn-primary btn-lg btn-block btn-skylight margin-top4"
 			data-ng-disabled="eventForm.$invalid"
 			data-ng-click="showReminderModal()">Create Event</a>

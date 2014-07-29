@@ -85,7 +85,7 @@ angular.module('AppToDate.Controllers')
 		if($scope.contacts && $scope.contacts.length > 0){
 			var filtered = $filter('filter')($scope.contacts, {'isSelected': true});
 			if(filtered && filtered.length > 0){
-				angular.each(filtered,function(item){
+				angular.forEach(filtered,function(item){
 					var attendee = {
 						AppToDateAttendee :{
 							Person: {
