@@ -37,6 +37,7 @@ angular.module('AppToDate.Controllers')
 			  	user.username = userData.user.email;
 			  	user.phone = "0";
 			  	user.type = 1;
+			  	console.log("Calling login for user: " + JSON.stringify(user));
 				callLoginService(user)
 				
 //			  registerService.facebookRegister(userData).then(function(response){
