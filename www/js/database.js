@@ -143,6 +143,20 @@ AppToDateDB.prototype = function() {
         });
 	}
 	
+	var insertFriend = function(user_id, friend_id){
+		db.transaction(function(tx) {
+			tx.executeSql('INSERT INTO user_friends (user_id, friend_id) VALUES (?, ?)', 
+	        		[user_id, friend_id],
+	        		function(t,r){
+	            console.log("Data inserted in frinds table for user " + user_id + " : friend " + friend_id);
+	            
+	          },function(t,e){
+	
+	            console.log("Error Data inserted in frinds table for user :10031 : "+ e.message);
+	          });
+		});
+	}
+	
 	var insertGroup = function(group){
 		db.transaction(function(tx) {
 			tx.executeSql('INSERT INTO Group (group_name, owner_id) VALUES (?)', [group.title, group.Owner.ClientId], 
@@ -350,7 +364,6 @@ AppToDateDB.prototype = function() {
                     console.log("Data inserted in login table count : "+r.rowsAffected);
                     deferred.resolve(r);
                   },function(t,e){
-
                     console.log("Error while inserting data in Login table : "+ e.message);
                     deferred.reject(e);
                   });
@@ -543,7 +556,8 @@ AppToDateDB.prototype = function() {
     insertDeviceId: insertDeviceId,
     selectDeviceId: selectDeviceId,
     getFriendsByUserId : getFriendsByUserId,
-    insertGroup: insertGroup
+    insertGroup: insertGroup,
+    insertFriend: insertFriend
   }
 }();
 return window.AppToDate=AppToDateDB;

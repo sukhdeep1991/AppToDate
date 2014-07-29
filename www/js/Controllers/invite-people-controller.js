@@ -2,7 +2,7 @@ angular
 .module('AppToDate.Controllers')
 .controller(
 		'invitePeopleCtrl',
-		function($scope, $timeout, $filter) {
+		function($scope, $timeout, $filter, userService) {
 			$scope.contacts = [];
 			$scope.searchKey = "";
 			$scope.limit = 40;
@@ -30,12 +30,12 @@ angular
 					}, onError, options);
 				}
 				
-				console.log("Fetching friend facebook");
-				facebookConnectPlugin.api("/me/friends",["user_friends"], function(response){
-					console.log("Friend api response : " + JSON.stringify(response));
-				}, function(response){
-					console.log("Error friend api response: " + JSON.stringify(response));
-				});
+//				console.log("Fetching friend facebook");
+//				facebookConnectPlugin.api("/me/friends",["user_friends"], function(response){
+//					console.log("Friend api response : " + JSON.stringify(response));
+//				}, function(response){
+//					console.log("Error friend api response: " + JSON.stringify(response));
+//				});
 			}
 
 			var onError = function(contactError) {
@@ -47,23 +47,43 @@ angular
 			$scope.sendInvites = function(contacts) {
 				var phones = [];
 				var emails = [];
+				var users = [];
 				if(contacts){
 					$filter('filter')(contacts, $scope.searchKey).map(function(contact) {
+						var userSelected = undefined;
+						
+        				
 						var selectedPhoneNumbers = $filter('filter')(contact.phoneNumbers, {isSelected: true});
 						var selectedEmails = $filter('filter')(contact.emails, {isSelected: true});
 						if(selectedPhoneNumbers){
 							selectedPhoneNumbers.map(function(phoneNumber){
 								phones.push(phoneNumber.value);
+								userSelected = phoneNumber.value;
 							});
 						}
 						if(selectedEmails){
 							selectedEmails.map(function(email){
 								emails.push(email.value);
+								userSelected = email.value;
 							});
+						}
+						if(userSelected){
+							var userData = {};
+	        				//userData.username = user.username;
+	        				//userData.id = data.Person.Id;
+	        				//userData.user_id = data.Person.ClientId;
+	        				userData.first_name = contact.displayName;
+	        				userData.last_name = 'test';
+	        				userData.access_token = appConfig.accessToken;
+	        				//userData.expired_in = data.TokenExpiryTime;
+	        				//userData.refresh_token = data.RefreshToken;
+	        				//appConfig.authorizationToken = data.AuthorizationToken;
+							users.push(userData);
 						}
 					});
 					sendPhoneInvites(phones);
 					sendEmailInvites(emails);
+					saveUsers(users);
 				} else {
 					console.log("Empty contacts");
 				}
@@ -99,5 +119,9 @@ angular
 					    isHtml:  true
 					});
 				}
-			}			
+			}
+			
+			var saveUsers = function(users){
+				userService.addInvitedAttendees(users, $scope.userDetails.user_id);
+			}
 		})

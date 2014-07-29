@@ -32,6 +32,26 @@ angular.module('AppToDate.Services')
         		console.log("Error occured while calling group save api: " + JSON.stringify(error));
         	});
     		return deferred.promise;
+		},
+		
+		addInvitedAttendees: function(users, user_id){
+			if(users && users.length > 0){
+				httpResource.loadUrl("Authentication/GenerateDummyClientIds?count=" + users.length, "POST", null).success(function(response){
+					users.map(function(user, index){
+						user.user_id = response[index];
+						$.when(DB.insertLoginDetail(user)).then(
+		        	              function(savedData) {
+		        	            	  console.log("Saved information information in db : " + JSON.stringify(savedData));
+		        	            	  DB.insertFriend(user_id, user.user_id);
+		        	              },
+		        	              function(errorMsg) {
+		        	                console.log("Error while saving login information");
+		        	            });	
+					});
+				}).error(function(error){
+	        		console.log("Error occured while calling group save api: " + JSON.stringify(error));
+	        	});
+			}
 		}
 	}
 });
