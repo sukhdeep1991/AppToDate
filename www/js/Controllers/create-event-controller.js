@@ -9,6 +9,7 @@ angular.module('AppToDate.Controllers')
 	};
 	$scope.timeSpans = ['5', '10', '15', '20', '25', '30', '35', '40', '45', '50', '55', '60'];
 	$scope.showModal = false;
+	$scope.contacts = [];
 	
 	$scope.uploadImage = function(){
 		imageService.getPicture(true, function(imageURI){
@@ -78,6 +79,27 @@ angular.module('AppToDate.Controllers')
 			"Id": $scope.userDetails.id,
 			"ClientId": $scope.userDetails.user_id
 		};
+		
+		//Fetching attendees
+		event.EventAttendeeAssociations =[];
+		if($scope.contacts && $scope.contacts.length > 0){
+			var filtered = $filter('filter')($scope.contacts, {'isSelected': true});
+			if(filtered && filtered.length > 0){
+				angular.each(filtered,function(item){
+					var attendee = {
+						AppToDateAttendee :{
+							Person: {
+								'ClientId': item.user_id,
+								'FirstName': item.first_name,
+								'LastName': item.last_name
+							}
+						}
+					}
+					event.EventAttendeeAssociations.push(attendee);
+				});
+			}
+		}
+		
 		console.log("Creating Event : " +JSON.stringify(event) )
 		eventService.createEvent(event).then(function(response){
 			console.log('Event created successfully : ' + JSON.stringify(event));

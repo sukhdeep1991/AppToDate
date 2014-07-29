@@ -1,29 +1,19 @@
 angular.module('AppToDate.Controllers')
-.controller('createEvent.attendeesCtrl', function($scope, $filter, $location, imageService, eventService, googleMapService) {
-	$scope.attendeeTab = 'emails';
+.controller('createEvent.attendeesCtrl', function($scope, $filter, $location, imageService, eventService, googleMapService, userService) {
+	$scope.attendeeTab = 'contacts';
 	$scope.searchAttendees = {
-		email : '',
 		group: '',
-		contact: '',
-		facebook: ''
+		contact: ''
 	}
 	
-	$scope.selectAll = function(list, searchValue, flag){
-		var filtered = flag ? $filter('filter')(list, {'value' : searchValue}) : list; 
+	$scope.selectAllContacts = function(list, searchValue, flag){
+		var filtered = flag ? $filter('filter')(list, {'first_name' : searchValue}) : list; 
 		if(filtered && filtered.length > 0){
 			filtered.map(function(item){
 				item.isSelected = flag;
 			});
 		}
 	}
-	
-	$scope.emails = [
-	                 {"value" :"test@123.com"},
-	                 {"value" :"test@097.com"},
-	                 {"value" :"test@457.com"},
-	                 {"value" :"test@sfg.com"},
-	                 {"value" :"test@000.com"}
-	                 ];
 	
 	$scope.groups = [
 	                 { "id": 123, "value": "Group 1"},
@@ -33,19 +23,15 @@ angular.module('AppToDate.Controllers')
 	                 { "id": 123, "value": "Group 5"}
 	                 ];
 	
-	$scope.contacts = [
-	                   {"value" : "123"},
-	                   {"value" : "4564"},
-	                   {"value" : "678"},
-	                   {"value" : "356"},
-	                   {"value" : "9999"}
-	                   ];
 	
-	$scope.facebookFriends = [
-	                          {"id": 123, "value": "Friend1"},
-	                          {"id": 123, "value": "Friend2"},
-	                          {"id": 123, "value": "Friend3"},
-	                          {"id": 123, "value": "Friend4"},
-	                          {"id": 123, "value": "Friend5"}
-	                          ];
+	if ($scope.userDetails && $scope.userDetails.user_id) {
+		userService.getFriends($scope.userDetails.user_id).then(function(data){
+			console.log("Got friends : " + JSON.stringify(data));
+			angular.forEach(data,function(item){
+				$scope.contacts.push(item);
+			});
+		}, function(error){
+			console.log("Error occured while getFriends: "+ JSON.stringify(error));
+		})
+	}
 });

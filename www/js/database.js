@@ -107,6 +107,13 @@ AppToDateDB.prototype = function() {
 	            console.log("Error while creating DeviceId table : "+e.message);
 	          });
           
+          tx.executeSql('CREATE TABLE IF NOT EXISTS event_attendees (id INTEGER PRIMARY KEY AUTOINCREMENT, event_id INTEGER, user_id TEXT, status TEXT',[],
+	          function(t,results){
+	            console.log("event_attendees table created");
+	          },function(t,e){
+	            console.log("Error while creating event_attendees table : "+e.message);
+	          });
+          
 //          tx.executeSql('INSERT INTO user_friends (user_id, friend_id) VALUES (?, ?)', 
 //	        		['d464afc9-020b-4c48-9927-ea75d3cca2cf', '435e357c-aad1-4b5a-b914-5a9e39e92184'],
 //	        		function(t,r){
@@ -252,6 +259,17 @@ AppToDateDB.prototype = function() {
 	        		[event.user_id, event.title, event.notes, event.start, event.end, event.imageUrl, 
 	        		 event.location.displayName, event.location.latitude, event.location.longitude, event.remindBefore],
 	        		function(t,r){
+	    		if(event.EventAttendeeAssociations && event.EventAttendeeAssociations.length > 0){
+	    			event.EventAttendeeAssociations.map(function(item){
+	    				tx.executeSql('INSERT INTO event_attendees (event_id, user_id, status) values(?, ?, ?)',
+	    				[r.insertId, item.AppToDateAttendee.Person.ClientId, eventStatus.unknown],
+	    				function(a, b){
+	    					console.log("Data inserted in event_attendees table count : "+r.rowsAffected);
+	    				}, function(t,e){
+	    					console.log("Error while inserting data in event_attendees table : "+ e.message);
+	    				});
+	    			});
+	    		}
 	            console.log("Data inserted in Events table count : "+r.rowsAffected);
 	          },function(t,e){
 	

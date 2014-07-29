@@ -5,3 +5,10 @@ appConfig = {
 	inviteMessage: "You have been invited to use AppToDate. Please visit www.google.com to register.",
 	googleSenderId: "196925764211"
 };
+
+eventStatus = {
+	unknown: 0,
+	attending: 1,
+	mayBe: 2,
+	notAttending: 3
+};
