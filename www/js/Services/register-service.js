@@ -7,6 +7,7 @@ angular.module('AppToDate.Services')
 	            	if(deviceId){
 	            		console.log("DeviceId found: " + JSON.stringify(deviceId) + " : Setting to login info");
 	            		user.deviceId = deviceId;
+	            		user.deviceType = 1; //1 for android
 	            		console.log("Registering user : " + JSON.stringify(user));
 	            		httpResource.loadUrl("authentication/register", "POST", user).success(function(data){
 	            			console.log("Registering user api done: " + JSON.stringify(data));

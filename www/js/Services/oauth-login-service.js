@@ -23,6 +23,7 @@ angular.module('AppToDate.Services')
 	            	if(deviceId){
 	            		console.log("DeviceId found: " + JSON.stringify(deviceId) + " : Setting to login info");
 	            		user.deviceId = deviceId;
+	            		user.deviceType = 1; //1 for android
 	            		httpResource.loadUrl("authentication/login", "POST", user).success(function(data){
 	        				console.log("User authenticated")
 	        				var userData = {};

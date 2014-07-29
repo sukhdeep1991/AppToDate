@@ -95,7 +95,66 @@ AppToDateDB.prototype = function() {
 	            console.log("Error while creating DeviceId table : "+e.message);
 	          });
           
+          tx.executeSql('CREATE TABLE IF NOT EXISTS user_friends (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id TEXT, friend_id TEXT)',[],
+	          function(t,results){
+	            console.log("DeviceId table created");
+	          },function(t,e){
+	            console.log("Error while creating DeviceId table : "+e.message);
+	          });
+          
         });
+	}
+	
+	var getUsers = function(ids, deferred, tx){
+		var query = "select * FROM Login where user_id in (";
+		for(var i = 0 ; i < ids.length ; i++){
+			query += "?, ";
+		}
+		query = query.substring(0, query.lastIndexOf(",")) + ")";
+		console.log("Resulting query : " + query);
+		tx.executeSql(query, ids, 
+          function(t,r){
+	          if(r.rows.length){
+	        	  var row = r.rows.item(0);
+	        	  var users = [];
+	        	  for(var j = 0 ; j < r.rows.length ; j++){
+		        	  var row = r.rows.item(j);
+		        	  users.push(toUserData(row));
+	        	  }
+	        	  deferred.resolve(userData);
+	          } else {
+	        	  deferred.resolve(null);
+	          }
+	      },function(t,e){
+          console.log("Error while selecting user image : "+ e.message);
+          deferred.reject(e.message);
+        });
+	}
+	
+	var getFriendsByUserId = function(userId){
+		console.log("Fetching friends data for userId : " + userId);
+		var deferred = $.Deferred();
+    	db.transaction(function(tx) {
+            tx.executeSql('SELECT friend_id FROM user_friends where user_id = ?', [userId], 
+              function(t,r){
+                if(r.rows.length){
+                	console.log("friends found");
+                	var friendIds = [];
+                	for(var i = 0 ; i < r.rows.length ; i ++){
+                    	var row = r.rows.item(0);
+                    	friendIds.push(row['friend_id']);                    	
+                	}
+                	getUsers(friendIds, deferred, tx);
+                } else {
+                	console.log("no friends found");
+                	deferred.resolve(null);
+                }
+            }, function(t,e){
+            	console.log("Error while selecting DeviceId data : "+ e.message);
+            	deferred.reject(e);
+            });
+    	});            
+        return deferred.promise();
 	}
 	
 	var insertDeviceId = function(deviceId){
@@ -236,6 +295,18 @@ AppToDateDB.prototype = function() {
     return deferred.promise();
   }
   
+  var toUserData = function(row){
+	  var userData = { person : {}};
+	  userData.username = username;
+	  userData.first_name = row['first_name'];
+	  userData.last_name = row['last_name'];
+	  userData.access_token = row['access_token'];
+	  userData.user_id = row['user_id'];
+	  userData.login_time = row['login_time'];
+	  userData.expires_in = row['expires_in'];
+	  userData.refresh_token = row['refresh_token'];
+  }
+  
   var getLoggedInUser = function(username){
 	  var deferred = $.Deferred();
 	  console.log('finding user with email : ' + username)
@@ -244,15 +315,7 @@ AppToDateDB.prototype = function() {
 	        function(t,r){
 	          if(r.rows.length){
 	        	  var row = r.rows.item(0);
-	        	  var userData = { person : {}};
-	        	  userData.username = username;
-	        	  userData.first_name = row['first_name'];
-	        	  userData.last_name = row['last_name'];
-	        	  userData.access_token = row['access_token'];
-	        	  userData.user_id = row['user_id'];
-	        	  userData.login_time = row['login_time'];
-	        	  userData.expires_in = row['expires_in'];
-	        	  userData.refresh_token = row['refresh_token'];
+	        	  var userData = toUserData(row);
 	        	  deferred.resolve(userData);
 	          } else {
 	        	  deferred.resolve(null);
