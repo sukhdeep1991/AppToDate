@@ -28,11 +28,16 @@ function($scope, imageService) {
 	    console.log("Uploading image to : " + serverUrl);
 	    ft.upload(imageURL, serverUrl, 
     		function(response){
-	    	console.log("Image uploaded: " + JSON.stringify(response));		    
-			$scope.setUserImage("about:blank");
-			setTimeout(function(){
-				$scope.setUserImage(appConfig.apiUrl + "Image/Get?clientId=" + $scope.userDetails.user_id);
-			}, 1000);
+	    	$scope.$apply(function(){
+	    		console.log("Image uploaded: " + JSON.stringify(response));		    
+				$scope.setUserImage("about:blank");
+				setTimeout(function(){
+					$scope.$apply(function(){
+						$scope.setUserImage(appConfig.apiUrl + "Image/Get?clientId=" + $scope.userDetails.user_id);
+					});
+				}, 500);
+	    	});
+	    	
 	    }, function(response){
 	    	console.log("Image upload failed: " + JSON.stringify(response));
 	    }, options);
