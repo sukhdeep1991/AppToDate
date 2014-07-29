@@ -29,7 +29,6 @@ angular.module('AppToDate', [
              	    pushNotification.register(
              	    	    function(success){
              	    	    	console.log("Successfully registered the device : " + JSON.stringify(success));
-             	    	    	DB.insertDeviceId(success);
              	    	    },
              	    	    function(error){
              	    	    	console.log("Error occured while registering the device : " + JSON.stringify(error));
