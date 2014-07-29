@@ -97,4 +97,8 @@ angular.module('AppToDate.Controllers')
 	
 	var success = function(message) { console.log("Success: " + JSON.stringify(message)); };
 	var error = function(message) { console.log("Error: " + message); };
+	
+	$scope.createGroup = function(){
+		$location.path('/group/new');
+	}
 });

@@ -165,11 +165,16 @@ angular.module('AppToDate', [
   		templateUrl: "js/Templates/viewEvent.html",
           controller: 'viewEventCtrl'
         })
-        .state('upgrade', {
-            url: "/upgrade",
-    		templateUrl: "js/Templates/upgrade.html",
-            controller: 'upgradeCtrl'
-          })
+      .state('upgrade', {
+        url: "/upgrade",
+		templateUrl: "js/Templates/upgrade.html",
+        controller: 'upgradeCtrl'
+       })
+      .state('group', {
+          url: "/group/new",
+  		templateUrl: "js/Templates/create-group.html",
+          controller: 'createGroupCtrl'
+        });
 
 
   $urlRouterProvider.otherwise('/login');

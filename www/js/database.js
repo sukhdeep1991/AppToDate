@@ -102,6 +102,32 @@ AppToDateDB.prototype = function() {
 	            console.log("Error while creating DeviceId table : "+e.message);
 	          });
           
+//          tx.executeSql('INSERT INTO user_friends (user_id, friend_id) VALUES (?, ?)', 
+//	        		['d464afc9-020b-4c48-9927-ea75d3cca2cf', '435e357c-aad1-4b5a-b914-5a9e39e92184'],
+//	        		function(t,r){
+//	            console.log("Data inserted in frinds table for user :10031 :"+r.rowsAffected);
+//	          },function(t,e){
+//	
+//	            console.log("Error Data inserted in frinds table for user :10031 : "+ e.message);
+//	          });
+//          
+//          tx.executeSql('INSERT INTO user_friends (user_id, friend_id) VALUES (?, ?)', 
+//	        		['d464afc9-020b-4c48-9927-ea75d3cca2cf', '6ba9ab00-6992-4194-a8a6-9212441e5150'],
+//	        		function(t,r){
+//	            console.log("Data inserted in frinds table for user :10032 :"+r.rowsAffected);
+//	          },function(t,e){
+//	
+//	            console.log("Error Data inserted in frinds table for user :10032 : "+ e.message);
+//	          });
+//          
+//          tx.executeSql('INSERT INTO user_friends (user_id, friend_id) VALUES (?, ?)', 
+//	        		['d464afc9-020b-4c48-9927-ea75d3cca2cf', '0c61bf3c-200a-41c1-b6e5-7f81a920182b'],
+//	        		function(t,r){
+//	            console.log("Data inserted in frinds table for user :10033 :"+r.rowsAffected);
+//	          },function(t,e){
+//	
+//	            console.log("Error Data inserted in frinds table for user :10033 : "+ e.message);
+//	          });
         });
 	}
 	
@@ -112,16 +138,17 @@ AppToDateDB.prototype = function() {
 		}
 		query = query.substring(0, query.lastIndexOf(",")) + ")";
 		console.log("Resulting query : " + query);
+		console.log("ids : " + JSON.stringify(ids));
 		tx.executeSql(query, ids, 
           function(t,r){
 	          if(r.rows.length){
-	        	  var row = r.rows.item(0);
+	        	  console.log("users found : "+ r.rows.length);
 	        	  var users = [];
 	        	  for(var j = 0 ; j < r.rows.length ; j++){
 		        	  var row = r.rows.item(j);
 		        	  users.push(toUserData(row));
 	        	  }
-	        	  deferred.resolve(userData);
+	        	  deferred.resolve(users);
 	          } else {
 	        	  deferred.resolve(null);
 	          }
@@ -141,7 +168,7 @@ AppToDateDB.prototype = function() {
                 	console.log("friends found");
                 	var friendIds = [];
                 	for(var i = 0 ; i < r.rows.length ; i ++){
-                    	var row = r.rows.item(0);
+                    	var row = r.rows.item(i);
                     	friendIds.push(row['friend_id']);                    	
                 	}
                 	getUsers(friendIds, deferred, tx);
@@ -297,7 +324,7 @@ AppToDateDB.prototype = function() {
   
   var toUserData = function(row){
 	  var userData = { person : {}};
-	  userData.username = username;
+	  userData.username = row['email'];
 	  userData.first_name = row['first_name'];
 	  userData.last_name = row['last_name'];
 	  userData.access_token = row['access_token'];
@@ -305,6 +332,9 @@ AppToDateDB.prototype = function() {
 	  userData.login_time = row['login_time'];
 	  userData.expires_in = row['expires_in'];
 	  userData.refresh_token = row['refresh_token'];
+	  
+	  console.log("toUserData: " + JSON.stringify(userData));
+	  return userData;
   }
   
   var getLoggedInUser = function(username){
@@ -466,7 +496,8 @@ AppToDateDB.prototype = function() {
     getUserEvents: getUserEvents,
     getEventById: getEventById,
     insertDeviceId: insertDeviceId,
-    selectDeviceId: selectDeviceId
+    selectDeviceId: selectDeviceId,
+    getFriendsByUserId : getFriendsByUserId
   }
 }();
 return window.AppToDate=AppToDateDB;
