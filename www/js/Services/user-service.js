@@ -26,15 +26,21 @@ angular.module('AppToDate.Services')
             	item.Person.LastName = item.last_name;            	
             });
         	httpResource.loadUrl("Group/Post", "POST", group).success(function(response){
-        		DB.insertGroup(group);
-        		deferred.resolve(group);
+        		DB.insertGroup(group).then(function(data){
+        			deferred.resolve(group);
+        		}, function(error){
+        			console.log("errror in createGroup: "+ JSON.stringify(error));
+        		});
+        		
         	}).error(function(error){
         		console.log("Error occured while calling group save api: " + JSON.stringify(error));
+        		deferred.reject(error);
         	});
     		return deferred.promise;
 		},
 		
 		addInvitedAttendees: function(users, user_id){
+			var deferred = $q.defer();
 			if(users && users.length > 0){
 				httpResource.loadUrl("Authentication/GenerateDummyClientIds?count=" + users.length, "POST", null).success(function(response){
 					users.map(function(user, index){
@@ -48,10 +54,27 @@ angular.module('AppToDate.Services')
 		        	                console.log("Error while saving login information");
 		        	            });	
 					});
+					deferred.resolve(null);
 				}).error(function(error){
-	        		console.log("Error occured while calling group save api: " + JSON.stringify(error));
+	        		console.log("Error occured while generate dummy api: " + JSON.stringify(error));
+	        		deferred.resolve(null);
 	        	});
 			}
+    		return deferred.promise;
+		},
+		getGroups: function(userId){
+			var deferred = $q.defer();
+            console.log('Fetching groups');
+            $.when(DB.getGroupsForOwner(userId)).then(
+	            function(data) {
+	            	deferred.resolve(data);
+	            },
+	            function(errorMsg) {
+	              console.log("Error while fetching groups: " + JSON.stringify(errorMsg));
+	              deferred.reject(errorMsg);
+	          });
+			
+			return deferred.promise;			
 		}
 	}
 });

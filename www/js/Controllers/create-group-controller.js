@@ -41,6 +41,7 @@ angular.module('AppToDate.Controllers')
 		if($scope.friends && $scope.friends.length > 0){
 			var selectedFriends = $filter('filter')($scope.friends, {'isSelected': true});
 			if(selectedFriends && selectedFriends.length > 0){
+				$scope.setShowLoader(true);
 				var group = {};
 				group.title = title;
 				group.groupPersonAssociations = selectedFriends;
@@ -51,11 +52,12 @@ angular.module('AppToDate.Controllers')
 				}
 				userService.createGroup(group).then(function(response){
 					console.log("Group Inserted : " + JSON.stringify(response));
-					$scope.msg.success = 'Group created successfully';
-					$scope.group.title = '';
-					$scope.selectAllFriends($scope.friends, '', false)
+					$scope.setShowLoader(false);
+					$scope.goBack();
 				}, function(error){
 					console.log("Error occured userService.createGroup : " + JSON.stringify(error));
+					$scope.msg.error = 'Could not create group!';
+					$scope.setShowLoader(false);
 				});
 				return
 			}

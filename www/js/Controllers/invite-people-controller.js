@@ -122,6 +122,13 @@ angular
 			}
 			
 			var saveUsers = function(users){
-				userService.addInvitedAttendees(users, $scope.userDetails.user_id);
+				$scope.setShowLoader(true);
+				userService.addInvitedAttendees(users, $scope.userDetails.user_id).then(function(data){
+					$scope.setShowLoader(false);
+					$scope.$apply();
+				}, function(error){
+					$scope.setShowLoader(false);
+					$scope.$apply();
+				});
 			}
 		})

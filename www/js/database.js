@@ -18,7 +18,7 @@ AppToDateDB.prototype = function() {
             },function(t,e){
               console.log("Error while dropping Group_Master table : "+e.message);
             });
-          tx.executeSql('CREATE TABLE IF NOT EXISTS Group(id INTEGER PRIMARY KEY AUTOINCREMENT,group_Name TEXT, owner_id TEXT)',[],
+          tx.executeSql('CREATE TABLE IF NOT EXISTS AttendeeGroup(id INTEGER PRIMARY KEY AUTOINCREMENT,group_name TEXT, owner_id TEXT)',[],
             function(t,results){
               console.log("Group_Master table created");
             },function(t,e){
@@ -107,7 +107,7 @@ AppToDateDB.prototype = function() {
 	            console.log("Error while creating DeviceId table : "+e.message);
 	          });
           
-          tx.executeSql('CREATE TABLE IF NOT EXISTS event_attendees (id INTEGER PRIMARY KEY AUTOINCREMENT, event_id INTEGER, user_id TEXT, status TEXT',[],
+          tx.executeSql('CREATE TABLE IF NOT EXISTS event_attendees (id INTEGER PRIMARY KEY AUTOINCREMENT, event_id INTEGER, user_id TEXT, status TEXT)',[],
 	          function(t,results){
 	            console.log("event_attendees table created");
 	          },function(t,e){
@@ -143,6 +143,32 @@ AppToDateDB.prototype = function() {
         });
 	}
 	
+	var getGroupsForOwner = function(ownerId){
+		console.log("Fetching groups data for userId : " + ownerId);
+		var deferred = $.Deferred();
+		db.transaction(function(tx) {
+            tx.executeSql('SELECT * FROM AttendeeGroup where owner_id = ?', [ownerId], 
+              function(t,r){
+                if(r.rows.length){
+                	console.log("groups found");
+                	var groups = [];
+                	for(var i = 0 ; i < r.rows.length ; i ++){
+                    	var row = r.rows.item(i);
+                    	groups.push(row);                    	
+                	}
+                	deferred.resolve(groups);
+                } else {
+                	console.log("no groups found");
+                	deferred.resolve(null);
+                }
+            }, function(t,e){
+            	console.log("Error while selecting groups data : "+ e.message);
+            	deferred.reject(e);
+            });
+    	});            
+        return deferred.promise();
+	}
+	
 	var insertFriend = function(user_id, friend_id){
 		db.transaction(function(tx) {
 			tx.executeSql('INSERT INTO user_friends (user_id, friend_id) VALUES (?, ?)', 
@@ -158,8 +184,9 @@ AppToDateDB.prototype = function() {
 	}
 	
 	var insertGroup = function(group){
+		var deferred = $.Deferred();
 		db.transaction(function(tx) {
-			tx.executeSql('INSERT INTO Group (group_name, owner_id) VALUES (?)', [group.title, group.Owner.ClientId], 
+			tx.executeSql('INSERT INTO AttendeeGroup (group_name, owner_id) VALUES (?, ?)', [group.title, group.Owner.ClientId], 
 			function(t,r){
 				console.log("Result of insert query + " + JSON.stringify(r));
 				var personIds = [];
@@ -171,12 +198,14 @@ AppToDateDB.prototype = function() {
 			          console.log("Error while inserting group : "+ e.message);
 			          deferred.reject(e.message);
 			        });
-				});				
+				});
+				deferred.resolve(group);
 			},function(t,e){
 	          console.log("Error while inserting group : "+ e.message);
 	          deferred.reject(e.message);
 	        });
 		});
+        return deferred.promise();
 	}
 	
 	var getUsers = function(ids, deferred, tx){
@@ -557,7 +586,8 @@ AppToDateDB.prototype = function() {
     selectDeviceId: selectDeviceId,
     getFriendsByUserId : getFriendsByUserId,
     insertGroup: insertGroup,
-    insertFriend: insertFriend
+    insertFriend: insertFriend,
+    getGroupsForOwner: getGroupsForOwner
   }
 }();
 return window.AppToDate=AppToDateDB;

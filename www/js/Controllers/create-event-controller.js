@@ -10,6 +10,7 @@ angular.module('AppToDate.Controllers')
 	$scope.timeSpans = ['5', '10', '15', '20', '25', '30', '35', '40', '45', '50', '55', '60'];
 	$scope.showModal = false;
 	$scope.contacts = [];
+	$scope.groups = [];
 	
 	$scope.uploadImage = function(){
 		imageService.getPicture(true, function(imageURI){
@@ -45,6 +46,7 @@ angular.module('AppToDate.Controllers')
 	}
 	
 	$scope.createEvent = function(event){
+		$scope.setShowLoader(true);
 		event.start = new Date($filter('date')(event.date, 'MM-dd-yyyy'));
 		event.end = new Date($filter('date')(event.date, 'MM-dd-yyyy'))
 		console.log("Event to create : " +JSON.stringify(event));
@@ -109,11 +111,12 @@ angular.module('AppToDate.Controllers')
 			
 			window.plugins.calendar.createEventWithOptions(event.title,event.location,event.notes,
 					event.start,event.end,calOptions,success,error);
-			
+			$scope.setShowLoader(false);
 			$location.path('/calendar');
 		}, 
 		function(data){
 			console.log('Error occured while creating event');
+			$scope.setShowLoader(false);
 		});
 	}
 	
