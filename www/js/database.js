@@ -12,8 +12,13 @@ AppToDateDB.prototype = function() {
             },function(t,e){
               console.log("Error while creating Login table : "+e.message);
             });
-
-          tx.executeSql('CREATE TABLE IF NOT EXISTS Group_Master(id INTEGER PRIMARY KEY AUTOINCREMENT,group_Name TEXT)',[],
+    	 tx.executeSql('drop TABLE IF EXISTS Group_Master',[],
+            function(t,results){
+              console.log("Group_Master table dropped");
+            },function(t,e){
+              console.log("Error while dropping Group_Master table : "+e.message);
+            });
+          tx.executeSql('CREATE TABLE IF NOT EXISTS Group(id INTEGER PRIMARY KEY AUTOINCREMENT,group_Name TEXT, owner_id TEXT)',[],
             function(t,results){
               console.log("Group_Master table created");
             },function(t,e){
@@ -129,6 +134,28 @@ AppToDateDB.prototype = function() {
 //	            console.log("Error Data inserted in frinds table for user :10033 : "+ e.message);
 //	          });
         });
+	}
+	
+	var insertGroup = function(group){
+		db.transaction(function(tx) {
+			tx.executeSql('INSERT INTO Group (group_name, owner_id) VALUES (?)', [group.title, group.Owner.ClientId], 
+			function(t,r){
+				console.log("Result of insert query + " + JSON.stringify(r));
+				var personIds = [];
+				group.groupPersonAssociations.map(function(item){
+					tx.executeSql('INSERT INTO User_Group (group_id, user_name) VALUES (?, ?)', [r.insertId, item.user_id], 
+					function(t,r){
+						console.log("row inserted : " + item.user_id)
+					},function(t,e){
+			          console.log("Error while inserting group : "+ e.message);
+			          deferred.reject(e.message);
+			        });
+				});				
+			},function(t,e){
+	          console.log("Error while inserting group : "+ e.message);
+	          deferred.reject(e.message);
+	        });
+		});
 	}
 	
 	var getUsers = function(ids, deferred, tx){
@@ -497,7 +524,8 @@ AppToDateDB.prototype = function() {
     getEventById: getEventById,
     insertDeviceId: insertDeviceId,
     selectDeviceId: selectDeviceId,
-    getFriendsByUserId : getFriendsByUserId
+    getFriendsByUserId : getFriendsByUserId,
+    insertGroup: insertGroup
   }
 }();
 return window.AppToDate=AppToDateDB;

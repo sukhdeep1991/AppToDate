@@ -18,7 +18,7 @@ angular.module('AppToDate.Controllers')
 	  if(!data || !data.username || !data.password){
 		  return;
 	  }
-	  data.type = 1;
+	  data.type = 2;
 	  callLoginService(data);
   } 
   
