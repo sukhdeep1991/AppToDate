@@ -59,6 +59,9 @@
     <feature name="AdMobPlugin">
         <param name="android-package" value="com.google.cordova.plugin.AdMobPlugin" />
     </feature>
+    <feature name="PushPlugin">
+        <param name="android-package" value="com.plugin.gcm.PushPlugin" />
+    </feature>
     <name>AppToDate</name>
     <description>
         A sample Apache Cordova application that responds to the deviceready event.
@@ -68,7 +71,4 @@
     </author>
     <content src="index.html" />
     <access origin="*" />
-    <feature name="PushPlugin">
-        <param name="android-package" value="com.plugin.gcm.PushPlugin" />
-    </feature>
 </widget>
