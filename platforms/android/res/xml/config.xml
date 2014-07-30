@@ -62,6 +62,9 @@
     <feature name="PushPlugin">
         <param name="android-package" value="com.plugin.gcm.PushPlugin" />
     </feature>
+    <feature name="PayPalMobile">
+        <param name="android-package" value="com.paypal.cordova.sdk.PayPalMobileCordovaPlugin" />
+    </feature>
     <name>AppToDate</name>
     <description>
         A sample Apache Cordova application that responds to the deviceready event.
