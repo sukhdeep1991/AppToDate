@@ -107,6 +107,9 @@ div.search-box.event{
 .event-search .form-control{
 	background-color: inherit !important;
 }
+.glyphicon-time{
+	color: #428bca;
+}
 /* div.scroll-bar.scroll-bar-v { */
 /* display: none; */
 /* } */

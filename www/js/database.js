@@ -113,34 +113,40 @@ AppToDateDB.prototype = function() {
 	          },function(t,e){
 	            console.log("Error while creating event_attendees table : "+e.message);
 	          });
-          
-//          tx.executeSql('INSERT INTO user_friends (user_id, friend_id) VALUES (?, ?)', 
-//	        		['d464afc9-020b-4c48-9927-ea75d3cca2cf', '435e357c-aad1-4b5a-b914-5a9e39e92184'],
-//	        		function(t,r){
-//	            console.log("Data inserted in frinds table for user :10031 :"+r.rowsAffected);
-//	          },function(t,e){
-//	
-//	            console.log("Error Data inserted in frinds table for user :10031 : "+ e.message);
-//	          });
-//          
-//          tx.executeSql('INSERT INTO user_friends (user_id, friend_id) VALUES (?, ?)', 
-//	        		['d464afc9-020b-4c48-9927-ea75d3cca2cf', '6ba9ab00-6992-4194-a8a6-9212441e5150'],
-//	        		function(t,r){
-//	            console.log("Data inserted in frinds table for user :10032 :"+r.rowsAffected);
-//	          },function(t,e){
-//	
-//	            console.log("Error Data inserted in frinds table for user :10032 : "+ e.message);
-//	          });
-//          
-//          tx.executeSql('INSERT INTO user_friends (user_id, friend_id) VALUES (?, ?)', 
-//	        		['d464afc9-020b-4c48-9927-ea75d3cca2cf', '0c61bf3c-200a-41c1-b6e5-7f81a920182b'],
-//	        		function(t,r){
-//	            console.log("Data inserted in frinds table for user :10033 :"+r.rowsAffected);
-//	          },function(t,e){
-//	
-//	            console.log("Error Data inserted in frinds table for user :10033 : "+ e.message);
-//	          });
         });
+	}
+	
+	var getAttendeesByEvent = function(eventId){
+		console.log("Attendees for event");
+		var deferred = $.Deferred();
+		db.transaction(function(tx) {
+            tx.executeSql('SELECT user_id, status FROM event_attendees where event_id = ?', [eventId],
+            	function(t, r){
+            	if(r.rows.length){
+            		var attendeeIds = [];
+            		var status = {};
+                	for(var i = 0 ; i < r.rows.length ; i ++){
+                    	var row = r.rows.item(i);
+                    	attendeeIds.push(row['user_id']);
+                    	status[row['user_id']] = row['status']
+                	}
+                	var tempDeferred = $.Deferred();
+                	tempDeferred.promise().then(function(attendees){
+                		attendees.map(function(attendee){
+                			attendee.status = status[attendee.user_id];
+                		});
+                		deferred.resolve(attendees);
+                	});
+                	getUsers(attendeeIds, tempDeferred, tx);
+            	} else {
+            		deferred.resolve(null);
+            	}
+            }, function(t,e){
+            	console.log("Error while selecting attendees data : "+ e.message);
+            	deferred.reject(e);
+            });
+		});
+		return deferred.promise();
 	}
 	
 	var getGroupsForOwner = function(ownerId){
@@ -587,7 +593,8 @@ AppToDateDB.prototype = function() {
     getFriendsByUserId : getFriendsByUserId,
     insertGroup: insertGroup,
     insertFriend: insertFriend,
-    getGroupsForOwner: getGroupsForOwner
+    getGroupsForOwner: getGroupsForOwner,
+    getAttendeesByEvent: getAttendeesByEvent
   }
 }();
 return window.AppToDate=AppToDateDB;

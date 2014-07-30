@@ -39,9 +39,19 @@ angular.module('AppToDate.Services')
 			var deferred = $q.defer();
 
             $.when(DB.getEventById(eventId)).then(
-              function(data) {
-                console.log("event found successfully : " + JSON.stringify(data));
-                deferred.resolve(data);
+              function(event) {
+                console.log("event found successfully : " + JSON.stringify(event));
+                console.log("Fetching attendees");
+                $.when(DB.getAttendeesByEvent(eventId)).then(
+    	            function(data) {
+    	            	event.attendees = data;
+    	            	console.log("Event with attendees: " + JSON.stringify(event))
+    	            	deferred.resolve(event);
+    	            },
+    	            function(errorMsg) {
+    	              console.log("Error while fetching attendees: " + JSON.stringify(errorMsg));
+    	              deferred.reject(errorMsg);
+    	          });
               },
               function(errorMsg) {
                 console.log("Error while fetching event");

@@ -25,7 +25,40 @@
 			</section>
 		</div>
 		<div class="tab-pane" data-ng-show="tab == 'attendees'">
-			<h1>In progress</h1>
+			<div class="search-box">
+				<section>
+					<form role="form">
+						<div class="form-group has-feedback">
+							<input type="text" class="form-control search" id="search"
+								placeholder="Search by name" data-ng-model="attendeeSearch">
+							<span class="glyphicon glyphicon-search form-control-feedback"></span>
+						</div>
+					</form>
+				</section>
+			</div>
+			<div role="main" class="margin-top6">
+				<section>
+					<div id='attendeeContacts'>
+						<div class="table-responsive">
+							<table class="table">
+								<tbody>
+									<tr
+										data-ng-repeat="attendee in event.attendees | filter : {'first_name': attendeeSearch}"
+										data-ng-click="attendeeClicked(attendee)">
+										<td class="contact-text-left">{{attendee.first_name}}</td>
+										<td
+											data-ng-class="{'contact-text-right-registered': attendee.status == 1}">
+											{{statusMessages[attendee.status]}} <span class="glyphicon"
+											data-ng-class="{'glyphicon-time': attendee.status == 0.0, 'glyphicon-thumbs-up': attendee.status == 1, 'glyphicon-thumbs-down': attendee.status == 3}"></span>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+
+					</div>
+				</section>
+			</div>
 		</div>
 		<div class="tab-pane" data-ng-show="tab == 'location'">
 			<section>
@@ -35,17 +68,46 @@
 				<div class="margin-top2" id="map"></div>
 			</section>
 		</div>
-<!-- 		<div class="bottom-box"> -->
-<!-- 			<hr /> -->
-<!-- 			<h2>Are you Attending event?</h2> -->
+		<!-- 		<div class="bottom-box"> -->
+		<!-- 			<hr /> -->
+		<!-- 			<h2>Are you Attending event?</h2> -->
 
-<!-- 			<div class="btn-group btn-bottom"> -->
-<!-- 				<button type="button" class="btn btn-default btn-left">May -->
-<!-- 					be</button> -->
-<!-- 				<button type="button" class="btn btn-default btn-middle">Yes</button> -->
-<!-- 				<button type="button" class="btn btn-default btn-right">No</button> -->
-<!-- 			</div> -->
-<!-- 		</div> -->
+		<!-- 			<div class="btn-group btn-bottom"> -->
+		<!-- 				<button type="button" class="btn btn-default btn-left">May -->
+		<!-- 					be</button> -->
+		<!-- 				<button type="button" class="btn btn-default btn-middle">Yes</button> -->
+		<!-- 				<button type="button" class="btn btn-default btn-right">No</button> -->
+		<!-- 			</div> -->
+		<!-- 		</div> -->
+	</div>
+</div>
+<!-- Dialog model for attendee -->
+<div modal="showModal" close="cancel()">
+	<div class="modal-header">
+		<p>
+			<a href ng-click="closeModal()">Close</a>
+		</p>
+	</div>
+	<div class="modal-body">
+		<div>
+			<div class="dashboard-top-bg edit-profile margin-top">
+				<a class="images_class" rel="images"><img id="profilePic"
+					class="img-responsive"
+					ng-src="{{userImageSource + selectedAttendee.user_id}}" alt="image" /></a>
+			</div>
+		</div>
+		<div class="table-responsive">
+			<table class="table">
+				<tbody>
+					<tr>
+						<td class="contact-text-left">{{selectedAttendee.first_name}}</td>
+					</tr>
+					<tr>
+						<td class="contact-text-left">{{selectedAttendee.username}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 	</div>
 </div>
 </ion-content> </ion-view>
