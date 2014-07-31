@@ -16,6 +16,7 @@ angular.module('AppToDate.Services')
 	            });
 			}).error(function(data){
 				console.log("Error occured while saving the event : "+ JSON.stringify(data));
+                deferred.reject(data);
 			});
             return deferred.promise;
 		},

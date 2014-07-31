@@ -102,6 +102,26 @@ angular.module('AppToDate.Controllers')
 			}
 		}
 		
+		//Fetching groups
+		event.GroupAssociations =[];
+		if($scope.groups && $scope.groups.length > 0){
+			var filtered = $filter('filter')($scope.groups, {'isSelected': true});
+			if(filtered && filtered.length > 0){
+				angular.forEach(filtered,function(item){
+					var groupAssociation = {
+						GroupId: item.server_id.substring(0, item.server_id.indexOf(".")),
+//						Group :{
+//							'Id': item.server_id.substring(0, item.server_id.indexOf(".")),
+//							'Title': item.group_name
+//						},
+//						CreatedDate: new Date(),
+//						UpdatedDate: new Date()
+					}
+					event.GroupAssociations.push(groupAssociation);
+				});
+			}
+		}
+		
 		console.log("Creating Event : " +JSON.stringify(event) )
 		eventService.createEvent(event).then(function(response){
 			console.log('Event created successfully : ' + JSON.stringify(event));
