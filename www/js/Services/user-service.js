@@ -26,6 +26,7 @@ angular.module('AppToDate.Services')
             	item.Person.LastName = item.last_name;            	
             });
         	httpResource.loadUrl("Group/Post", "POST", group).success(function(response){
+        		group.server_id = response.Id;
         		DB.insertGroup(group).then(function(data){
         			deferred.resolve(group);
         		}, function(error){

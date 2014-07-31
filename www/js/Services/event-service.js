@@ -4,6 +4,7 @@ angular.module('AppToDate.Services')
 		createEvent : function(event){
 			var deferred = $q.defer();
 			httpResource.loadUrl("Calendar/Create", "POST", event).success(function(eventData){
+				event.server_id = eventData.Id;
 	            $.when(DB.insertEvent(event)).then(
 	              function(data) {
 	                console.log("event saved successfully : " + JSON.stringify(event));

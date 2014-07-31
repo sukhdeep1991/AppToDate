@@ -18,13 +18,25 @@ AppToDateDB.prototype = function() {
             },function(t,e){
               console.log("Error while dropping Group_Master table : "+e.message);
             });
-          tx.executeSql('CREATE TABLE IF NOT EXISTS AttendeeGroup(id INTEGER PRIMARY KEY AUTOINCREMENT,group_name TEXT, owner_id TEXT)',[],
+          tx.executeSql('CREATE TABLE IF NOT EXISTS AttendeeGroup(id INTEGER PRIMARY KEY AUTOINCREMENT,group_name TEXT, owner_id TEXT, server_id TEXT)',[],
             function(t,results){
               console.log("Group_Master table created");
             },function(t,e){
               console.log("Error while creating Group_Master table : "+e.message);
             });
-
+          tx.executeSql('SELECT server_id FROM AttendeeGroup LIMIT 1', [], 
+                  function(t,r){
+              	  console.log("Column server_id for AttendeeGroup exists");
+                }, function(err){
+              	  console.log("Column server_id for AttendeeGroup does not exist");
+              	  console.log("Creating server_id column");
+      	          tx.executeSql('ALTER TABLE AttendeeGroup ADD COLUMN server_id TEXT', [], 
+      	                  function(t,r){
+      	              	  console.log("server_id column added to AttendeeGroup");
+                      }, function(err){
+                    	  console.log("Error : server_id column added to AttendeeGroup");
+                      });
+            });
           tx.executeSql('CREATE TABLE IF NOT EXISTS User_Group(id INTEGER PRIMARY KEY AUTOINCREMENT,group_Id INTEGER,user_Name)',[],
             function(t,results){
               console.log("User_Group table created");
@@ -39,15 +51,8 @@ AppToDateDB.prototype = function() {
               console.log("Error while creating User_Images table : "+e.message);
             });
           
-          tx.executeSql('CREATE TABLE IF NOT EXISTS User_Images(id INTEGER PRIMARY KEY AUTOINCREMENT, user_Id INTEGER, image_data)',[],
-	          function(t,results){
-	            console.log("User_Images table created");
-	          },function(t,e){
-	            console.log("Error while creating User_Images table : "+e.message);
-	          });
-          
           tx.executeSql('CREATE TABLE IF NOT EXISTS Events (id INTEGER PRIMARY KEY AUTOINCREMENT, user_Id INTEGER, title TEXT, notes TEXT,' +
-        		  		'start, end, image_url, location_title, lat, lng, remind_before)',[],
+        		  		'start, end, image_url, location_title, lat, lng, remind_before, server_id TEXT)',[],
     	          function(t,results){
     	            console.log("Events table created");
     	          },function(t,e){
@@ -65,6 +70,20 @@ AppToDateDB.prototype = function() {
       	              	  console.log("remind_before column added");
                       }, function(err){
                     	  console.log("Error : remind_before column added");
+                      });
+            });
+          /*Add not created tables*/
+          tx.executeSql('SELECT server_id FROM Events LIMIT 1', [], 
+                  function(t,r){
+              	  console.log("Column server_id exists in events");
+                }, function(err){
+              	  console.log("Column server_id does not exist in events");
+              	  console.log("Creating server_id column");
+      	          tx.executeSql('ALTER TABLE Events ADD COLUMN server_id TEXT', [], 
+      	                  function(t,r){
+      	              	  console.log("server_id column added");
+                      }, function(err){
+                    	  console.log("Error : server_id column added");
                       });
             });
           tx.executeSql('SELECT location_title FROM Events LIMIT 1', [], 
@@ -192,7 +211,7 @@ AppToDateDB.prototype = function() {
 	var insertGroup = function(group){
 		var deferred = $.Deferred();
 		db.transaction(function(tx) {
-			tx.executeSql('INSERT INTO AttendeeGroup (group_name, owner_id) VALUES (?, ?)', [group.title, group.Owner.ClientId], 
+			tx.executeSql('INSERT INTO AttendeeGroup (group_name, owner_id, server_id) VALUES (?, ?, ?)', [group.title, group.Owner.ClientId, group.server_id], 
 			function(t,r){
 				console.log("Result of insert query + " + JSON.stringify(r));
 				var personIds = [];
@@ -304,9 +323,10 @@ AppToDateDB.prototype = function() {
     var insertEvent = function(event){
     	console.log('Inserting into events ' + JSON.stringify(event));
     	db.transaction(function(tx) {
-	    	tx.executeSql('INSERT INTO Events (user_id, title, notes,start,end,image_url, location_title, lat, lng, remind_before) VALUES (?, ?, ?,?,?,?, ?, ?, ?, ?)', 
+	    	tx.executeSql('INSERT INTO Events (user_id, title, notes,start,end,image_url, location_title, lat, lng, remind_before, server_id)'+ 
+	    			'VALUES (?, ?, ?,?,?,?, ?, ?, ?, ?, ?)', 
 	        		[event.user_id, event.title, event.notes, event.start, event.end, event.imageUrl, 
-	        		 event.location.displayName, event.location.latitude, event.location.longitude, event.remindBefore],
+	        		 event.location.displayName, event.location.latitude, event.location.longitude, event.remindBefore, event.server_id],
 	        		function(t,r){
 	    		if(event.EventAttendeeAssociations && event.EventAttendeeAssociations.length > 0){
 	    			event.EventAttendeeAssociations.map(function(item){
