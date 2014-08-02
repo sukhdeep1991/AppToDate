@@ -2,7 +2,7 @@ angular.module('AppToDate.Controllers')
 
 .controller('createGroupCtrl', 
   function($scope, userService, $filter) {
-	 $scope.navTitle = "Group";
+	$scope.setNavTitle("Create Group");
 	 $scope.success = false;
 	 $scope.group = {
 		 'title' : ''

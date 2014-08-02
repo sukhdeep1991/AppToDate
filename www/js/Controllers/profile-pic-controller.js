@@ -3,7 +3,7 @@ angular
 .controller(
 		'profilePicCtrl',
 function($scope, imageService) {
-	$scope.navTitle = "Profile Pic";
+	$scope.setNavTitle("Profile");
 	$scope.uploadBtnText = "Upload New";
 	$scope.captureBtnText = "Capture New";
 	$scope.cancelBtnText = "Later";

@@ -1,6 +1,6 @@
 angular.module('AppToDate.Controllers')
 .controller('createEventCtrl', function($scope, $filter, $location, imageService, eventService, googleMapService) {
-	$scope.navTitle = "Create Event";
+	$scope.setNavTitle("Create Event");
 	$scope.minDate = new Date();
 	$scope.mapLoaded = false;
 	$scope.tab = 'details';

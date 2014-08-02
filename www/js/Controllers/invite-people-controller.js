@@ -3,6 +3,7 @@ angular
 .controller(
 		'invitePeopleCtrl',
 		function($scope, $timeout, $filter, userService) {
+			$scope.setNavTitle("Invite");
 			$scope.contacts = [];
 			$scope.searchKey = "";
 			$scope.limit = 40;

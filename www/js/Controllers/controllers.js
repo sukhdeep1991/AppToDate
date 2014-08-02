@@ -29,7 +29,7 @@ angular.module('AppToDate.Controllers',['AppToDate.Services'])
 		
 	}
 	
-	//$scope.userDetails = {};
+	$scope.userDetails = {};
 	
 	$scope.setUserDetails = function(userData){
 		$scope.userDetails = userData;
@@ -52,5 +52,9 @@ angular.module('AppToDate.Controllers',['AppToDate.Services'])
 	
 	$scope.setShowLoader = function(toggle){
 		$scope.showLoader = toggle;
+	}
+	
+	$scope.setNavTitle = function(title){
+		$scope.navTitle = title;
 	}
 });

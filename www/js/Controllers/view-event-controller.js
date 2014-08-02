@@ -4,7 +4,7 @@ angular
 		'viewEventCtrl',
 function($scope, $filter, $location, imageService,
 		eventService, googleMapService, $stateParams) {
-	$scope.navTitle = "View Event";
+    $scope.setNavTitle("View Event");
 	$scope.mapLoaded = false;
 	$scope.tab = 'details';
 	$scope.eventId = $stateParams.id

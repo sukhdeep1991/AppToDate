@@ -1,6 +1,6 @@
 angular.module('AppToDate.Controllers')
 .controller('homeCtrl', function($scope, $location) {
- $scope.navTitle = "Home";
+ $scope.setNavTitle("Home");
  
  $scope.NavigateToCalendar = function()
  {

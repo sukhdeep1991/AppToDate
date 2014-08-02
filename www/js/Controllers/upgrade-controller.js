@@ -3,6 +3,7 @@ angular
 .controller(
 		'upgradeCtrl',
 function($scope) {
+	$scope.setNavTitle("Upgrade");
 	var config = new PayPalConfiguration({
 		merchantName: "AppToDate", 
 		merchantPrivacyPolicyURL: "https://mytestshop.com/policy", 

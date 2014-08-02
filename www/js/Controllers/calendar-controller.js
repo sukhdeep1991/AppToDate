@@ -3,6 +3,8 @@ angular
 .controller(
 		'calendarCtrl',
 function($scope, $filter, $location, eventService) {
+	$scope.setNavTitle("Calendar");
+			
 	$scope.view = 'month';
 
 	$scope.createEvent = function() {
