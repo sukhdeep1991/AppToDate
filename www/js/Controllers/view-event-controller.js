@@ -97,6 +97,8 @@ function($scope, $filter, $location, imageService,
 	var confirmCallback = function(message){
 		if(message == 1){
 			console.log("Editing event");
+			$location.path('/event/edit/' + $scope.eventId);
+			$scope.$apply();
 		} else if(message == 2){
 			$scope.setShowLoader(true);
 			console.log("Delete event");

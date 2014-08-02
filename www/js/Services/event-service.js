@@ -3,7 +3,11 @@ angular.module('AppToDate.Services')
 	return {
 		createEvent : function(event){
 			var deferred = $q.defer();
-			httpResource.loadUrl("Calendar/Create", "POST", event).success(function(eventData){
+			var url = "Calendar/Create";
+			if(event.client_id){
+				url = "Calendar/Edit";
+			}
+			httpResource.loadUrl(url, "POST", event).success(function(eventData){
 				event.server_id = eventData.Id;
 	            $.when(DB.insertEvent(event)).then(
 	              function(data) {

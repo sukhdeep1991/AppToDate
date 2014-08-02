@@ -174,7 +174,12 @@ angular.module('AppToDate', [
           url: "/group/new",
   		templateUrl: "js/Templates/create-group.html",
           controller: 'createGroupCtrl'
-        });
+        })
+        .state('editEvent', {
+            url: "/event/edit/:id",
+    		templateUrl: "js/Templates/event.html",
+            controller: 'editEventCtrl'
+          });
 
 
   $urlRouterProvider.otherwise('/login');

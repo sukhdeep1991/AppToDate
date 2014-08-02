@@ -337,7 +337,52 @@ AppToDateDB.prototype = function() {
         return deferred.promise();
 	}
 	
+	var updateEvent = function(event){
+		var deferred = $.Deferred();    	
+    	console.log('Inserting into events ' + JSON.stringify(event));
+    	db.transaction(function(tx) {
+	    	tx.executeSql('update Events set user_id=?, title=?, notes=?,start=?,end=?,image_url=?,'+
+	    				'location_title=?, lat=?, lng=?, remind_before=?, server_id=? where id = ?', 
+	        		[event.user_id, event.title, event.notes, event.start, event.end, event.imageUrl, 
+	        		 event.location.displayName, event.location.latitude, event.location.longitude,
+	        		 event.remindBefore, event.server_id, event.client_id],
+	        		function(t,r){
+	    			tx.executeSql('delete from event_attendees where event_id = ?',
+	    				[event.client_id],
+	    				function(a, b){
+	    					console.log("Data deleted in event_attendees table count : "+r.rowsAffected);
+	    				}, function(t,e){
+	    					console.log("Error while deleting data in event_attendees table : "+ e.message);
+	    		            deferred.reject(e.message);
+	    				});
+	    		if(event.EventAttendeeAssociations && event.EventAttendeeAssociations.length > 0){
+	    			event.EventAttendeeAssociations.map(function(item){
+	    				tx.executeSql('INSERT INTO event_attendees (event_id, user_id, status) values(?, ?, ?)',
+	    				[r.insertId, item.AppToDateAttendee.Person.ClientId, eventStatus.unknown],
+	    				function(a, b){
+	    					console.log("Data inserted in event_attendees table count : "+r.rowsAffected);
+	    				}, function(t,e){
+	    					console.log("Error while inserting data in event_attendees table : "+ e.message);
+	    		            deferred.reject(e.message);
+	    				});
+	    			});
+	    			
+	    		}
+	    		deferred.resolve(event);
+	            console.log("Data inserted in Events table count : "+r.rowsAffected);
+	          },function(t,e){
+	            console.log("Error while inserting data in Events table : "+ e.message);
+	            deferred.reject(e.message);
+	          });
+    	});
+    	return deferred.promise();
+	}
+	
     var insertEvent = function(event){
+    	if(event.client_id){
+    		return updateEvent(event);
+    	}
+		var deferred = $.Deferred();    	
     	console.log('Inserting into events ' + JSON.stringify(event));
     	db.transaction(function(tx) {
 	    	tx.executeSql('INSERT INTO Events (user_id, title, notes,start,end,image_url, location_title, lat, lng, remind_before, server_id)'+ 
@@ -353,15 +398,19 @@ AppToDateDB.prototype = function() {
 	    					console.log("Data inserted in event_attendees table count : "+r.rowsAffected);
 	    				}, function(t,e){
 	    					console.log("Error while inserting data in event_attendees table : "+ e.message);
+	    		            deferred.reject(e.message);
 	    				});
 	    			});
+	    			
 	    		}
+	    		deferred.resolve(event);
 	            console.log("Data inserted in Events table count : "+r.rowsAffected);
 	          },function(t,e){
-	
 	            console.log("Error while inserting data in Events table : "+ e.message);
+	            deferred.reject(e.message);
 	          });
     	});
+    	return deferred.promise();
     }
     
     var getUserEvents = function(userId){
@@ -459,6 +508,7 @@ AppToDateDB.prototype = function() {
 	  userData.last_name = row['last_name'];
 	  userData.access_token = row['access_token'];
 	  userData.user_id = row['user_id'];
+	  userData.server_id = row['user_id'];
 	  userData.login_time = row['login_time'];
 	  userData.expires_in = row['expires_in'];
 	  userData.refresh_token = row['refresh_token'];
