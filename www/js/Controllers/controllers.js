@@ -57,4 +57,7 @@ angular.module('AppToDate.Controllers',['AppToDate.Services'])
 	$scope.setNavTitle = function(title){
 		$scope.navTitle = title;
 	}
+	$scope.editClicked = function(){
+		$scope.$broadcast('edit_clicked');
+	}
 });

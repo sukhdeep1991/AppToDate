@@ -135,6 +135,23 @@ AppToDateDB.prototype = function() {
         });
 	}
 	
+	var deleteEvent = function(eventServerId){
+		console.log("delete event");
+		var deferred = $.Deferred();
+		db.transaction(function(tx) {
+			tx.executeSql('delete from Events where server_id = ?', 
+	        		[eventServerId],
+	        		function(t,r){
+	            console.log("event with server id is deleted: " + eventServerId );
+	            deferred.resolve(r);
+	          },function(t,e){	
+	            console.log("Error Data deleting event "+ e.message);
+	            deferred.reject(e.message);
+	          });
+		});
+		return deferred.promise();
+	}
+	
 	var getAttendeesByEvent = function(eventId){
 		console.log("Attendees for event");
 		var deferred = $.Deferred();
@@ -614,7 +631,8 @@ AppToDateDB.prototype = function() {
     insertGroup: insertGroup,
     insertFriend: insertFriend,
     getGroupsForOwner: getGroupsForOwner,
-    getAttendeesByEvent: getAttendeesByEvent
+    getAttendeesByEvent: getAttendeesByEvent,
+    deleteEvent: deleteEvent
   }
 }();
 return window.AppToDate=AppToDateDB;

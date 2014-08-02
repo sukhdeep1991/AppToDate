@@ -61,6 +61,25 @@ angular.module('AppToDate.Services')
             });
 
             return deferred.promise;
+		},
+		
+		deleteEvent: function(eventId){
+			var deferred = $q.defer();
+			httpResource.loadUrl("Calendar/Delete?appEventId="+eventId, "DELETE", null).success(function(response){
+				$.when(DB.deleteEvent(eventId)).then(
+	              function(data) {
+	                console.log("event deleted successfully : " + JSON.stringify(response));
+	                deferred.resolve(true);
+	              },
+	              function(errorMsg) {
+	                console.log("Error while deleting event");
+	                deferred.reject(errorMsg);
+	            });
+			}).error(function(data){
+				console.log("Error occured while deleting the event : "+ JSON.stringify(data));
+                deferred.reject(data);
+			});
+            return deferred.promise;
 		}
 	}
 });

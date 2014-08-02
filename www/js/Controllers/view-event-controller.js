@@ -89,4 +89,29 @@ function($scope, $filter, $location, imageService,
 	$scope.closeModal = function(){
 		$scope.showModal = false;
 	}
+
+	$scope.$on('edit_clicked', function(){
+		 navigator.notification.confirm('What do you want?', confirmCallback, 'Event', 'Edit, Delete, Cancel');  
+	});
+	
+	var confirmCallback = function(message){
+		if(message == 1){
+			console.log("Editing event");
+		} else if(message == 2){
+			$scope.setShowLoader(true);
+			console.log("Delete event");
+			eventService.deleteEvent(parseInt($scope.event.server_id))
+				.then(function(data){
+					navigator.notification.alert('Event deleted successfully!', function(){
+						$scope.setShowLoader(false);
+						$location.path('/calendar');
+						$scope.$apply();
+					}, 'Alert', 'OK');  
+				}, function(data){
+					console.log("Error occured while deleting event: "+ JSON.stringify(data));
+				})
+		} else {
+			console.log("Do nothing");
+		}
+	}
 });

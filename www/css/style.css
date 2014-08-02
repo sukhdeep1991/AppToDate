@@ -110,6 +110,10 @@ div.search-box.event{
 .glyphicon-time{
 	color: #428bca;
 }
+.navBar-right.glyphicon.glyphicon-edit{
+	color: white;
+	padding: 12px;
+}
 /* div.scroll-bar.scroll-bar-v { */
 /* display: none; */
 /* } */
