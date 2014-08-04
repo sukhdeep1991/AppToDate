@@ -1,13 +1,17 @@
 angular.module('AppToDate.Controllers')
 
 .controller('loginCtrl', 
-  function($scope,$state,$rootScope,LoaderService,sessionService,Authentication, $location, registerService) {
+  function($scope,$state,$rootScope,LoaderService,sessionService,Authentication, $location, registerService, userService) {
 	
-	if($scope.userDetail){
-		console.log("User already logged in");
-		$location.path('/register');
-		return;
-	}
+	
+		userService.getLoggedInUser().then(function(user){
+			if(user){
+				console.log("User already found: " + JSON.stringify(user));
+				callLoginService(user, true);
+			}
+		}, function(error){
+			console.log("Error while fetching getLoggedInUser: " + JSON.stringify(error));
+		})
 	
   $scope.register = function(){
 	  $location.path('/register');
@@ -19,7 +23,7 @@ angular.module('AppToDate.Controllers')
 		  return;
 	  }
 	  data.type = 2;
-	  callLoginService(data);
+	  callLoginService(data, false);
   } 
   
   $scope.facebookLogin = function(){
@@ -38,7 +42,7 @@ angular.module('AppToDate.Controllers')
 			  	user.phone = "0";
 			  	user.type = 1;
 			  	console.log("Calling login for user: " + JSON.stringify(user));
-				callLoginService(user)
+				callLoginService(user, false)
 				
 //			  registerService.facebookRegister(userData).then(function(response){
 //					if(response){
@@ -65,13 +69,23 @@ angular.module('AppToDate.Controllers')
 		);
   }
   
-  var callLoginService = function(data)
+  var callLoginService = function(data, alreadyLoggedIn)
   {
 	  $scope.setShowLoader(true);
 	  Authentication.oa.login(data).then(function(response){
 		  if(response){
-			  $scope.setUserDetails(response);
-			  $location.path('/home');
+			  if(!alreadyLoggedIn){
+				  userService.insertLoggedInUser({username: data.username, password: data.password, 
+					  			type: data.type}).then(function(flag){
+					  $scope.setUserDetails(response);
+					  $location.path('/home');
+		  			}, function(error){
+		  				console.log("Error while inserting data in logged in user: " + JSON.stringify(error));
+		  			})
+			  } else {
+				  $scope.setUserDetails(response);
+				  $location.path('/home');
+			  }
 		  } else {
 			  $scope.showErrorMessage("Username/password combination does not exist.");
 		  }

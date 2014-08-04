@@ -6,7 +6,12 @@ angular.module('AppToDate.Controllers',['AppToDate.Services'])
 	var history = [];
 	//Keep pushing into the history
 	$scope.$on("$locationChangeStart", function(e, currentLocation, previousLocation){
-		history.push(currentLocation.substring(currentLocation.lastIndexOf('#/')+1));
+		var hashUrl = currentLocation.substring(currentLocation.lastIndexOf('#/')+1);
+		if(hashUrl == "/login" && $scope.userDetails != undefined){
+			e.preventDefault();
+			return;
+		}
+		history.push(hashUrl);
 	});
 	
 	$scope.goBack = function(){
@@ -29,7 +34,7 @@ angular.module('AppToDate.Controllers',['AppToDate.Services'])
 		
 	}
 	
-	$scope.userDetails = {};
+	//$scope.userDetails = {};
 	
 	$scope.setUserDetails = function(userData){
 		$scope.userDetails = userData;

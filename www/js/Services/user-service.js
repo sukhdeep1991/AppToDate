@@ -76,6 +76,34 @@ angular.module('AppToDate.Services')
 	          });
 			
 			return deferred.promise;			
+		},
+		getLoggedInUser: function(){
+			var deferred = $q.defer();
+            console.log('Fetching logged in user');
+            $.when(DB.getCurrentLoggedInUser()).then(
+	            function(data) {
+	            	deferred.resolve(data);
+	            },
+	            function(errorMsg) {
+	              console.log("Error while fetching logged in user: " + JSON.stringify(errorMsg));
+	              deferred.reject(errorMsg);
+	          });
+			
+			return deferred.promise;	
+		},
+		insertLoggedInUser: function(user){
+			var deferred = $q.defer();
+            console.log('inserting logged in user');
+            $.when(DB.insertCurrentLoggedInUser(user)).then(
+	            function(data) {
+	            	deferred.resolve(data);
+	            },
+	            function(errorMsg) {
+	              console.log("Error while inserting logged in user: " + JSON.stringify(errorMsg));
+	              deferred.reject(errorMsg);
+	          });
+			
+			return deferred.promise;	
 		}
 	}
 });

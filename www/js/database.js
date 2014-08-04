@@ -132,7 +132,54 @@ AppToDateDB.prototype = function() {
 	          },function(t,e){
 	            console.log("Error while creating event_attendees table : "+e.message);
 	          });
+          tx.executeSql('CREATE TABLE IF NOT EXISTS LoggedInUser (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, password TEXT, type TEXT)',[],
+          function(t,results){
+            console.log("LoggedInUser table created");
+          },function(t,e){
+            console.log("Error while creating LoggedInUser table : "+e.message);
+          });
         });
+	}
+	
+	var insertCurrentLoggedInUser = function(user){
+		console.log("Inserting logged in user");
+		var deferred = $.Deferred();
+		db.transaction(function(tx) {
+			tx.executeSql('INSERT INTO LoggedInUser (username, password, type) VALUES (?, ?, ?)', 
+	        		[user.username, user.password, user.type],
+	        		function(t,r){
+	            console.log("Data inserted LoggedInUser usename: " + user.username + " : friend " + user.password);
+	            deferred.resolve(true);
+	          },function(t,e){
+	            console.log("Error Data inserted in LoggedInUser table:  "+ e.message);
+	            deferred.reject(e);
+	          });
+		});
+		return deferred.promise();
+	}
+	
+	var getCurrentLoggedInUser = function(){
+		console.log("Getting logged in user");
+		var deferred = $.Deferred();
+		db.transaction(function(tx) {
+            tx.executeSql('SELECT username, password, type FROM LoggedInUser LIMIT 1', [],
+            	function(t, r){
+            	if(r.rows.length){
+            		var row = r.rows.item(0);
+                	deferred.resolve({
+                		username: row["username"],
+                		password: row["password"],
+                		type: parseInt(row["type"])
+                	});
+            	} else {
+            		deferred.resolve(null);
+            	}
+            }, function(t,e){
+            	console.log("Error while getting logged in user: "+ e.message);
+            	deferred.reject(e);
+            });
+		});
+		return deferred.promise();
 	}
 	
 	var deleteEvent = function(eventServerId){
@@ -682,7 +729,9 @@ AppToDateDB.prototype = function() {
     insertFriend: insertFriend,
     getGroupsForOwner: getGroupsForOwner,
     getAttendeesByEvent: getAttendeesByEvent,
-    deleteEvent: deleteEvent
+    deleteEvent: deleteEvent,
+    getCurrentLoggedInUser: getCurrentLoggedInUser,
+    insertCurrentLoggedInUser: insertCurrentLoggedInUser
   }
 }();
 return window.AppToDate=AppToDateDB;
