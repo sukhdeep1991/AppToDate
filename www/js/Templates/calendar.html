@@ -1,10 +1,9 @@
-
 <ion-view title="My Calendar"> <ion-content>
 <div class="search-box event">
 	<section>
 		<form role="form">
 			<!-- Text input Search-->
-			<div class="form-group has-feedback event-search">
+			<div class="form-group has-feedback event-search search-top">
 				<input type="text" class="form-control search" id="Search"
 					placeholder="Search by event name" required=""><span
 					class="glyphicon glyphicon-search form-control-feedback"></span>
@@ -13,7 +12,7 @@
 		</form>
 	</section>
 </div>
-<div role="main">
+<div role="main" class="header-events bg">
 	<section>
 		<div id='calendar' style="position: relative"></div>
 		<div class="header-option">

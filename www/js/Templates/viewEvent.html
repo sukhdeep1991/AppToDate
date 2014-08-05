@@ -7,6 +7,7 @@
 	<li data-ng-class="{'active' : tab == 'location'}"><a
 		data-ng-click="loadGoogleMap()">Location</a></li>
 </ul>
+<div class="bg">
 <!-- Tab panes -->
 <div class="tab-content">
 
@@ -36,7 +37,7 @@
 					</form>
 				</section>
 			</div>
-			<div role="main" class="margin-top6">
+			<div role="main" class="header-events bg">
 				<section>
 					<div id='attendeeContacts'>
 						<div class="table-responsive">
@@ -81,33 +82,27 @@
 		<!-- 		</div> -->
 	</div>
 </div>
+</div>
 <!-- Dialog model for attendee -->
-<div modal="showModal" close="cancel()">
-	<div class="modal-header">
-		<p>
-			<a href ng-click="closeModal()">Close</a>
-		</p>
-	</div>
-	<div class="modal-body">
-		<div>
-			<div class="dashboard-top-bg edit-profile margin-top">
-				<a class="images_class" rel="images"><img id="profilePic"
-					class="img-responsive"
-					ng-src="{{userImageSource + selectedAttendee.user_id}}" alt="image" /></a>
-			</div>
-		</div>
-		<div class="table-responsive">
-			<table class="table">
-				<tbody>
-					<tr>
-						<td class="contact-text-left">{{selectedAttendee.first_name}}</td>
-					</tr>
-					<tr>
-						<td class="contact-text-left">{{selectedAttendee.username}}</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-	</div>
+<div modal="showModal" id="attendeeModal" tabindex="-1" role="modal" aria-labelledby="attendeeModalLabel" aria-hidden="true" close="cancel()">
+	<div class="modal-dialog">
+        <div class="modal-content modal-attendee">
+            <div class="modal-header modal-head-reminder-bg">
+                <button type="button" class="close close-bg" data-dismiss="modal" data-ng-click="showModal = false">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <div class="profile-modal-top-bg">
+                    <img 
+				        class="img-responsive"
+				        ng-src="{{userImageSource + selectedAttendee.user_id}}" alt="image" />
+		        </div>
+            </div>
+	        <div class="modal-body modal-body-attendee">
+		    <p class="attendeelabel">{{selectedAttendee.first_name}}</p>
+		    <p class="attendeelabel">{{selectedAttendee.username}}</p>
+	        </div>
+        </div>
+    </div>
 </div>
 </ion-content> </ion-view>

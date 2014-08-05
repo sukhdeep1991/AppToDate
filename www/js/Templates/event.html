@@ -7,6 +7,7 @@
 	<li data-ng-class="{'active' : tab == 'location'}"><a
 		data-ng-click="loadGoogleMap()">Location</a></li>
 </ul>
+<div class="bg">  
 <!-- Tab panes -->
 <div class="tab-content">
 
@@ -188,23 +189,34 @@
 			data-ng-click="showReminderModal()">Create Event</a>
 	</div>
 </div>
-<!-- Dialog model for remind before -->
-<div modal="showModal" close="cancel()">
-	<div class="modal-header">
-		<h4>Reminder</h4>
-	</div>
-	<div class="modal-body">
-		<p>Remind me about event before</p>
-		<div class="form-group no-label">
-			<select data-ng-model="event.remindBefore" style="margin: auto">
-				<option data-ng-repeat="value in timeSpans" value="{{value}}">{{value}}</option>
-			</select> minutes
-		</div>
-	</div>
-	<div class="modal-footer">
-		<button class="btn btn-success" ng-click="createEvent(event)">Set
-			Reminder</button>
-	</div>
 </div>
+<!-- Dialog model for remind before -->
+<div modal="showModal" id="reminderModal" tabindex="-1" role="modal" aria-labelledby="reminderModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+        <div class="modal-content modal-attendee">
+            <div class="modal-header modal-head-reminder-bg">
+                <button type="button" class="close close-bg" data-dismiss="modal" data-ng-click="showModal = false">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <h4>Reminder</h4>
+            </div>
+            <div class="modal-body reminder-text">
+                <p>Remind me about event before</p>
 
+                <form role="form">
+                    <div class="reminderForm">
+			            <select data-ng-model="event.remindBefore" style="margin: auto">
+				            <option data-ng-repeat="value in timeSpans" value="{{value}}">{{value}}</option>
+			            </select> minutes
+		            </div>
+                    <button type="button" id="Button1" class="btn btn-default btn-lg btn-block btn-create-group margin-top" 
+                        data-ng-click="createEvent(event)">
+                      <span class="glyphicon glyphicon-dashboard"></span> Set Reminder
+                    </button>
+                </form>
+	        </div>
+        </div>
+    </div>
+</div>
 </ion-content> </ion-view>
