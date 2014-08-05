@@ -53,6 +53,10 @@
 											data-ng-class="{'glyphicon-time': attendee.status == 0.0, 'glyphicon-thumbs-up': attendee.status == 1, 'glyphicon-thumbs-down': attendee.status == 3}"></span>
 										</td>
 									</tr>
+									<tr
+										data-ng-repeat="group in event.groups | filter : {'group_name': attendeeSearch}">
+										<td class="contact-text-left">{{group.group_name}}</td>
+									</tr>
 								</tbody>
 							</table>
 						</div>

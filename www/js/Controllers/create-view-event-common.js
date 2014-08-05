@@ -99,7 +99,8 @@ angular.module('AppToDate.Controllers')
 			if(filtered && filtered.length > 0){
 				angular.forEach(filtered,function(item){
 					var groupAssociation = {
-						GroupId: item.server_id.substring(0, item.server_id.indexOf(".")),
+						GroupId: parseInt(item.server_id),
+						GroupClientId: item.id
 //						Group :{
 //							'Id': item.server_id.substring(0, item.server_id.indexOf(".")),
 //							'Title': item.group_name
@@ -120,7 +121,11 @@ angular.module('AppToDate.Controllers')
 			calOptions.firstReminderMinutes = event.remindBefore;		
 			
 			window.plugins.calendar.createEventWithOptions(event.title,event.location,event.notes,
-					event.start,event.end,calOptions,success,error);
+					event.start,event.end,calOptions,function(response){
+				console.log("Plugin create event success: " + JSON.stringify(response));
+			},function(error){
+				console.log("Plugin create event error: " + JSON.stringify(error));				
+			});
 			if(response.imageUrl && response.imageUrl != ""){
 				 var serverUrl = appConfig.apiUrl + "Image/UploadEventPicture?eventId=" + response.server_id;
 				 imageService.uploadImageToServer(response.imageUrl, serverUrl, 
@@ -128,7 +133,8 @@ angular.module('AppToDate.Controllers')
 						$scope.setShowLoader(false);
 						$location.path('/calendar');
 				 }, function(error){
-					 
+					 console.log("Error in event image upload: " + JSON.stringify(error));
+					 $scope.setShowLoader(false);
 				 });
 			} else {
 				$scope.setShowLoader(false);

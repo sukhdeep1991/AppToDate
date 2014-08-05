@@ -17,12 +17,23 @@ function($scope, $filter, $location, imageService,
 	
 	$scope.addSelected = function(event){
 		if(event.attendees && event.attendees.length > 0){
-			angular.forEach(event.attendees, function(iten){
-				$scope.selectedContacts.push(iten.server_id);
+			angular.forEach(event.attendees, function(item){
+				$scope.selectedContacts.push(item.server_id);
 			});
 			console.log("selected attendees of event: " + JSON.stringify($scope.selectedContacts));
 			if($scope.contacts.length > 0){
 				$scope.setSelected($scope.contacts, $scope.selectedContacts);
+			} else {
+				console.log("friends not found yet")
+			}
+		}
+		if(event.groups && event.groups.length > 0){
+			angular.forEach(event.groups, function(item){
+				$scope.selectedGroups.push(item.server_id);
+			});
+			console.log("selected groups of event: " + JSON.stringify($scope.selectedGroups));
+			if($scope.groups.length > 0){
+				$scope.setSelected($scope.groups, $scope.selectedGroups);
 			} else {
 				console.log("friends not found yet")
 			}

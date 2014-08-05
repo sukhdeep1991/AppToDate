@@ -138,7 +138,71 @@ AppToDateDB.prototype = function() {
           },function(t,e){
             console.log("Error while creating LoggedInUser table : "+e.message);
           });
+          tx.executeSql('CREATE TABLE IF NOT EXISTS event_groups (id INTEGER PRIMARY KEY AUTOINCREMENT, event_id INTEGER, group_id INTEGER, status TEXT)',[],
+          function(t,results){
+            console.log("event_groups table created");
+          },function(t,e){
+            console.log("Error while creating event_groups table : "+e.message);
+          });
+          
+          tx.executeSql('select * from event_groups', 
+	        		[],
+	        		function(t,r){
+				if(r.rows.length > 0){
+					var eventGroups = [];
+					for(var i = 0 ; i < r.rows.length ; i++){
+						eventGroups.push(r.rows.item(i));
+					}
+					console.log("Event groups: " + JSON.stringify(eventGroups));
+				}
+          }, function(){
+        	  
+          });
         });
+	}
+	
+	var getGroupsByEvent = function(eventId){
+		console.log("fetching groups for event: " + eventId);
+		var deferred = $.Deferred();
+		db.transaction(function(tx) {
+			tx.executeSql('select group_id from event_groups where event_id = ?', 
+	        		[eventId],
+	        		function(t,r){
+				if(r.rows.length > 0){
+		            console.log("Groups found for event: " + JSON.stringify(groups));
+					var groups = [];
+		            var query = 'select * from AttendeeGroup where id in ('
+					for(var i = 0 ; i < r.rows.length ; i++){
+						var row = r.rows.item(i);
+						groups.push(row['group_id']);
+						query += '?, ';
+					}
+					query = query.substring(0, query.lastIndexOf(',')) + ")"
+					console.log("The group query is: " + query);
+		            tx.executeSql(query, groups, function(t,groupR){
+						if(groupR.rows.length > 0){
+							groups = [];
+							for(var i = 0 ; i < groupR.rows.length ; i ++){
+								var row = groupR.rows.item(i);
+								groups.push(row);
+							}
+							deferred.resolve(groups);
+							return;
+						}
+						deferred.resolve(null);
+		            }, function(t,e){
+		            	console.log("Error Data inserted in LoggedInUser table:  "+ e.message);
+			            deferred.reject(e);
+		            });
+				} else {
+					console.log("No groups found for the event");
+		            deferred.resolve(null);					
+				}
+	          },function(t,e){
+	            
+	          });
+		});
+		return deferred.promise();
 	}
 	
 	var insertCurrentLoggedInUser = function(user){
@@ -430,7 +494,7 @@ AppToDateDB.prototype = function() {
     		return updateEvent(event);
     	}
 		var deferred = $.Deferred();    	
-    	console.log('Inserting into events ' + JSON.stringify(event));
+    	console.log('Inserting into events ' + JSON.stringify(event));//event_group
     	db.transaction(function(tx) {
 	    	tx.executeSql('INSERT INTO Events (user_id, title, notes,start,end,image_url, location_title, lat, lng, remind_before, server_id)'+ 
 	    			'VALUES (?, ?, ?,?,?,?, ?, ?, ?, ?, ?)', 
@@ -445,6 +509,19 @@ AppToDateDB.prototype = function() {
 	    					console.log("Data inserted in event_attendees table count : "+r.rowsAffected);
 	    				}, function(t,e){
 	    					console.log("Error while inserting data in event_attendees table : "+ e.message);
+	    		            deferred.reject(e.message);
+	    				});
+	    			});
+	    			
+	    		}
+	    		if(event.GroupAssociations && event.GroupAssociations.length > 0){
+	    			event.GroupAssociations.map(function(item){
+	    				tx.executeSql('INSERT INTO event_groups (event_id, group_id, status) values(?, ?, ?)',
+	    				[r.insertId, item.GroupClientId, eventStatus.unknown],
+	    				function(a, b){
+	    					console.log("Data inserted in event_groups table for event id : "+r.insertId + " and group id : " + item.GroupClientId);
+	    				}, function(t,e){
+	    					console.log("Error while inserting data in event_groups table : "+ e.message);
 	    		            deferred.reject(e.message);
 	    				});
 	    			});
@@ -731,7 +808,8 @@ AppToDateDB.prototype = function() {
     getAttendeesByEvent: getAttendeesByEvent,
     deleteEvent: deleteEvent,
     getCurrentLoggedInUser: getCurrentLoggedInUser,
-    insertCurrentLoggedInUser: insertCurrentLoggedInUser
+    insertCurrentLoggedInUser: insertCurrentLoggedInUser,
+    getGroupsByEvent: getGroupsByEvent
   }
 }();
 return window.AppToDate=AppToDateDB;

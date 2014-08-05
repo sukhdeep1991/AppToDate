@@ -52,7 +52,17 @@ angular.module('AppToDate.Services')
     	            function(data) {
     	            	event.attendees = data;
     	            	console.log("Event with attendees: " + JSON.stringify(event))
-    	            	deferred.resolve(event);
+    	            	console.log("Fetching attendees");
+		                $.when(DB.getGroupsByEvent(eventId)).then(
+		    	            function(groupsData) {
+		    	            	event.groups = groupsData;
+		    	            	console.log("Event with groups: " + JSON.stringify(event))
+		    	            	deferred.resolve(event);
+		    	            },
+		    	            function(errorMsg) {
+		    	              console.log("Error while fetching attendees: " + JSON.stringify(errorMsg));
+		    	              deferred.reject(errorMsg);
+		    	          });
     	            },
     	            function(errorMsg) {
     	              console.log("Error while fetching attendees: " + JSON.stringify(errorMsg));
