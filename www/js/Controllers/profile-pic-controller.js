@@ -17,29 +17,24 @@ function($scope, imageService) {
 	}
 	
 	function onSuccess(imageURL) {		
-		var options = new FileUploadOptions();
-	    options.fileKey="file";
-	    options.fileName=imageURL.substr(imageURL.lastIndexOf('/')+1);
-	    options.mimeType="image/jpeg";
-	    options.params = {};
-
-	    var ft = new FileTransfer();
+		$scope.setShowLoader(true);
 	    var serverUrl = appConfig.apiUrl + "Image/UploadPicture?clientId=" + $scope.userDetails.user_id;
-	    console.log("Uploading image to : " + serverUrl);
-	    ft.upload(imageURL, serverUrl, 
+	    imageService.uploadImageToServer(imageURL, serverUrl, 
     		function(response){
 	    	$scope.$apply(function(){
 	    		console.log("Image uploaded: " + JSON.stringify(response));		    
 				$scope.setUserImage("about:blank");
 				setTimeout(function(){
 					$scope.$apply(function(){
-						$scope.setUserImage(appConfig.apiUrl + "Image/Get?clientId=" + $scope.userDetails.user_id);
+						$scope.setUserImage(appConfig.apiUrl + "Image/Get?clientId=" + $scope.userDetails.user_id);	
+						$scope.setShowLoader(false);
 					});
 				}, 500);
 	    	});
 	    	
 	    }, function(response){
-	    	console.log("Image upload failed: " + JSON.stringify(response));
+	    	console.log("Image upload failed: " + JSON.stringify(response));	
+			$scope.setShowLoader(false);
 	    }, options);
 //		imageService.saveOrUpdateUserImage($scope.userDetails.user_id, imageURL).then(
 //				function(data) {

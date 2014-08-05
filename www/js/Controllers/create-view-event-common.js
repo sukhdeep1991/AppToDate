@@ -121,17 +121,26 @@ angular.module('AppToDate.Controllers')
 			
 			window.plugins.calendar.createEventWithOptions(event.title,event.location,event.notes,
 					event.start,event.end,calOptions,success,error);
-			$scope.setShowLoader(false);
-			$location.path('/calendar');
+			if(response.imageUrl && response.imageUrl != ""){
+				 var serverUrl = appConfig.apiUrl + "Image/UploadEventPicture?eventId=" + response.server_id;
+				 imageService.uploadImageToServer(response.imageUrl, serverUrl, 
+				    		function(response){
+						$scope.setShowLoader(false);
+						$location.path('/calendar');
+				 }, function(error){
+					 
+				 });
+			} else {
+				$scope.setShowLoader(false);
+				$location.path('/calendar');
+			}
+			
 		}, 
 		function(data){
 			console.log('Error occured while creating event');
 			$scope.setShowLoader(false);
 		});
 	}
-	
-	var success = function(message) { console.log("Success: " + JSON.stringify(message)); };
-	var error = function(message) { console.log("Error: " + message); };
 	
 	$scope.createGroup = function(){
 		$location.path('/group/new');

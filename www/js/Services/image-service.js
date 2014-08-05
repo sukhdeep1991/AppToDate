@@ -46,6 +46,19 @@ angular.module('AppToDate.Services')
 							destinationType : navigator.camera.DestinationType.FILE_URI,
 							sourceType : fromGallary ? navigator.camera.PictureSourceType.PHOTOLIBRARY : undefined
 						});
+	        },
+	        
+	        uploadImageToServer: function(imageURL, serverUrl, successCallback, errorCallback){
+	        	var options = new FileUploadOptions();
+	    	    options.fileKey="file";
+	    	    options.fileName=imageURL.substr(imageURL.lastIndexOf('/')+1);
+	    	    options.mimeType="image/jpeg";
+	    	    options.params = {};
+
+	    	    var ft = new FileTransfer();
+	    	    console.log("Uploading image to : " + serverUrl);
+	    	    ft.upload(imageURL, serverUrl, 
+	    	    		successCallback, errorCallback, options);
 	        }
 	  }
 	    
