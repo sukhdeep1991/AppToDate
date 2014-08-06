@@ -116,16 +116,6 @@ angular.module('AppToDate.Controllers')
 		console.log("Creating Event : " +JSON.stringify(event) )
 		eventService.createEvent(event).then(function(response){
 			console.log('Event created successfully : ' + JSON.stringify(event));
-			//prepare calendar options
-			var calOptions = window.plugins.calendar.getCalendarOptions();
-			calOptions.firstReminderMinutes = event.remindBefore;		
-			
-			window.plugins.calendar.createEventWithOptions(event.title,event.location,event.notes,
-					event.start,event.end,calOptions,function(response){
-				console.log("Plugin create event success: " + JSON.stringify(response));
-			},function(error){
-				console.log("Plugin create event error: " + JSON.stringify(error));				
-			});
 			if(response.imageUrl && response.imageUrl != ""){
 				 var serverUrl = appConfig.apiUrl + "Image/UploadEventPicture?eventId=" + response.server_id;
 				 imageService.uploadImageToServer(response.imageUrl, serverUrl, 

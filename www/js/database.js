@@ -18,7 +18,7 @@ AppToDateDB.prototype = function() {
             },function(t,e){
               console.log("Error while dropping Group_Master table : "+e.message);
             });
-          tx.executeSql('CREATE TABLE IF NOT EXISTS AttendeeGroup(id INTEGER PRIMARY KEY AUTOINCREMENT,group_name TEXT, owner_id TEXT, server_id TEXT)',[],
+          tx.executeSql('CREATE TABLE IF NOT EXISTS AttendeeGroup(id INTEGER PRIMARY KEY AUTOINCREMENT,group_name TEXT, owner_id TEXT, server_id INTEGER)',[],
             function(t,results){
               console.log("Group_Master table created");
             },function(t,e){
@@ -30,7 +30,7 @@ AppToDateDB.prototype = function() {
                 }, function(err){
               	  console.log("Column server_id for AttendeeGroup does not exist");
               	  console.log("Creating server_id column");
-      	          tx.executeSql('ALTER TABLE AttendeeGroup ADD COLUMN server_id TEXT', [], 
+      	          tx.executeSql('ALTER TABLE AttendeeGroup ADD COLUMN server_id INTEGER', [], 
       	                  function(t,r){
       	              	  console.log("server_id column added to AttendeeGroup");
                       }, function(err){
@@ -52,7 +52,7 @@ AppToDateDB.prototype = function() {
             });
           
           tx.executeSql('CREATE TABLE IF NOT EXISTS Events (id INTEGER PRIMARY KEY AUTOINCREMENT, user_Id INTEGER, title TEXT, notes TEXT,' +
-        		  		'start, end, image_url, location_title, lat, lng, remind_before, server_id TEXT)',[],
+        		  		'start, end, image_url, location_title, lat, lng, remind_before, server_id INTEGER)',[],
     	          function(t,results){
     	            console.log("Events table created");
     	          },function(t,e){
@@ -159,6 +159,26 @@ AppToDateDB.prototype = function() {
         	  
           });
         });
+	}
+	
+	var getEventClientIdFromServerId = function(eventServerId){
+		console.log("fetching client id from event serverid : " + eventServerId);
+		var deferred = $.Deferred();
+		db.transaction(function(tx) {
+			tx.executeSql('select id from Events where server_id = ?', [eventServerId],
+				function(t,r){
+					if(r.rows.length > 0){
+						var row = r.rows.item(0);
+						deferred.resolve(row['id']);
+					} else {
+						deferred.resolve(null);
+					}
+			}, function(t,e){
+	            console.log("Error fetching client id from event serverid:  "+ e.message);
+	            deferred.reject(e);
+	          });
+		});
+		return deferred.promise();
 	}
 	
 	var getGroupsByEvent = function(eventId){
@@ -809,7 +829,8 @@ AppToDateDB.prototype = function() {
     deleteEvent: deleteEvent,
     getCurrentLoggedInUser: getCurrentLoggedInUser,
     insertCurrentLoggedInUser: insertCurrentLoggedInUser,
-    getGroupsByEvent: getGroupsByEvent
+    getGroupsByEvent: getGroupsByEvent,
+    getEventClientIdFromServerId: getEventClientIdFromServerId
   }
 }();
 return window.AppToDate=AppToDateDB;
