@@ -181,10 +181,15 @@ angular.module('AppToDate', [
             url: "/event/edit/:id",
     		templateUrl: "js/Templates/event.html",
             controller: 'editEventCtrl'
+          })
+          .state('splashScreen', {
+            url: "/splashScreen",
+    		templateUrl: "js/Templates/splashScreen.html",
+            controller: 'splashScreenCtrl'
           });
 
 
-  $urlRouterProvider.otherwise('/login');
+  $urlRouterProvider.otherwise('/splashScreen');
 
 });
 //handle GCM notifications for Android

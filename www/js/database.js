@@ -450,6 +450,7 @@ AppToDateDB.prototype = function() {
 	
 	var selectDeviceId = function(){
 		var deferred = $.Deferred();
+		console.log("called selectDeviceId");
     	db.transaction(function(tx) {
             tx.executeSql('SELECT device_id FROM DeviceId LIMIT 1', [], 
               function(t,r){
@@ -458,6 +459,7 @@ AppToDateDB.prototype = function() {
                 	var row = r.rows.item(0);
                 	deferred.resolve(row['device_id']);
                 } else {
+                	console.log("device_id NOT found");
                 	deferred.resolve(null);
                 }
             }, function(t,e){

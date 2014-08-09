@@ -6,8 +6,10 @@ angular.module('AppToDate.Services')
 				console.log("Deleting with url : " + appConfig.apiUrl + url)
 				return $http.delete(appConfig.apiUrl + url);
 			} else if(method == "GET"){
+				console.log("API URL: " + appConfig.apiUrl + url);
 				return $http.get(appConfig.apiUrl + url, data);
 			} else {
+				console.log("API URL CALLED: " + appConfig.apiUrl + url);
 				return $http.post(appConfig.apiUrl + url, data);
 			}
 		}

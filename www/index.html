@@ -66,6 +66,7 @@
 <script src="js/Controllers/create-group-controller.js"></script>
 <script src="js/Controllers/edit-event-controller.js"></script>
 <script src="js/Controllers/create-view-event-common.js"></script>
+<script src="js/Controllers/splash-screen-controller.js"></script>
 
 <script type="text/javascript">
 	var DB = new AppToDate();
@@ -86,7 +87,7 @@
 	data-ng-controller="parentController">
 	<nav data-ng-show="userDetails">
 		<!--Top Navigation -->
-		<div class="navbar navbar-inverse navbar-fixed-top">
+		<div id="navbar" class="navbar navbar-inverse navbar-fixed-top">
 			<div class="container padding-none">
 				<div class="navbar-header">
 					<div class="navBar-right navbar-toggle collapsed"
@@ -97,17 +98,17 @@
 					<h4 class="navbar-heading text-center">{{navTitle}}</h4>
 
 				</div>
-				<div class="navbar-collapse collapse" style="height: 1px;">
+				<div id="nav-collapse" class="navbar-collapse collapse" style="height: 1px;">
 					<ul class="nav navbar-nav top-nav">
-						<li><div class="profile-pic">
+						<!-- <li><div class="profile-pic">
 								<img class="img-responsive" ng-src="{{imageSrc}}"
 									alt="" />
 							</div>
-							<a href="#/home">{{userDetails.first_name}}</a></li>
-						<li><div class="profile-pic no-border">
+							<a href="#/home">{{userDetails.first_name}}</a></li> -->
+						<li><div class="profile-pic">
 								<img class="img-responsive" ng-src="{{imageSrc}}" alt="" />
 							</div>
-							<a href="#/profile">Profile</a></li>
+							<a href="#/profile">{{userDetails.first_name}}</a></li>
 						<li>
 							<a href="#/upgrade">Upgrade</a></li>
 						<li>
@@ -127,5 +128,14 @@
 	<!-- jQuery Framework-->
 	<!-- Include all compiled plugins (below), or include individual files as needed -->
 	<script src="js/main.js"></script>
+	<script type="text/javascript" >
+	 $(document).ready(function () { 
+	    $("#navbar li a").click(function(event) {
+	        // check if window is small enough so dropdown is created
+	    $("#nav-collapse").removeClass("in").addClass("collapse");
+
+	    });
+	 }); 
+	</script>
 </body>
 </html>
