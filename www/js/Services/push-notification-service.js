@@ -4,7 +4,17 @@ function onNotificationGCM(e) {
         case 'registered':
             if (e.regid.length > 0) {
                 console.log("Device Registered Event Received" + JSON.stringify(e.regid));
-                DB.insertDeviceId(e.regid);
+                $.when(DB.selectDeviceId()).then(
+                    function(deviceId) {
+                    	if(deviceId){
+                    		console.log("DeviceId already present no need to insert again: " + JSON.stringify(deviceId));
+                     	} else {
+                     		DB.insertDeviceId(e.regid);
+                     	}
+                    },
+                    function(errorMsg) {
+                        console.log("Error while fetching deviceId : " + JSON.stringify(errorMsg));
+                    });
             }
             break;
 
@@ -26,10 +36,13 @@ function onNotificationGCM(e) {
 	            			eventService.deleteEventFromNotification(payload.InformationId);
 	        				break;
 	            		case 'EventAccepeted':
+	            			eventService.updateEventFromNotification(payload.InformationId);
 	        				break;
 	            		case 'EventRejected':
+	            			eventService.updateEventFromNotification(payload.InformationId);
 	        				break;
 	            		case 'EventMayBe':
+	            			eventService.updateEventFromNotification(payload.InformationId);
 	        				break;
 	            		case 'PersonJoined':
 	        				break;

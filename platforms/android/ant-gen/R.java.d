@@ -108,6 +108,7 @@ D:\work\phonegap-angularjs\sdk\facebook-android-sdk-3.15.0\facebook\res\values-l
 D:\work\phonegap-angularjs\sdk\facebook-android-sdk-3.15.0\facebook\res\values-mdpi\dimens.xml \
 D:\work\phonegap-angularjs\sdk\facebook-android-sdk-3.15.0\facebook\res\values-xhdpi\dimens.xml \
 D:\work\phonegap-workspace\AppToDate\platforms\android\res\drawable\icon.png \
+D:\work\phonegap-workspace\AppToDate\platforms\android\res\drawable\logo.png \
 D:\work\phonegap-workspace\AppToDate\platforms\android\res\drawable-hdpi\icon.png \
 D:\work\phonegap-workspace\AppToDate\platforms\android\res\drawable-hdpi\ic_action_next_item.png \
 D:\work\phonegap-workspace\AppToDate\platforms\android\res\drawable-hdpi\ic_action_previous_item.png \
@@ -136,6 +137,7 @@ D:\work\phonegap-workspace\AppToDate\platforms\android\res\values\facebookconnec
 D:\work\phonegap-workspace\AppToDate\platforms\android\res\values\strings.xml \
 D:\work\phonegap-workspace\AppToDate\platforms\android\res\xml\config.xml \
 D:\work\phonegap-workspace\AppToDate\platforms\android\ant-build\res\drawable\icon.png \
+D:\work\phonegap-workspace\AppToDate\platforms\android\ant-build\res\drawable\logo.png \
 D:\work\phonegap-workspace\AppToDate\platforms\android\ant-build\res\drawable-hdpi\icon.png \
 D:\work\phonegap-workspace\AppToDate\platforms\android\ant-build\res\drawable-hdpi\ic_action_next_item.png \
 D:\work\phonegap-workspace\AppToDate\platforms\android\ant-build\res\drawable-hdpi\ic_action_previous_item.png \

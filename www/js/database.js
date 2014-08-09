@@ -126,7 +126,7 @@ AppToDateDB.prototype = function() {
 	            console.log("Error while creating DeviceId table : "+e.message);
 	          });
           
-          tx.executeSql('CREATE TABLE IF NOT EXISTS event_attendees (id INTEGER PRIMARY KEY AUTOINCREMENT, event_id INTEGER, user_id TEXT, status TEXT)',[],
+          tx.executeSql('CREATE TABLE IF NOT EXISTS event_attendees (id INTEGER PRIMARY KEY AUTOINCREMENT, event_id INTEGER, user_id TEXT, status INTEGER)',[],
 	          function(t,results){
 	            console.log("event_attendees table created");
 	          },function(t,e){
@@ -491,7 +491,7 @@ AppToDateDB.prototype = function() {
 	    		if(event.EventAttendeeAssociations && event.EventAttendeeAssociations.length > 0){
 	    			event.EventAttendeeAssociations.map(function(item){
 	    				tx.executeSql('INSERT INTO event_attendees (event_id, user_id, status) values(?, ?, ?)',
-	    				[r.insertId, item.AppToDateAttendee.Person.ClientId, eventStatus.unknown],
+	    				[r.insertId, item.Person.ClientId, item.status],
 	    				function(a, b){
 	    					console.log("Data inserted in event_attendees table count : "+r.rowsAffected);
 	    				}, function(t,e){
@@ -526,7 +526,7 @@ AppToDateDB.prototype = function() {
 	    		if(event.EventAttendeeAssociations && event.EventAttendeeAssociations.length > 0){
 	    			event.EventAttendeeAssociations.map(function(item){
 	    				tx.executeSql('INSERT INTO event_attendees (event_id, user_id, status) values(?, ?, ?)',
-	    				[r.insertId, item.AppToDateAttendee.Person.ClientId, eventStatus.unknown],
+	    				[r.insertId, item.Person.ClientId, item.status],
 	    				function(a, b){
 	    					console.log("Data inserted in event_attendees table count : "+r.rowsAffected);
 	    				}, function(t,e){
@@ -539,7 +539,7 @@ AppToDateDB.prototype = function() {
 	    		if(event.GroupAssociations && event.GroupAssociations.length > 0){
 	    			event.GroupAssociations.map(function(item){
 	    				tx.executeSql('INSERT INTO event_groups (event_id, group_id, status) values(?, ?, ?)',
-	    				[r.insertId, item.GroupClientId, eventStatus.unknown],
+	    				[r.insertId, item.GroupClientId, item.status],
 	    				function(a, b){
 	    					console.log("Data inserted in event_groups table for event id : "+r.insertId + " and group id : " + item.GroupClientId);
 	    				}, function(t,e){

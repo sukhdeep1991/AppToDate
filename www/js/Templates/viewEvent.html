@@ -1,4 +1,4 @@
-<ion-view title="{{navTitle}}"> <ion-content> <!-- Nav tabs -->
+<ion-view title="{{navTitle}}"> <ion-pane> <!-- Nav tabs -->
 <ul class="nav nav-tabs events" id="tab">
 	<li data-ng-class="{'active' : tab == 'details'}"><a
 		data-ng-click="loadEventDetails()">Details</a></li>
@@ -8,105 +8,108 @@
 		data-ng-click="loadGoogleMap()">Location</a></li>
 </ul>
 <div class="bg">
-<!-- Tab panes -->
-<div class="tab-content">
+	<!-- Tab panes -->
+	<div class="tab-content">
 
-	<div role="main" class="container theme-showcase" id="viewEvent">
-		<div class="tab-pane" data-ng-show="tab == 'details'">
-			<section>
-				<h4 class="margin-top" data-ng-bind="event.title"></h4>
-				<p class="margin-top" data-ng-bind="event.notes"></p>
-
-
-				<div class="event-box">
-					<hr />
-					<h3>Event Time</h3>
-					<p class="time">{{ event.start | date : 'short'}}</p>
-				</div>
-			</section>
-		</div>
-		<div class="tab-pane" data-ng-show="tab == 'attendees'">
-			<div class="search-box">
+		<div role="main" class="container theme-showcase" id="viewEvent">
+			<div class="tab-pane" data-ng-show="tab == 'details'">
 				<section>
-					<form role="form">
-						<div class="form-group has-feedback">
-							<input type="text" class="form-control search" id="search"
-								placeholder="Search by name" data-ng-model="attendeeSearch">
-							<span class="glyphicon glyphicon-search form-control-feedback"></span>
-						</div>
-					</form>
-				</section>
-			</div>
-			<div role="main" class="header-events bg">
-				<section>
-					<div id='attendeeContacts'>
-						<div class="table-responsive">
-							<table class="table">
-								<tbody>
-									<tr
-										data-ng-repeat="attendee in event.attendees | filter : {'first_name': attendeeSearch}"
-										data-ng-click="attendeeClicked(attendee)">
-										<td class="contact-text-left">{{attendee.first_name}}</td>
-										<td
-											data-ng-class="{'contact-text-right-registered': attendee.status == 1}">
-											{{statusMessages[attendee.status]}} <span class="glyphicon"
-											data-ng-class="{'glyphicon-time': attendee.status == 0.0, 'glyphicon-thumbs-up': attendee.status == 1, 'glyphicon-thumbs-down': attendee.status == 3}"></span>
-										</td>
-									</tr>
-									<tr
-										data-ng-repeat="group in event.groups | filter : {'group_name': attendeeSearch}">
-										<td class="contact-text-left">{{group.group_name}}</td>
-									</tr>
-								</tbody>
-							</table>
-						</div>
+					<h4 class="margin-top" data-ng-bind="event.title"></h4>
+					<p class="margin-top" data-ng-bind="event.notes"></p>
+					<img class="img-responsive"
+						ng-src="{{eventImageSource+event.server_id}}" />
 
+					<div class="event-box">
+						<hr />
+						<h3>Event Time</h3>
+						<p class="time">{{ event.start | date : 'short'}}</p>
 					</div>
 				</section>
 			</div>
-		</div>
-		<div class="tab-pane" data-ng-show="tab == 'location'">
-			<section>
-				<div class="form-group has-feedback">
-					<h4 class="margin-top" data-ng-bind="event.location_title"></h4>
+			<div class="tab-pane" data-ng-show="tab == 'attendees'">
+				<div class="search-box">
+					<section>
+						<form role="form">
+							<div class="form-group has-feedback">
+								<input type="text" class="form-control search" id="search"
+									placeholder="Search by name" data-ng-model="attendeeSearch">
+								<span class="glyphicon glyphicon-search form-control-feedback"></span>
+							</div>
+						</form>
+					</section>
 				</div>
-				<div class="margin-top2" id="map"></div>
-			</section>
-		</div>
-		<!-- 		<div class="bottom-box"> -->
-		<!-- 			<hr /> -->
-		<!-- 			<h2>Are you Attending event?</h2> -->
+				<div role="main" class="header-events bg">
+					<section>
+						<div id='attendeeContacts'>
+							<div class="table-responsive">
+								<table class="table">
+									<tbody>
+										<tr
+											data-ng-repeat="attendee in event.attendees | filter : {'first_name': attendeeSearch}"
+											data-ng-click="attendeeClicked(attendee)">
+											<td class="contact-text-left">{{attendee.first_name}}</td>
+											<td
+												data-ng-class="{'contact-text-right-registered': attendee.status == 1}">
+												{{statusMessages[attendee.status]}} <span class="glyphicon"
+												data-ng-class="{'glyphicon-time': attendee.status == 0.0, 'glyphicon-thumbs-up': attendee.status == 1, 'glyphicon-thumbs-down': attendee.status == 3}"></span>
+											</td>
+										</tr>
+										<tr
+											data-ng-repeat="group in event.groups | filter : {'group_name': attendeeSearch}">
+											<td class="contact-text-left">{{group.group_name}}</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
 
-		<!-- 			<div class="btn-group btn-bottom"> -->
-		<!-- 				<button type="button" class="btn btn-default btn-left">May -->
-		<!-- 					be</button> -->
-		<!-- 				<button type="button" class="btn btn-default btn-middle">Yes</button> -->
-		<!-- 				<button type="button" class="btn btn-default btn-right">No</button> -->
-		<!-- 			</div> -->
-		<!-- 		</div> -->
+						</div>
+					</section>
+				</div>
+			</div>
+			<div class="tab-pane" data-ng-show="tab == 'location'">
+				<section>
+					<div class="form-group has-feedback">
+						<h4 class="margin-top" data-ng-bind="event.location_title"></h4>
+					</div>
+					<div class="margin-top2" id="map"></div>
+				</section>
+			</div>
+			<!-- 		<div class="bottom-box"> -->
+			<!-- 			<hr /> -->
+			<!-- 			<h2>Are you Attending event?</h2> -->
+
+			<!-- 			<div class="btn-group btn-bottom"> -->
+			<!-- 				<button type="button" class="btn btn-default btn-left">May -->
+			<!-- 					be</button> -->
+			<!-- 				<button type="button" class="btn btn-default btn-middle">Yes</button> -->
+			<!-- 				<button type="button" class="btn btn-default btn-right">No</button> -->
+			<!-- 			</div> -->
+			<!-- 		</div> -->
+		</div>
 	</div>
 </div>
-</div>
 <!-- Dialog model for attendee -->
-<div modal="showModal" id="attendeeModal" tabindex="-1" role="modal" aria-labelledby="attendeeModalLabel" aria-hidden="true" close="cancel()">
+<div modal="showModal" id="attendeeModal" tabindex="-1" role="modal"
+	aria-labelledby="attendeeModalLabel" aria-hidden="true"
+	close="cancel()">
 	<div class="modal-dialog">
-        <div class="modal-content modal-attendee">
-            <div class="modal-header modal-head-reminder-bg">
-                <button type="button" class="close close-bg" data-dismiss="modal" data-ng-click="showModal = false">
-                    <span aria-hidden="true">&times;</span>
-                    <span class="sr-only">Close</span>
-                </button>
-                <div class="profile-modal-top-bg">
-                    <img 
-				        class="img-responsive"
-				        ng-src="{{userImageSource + selectedAttendee.user_id}}" alt="image" />
-		        </div>
-            </div>
-	        <div class="modal-body modal-body-attendee">
-		    <p class="attendeelabel">{{selectedAttendee.first_name}}</p>
-		    <p class="attendeelabel">{{selectedAttendee.username}}</p>
-	        </div>
-        </div>
-    </div>
+		<div class="modal-content modal-attendee">
+			<div class="modal-header modal-head-reminder-bg">
+				<button type="button" class="close close-bg" data-dismiss="modal"
+					data-ng-click="showModal = false">
+					<span aria-hidden="true">&times;</span> <span class="sr-only">Close</span>
+				</button>
+				<div class="profile-modal-top-bg">
+					<img class="img-responsive"
+						ng-src="{{userImageSource + selectedAttendee.user_id}}"
+						alt="image" />
+				</div>
+			</div>
+			<div class="modal-body modal-body-attendee">
+				<p class="attendeelabel">{{selectedAttendee.first_name}}</p>
+				<p class="attendeelabel">{{selectedAttendee.username}}</p>
+			</div>
+		</div>
+	</div>
 </div>
-</ion-content> </ion-view>
+</ion-pane> </ion-view>

@@ -1,6 +1,10 @@
 angular.module('AppToDate.Services')
 .factory('eventService',function(httpResource,$q,$filter, $location, $window){
 	var convertServerToClientEvent = function(eventData){
+		angular.forEach(eventData.EventAttendeeAssociations,function(attendee){
+			attendee.status = attendee.Status;
+		});
+		
 		var event = {
 				user_id: eventData.Organizer.ClientId,
 				title: eventData.Title,
@@ -21,6 +25,20 @@ angular.module('AppToDate.Services')
 		return event;
 	}
 	
+	var insertEventInDevice = function(title, location, notes, start, end, remindBefore){
+		console.log("Inserting event in device");
+		//prepare calendar options
+		var calOptions = window.plugins.calendar.getCalendarOptions();
+		calOptions.firstReminderMinutes = remindBefore;		
+		
+		window.plugins.calendar.createEventWithOptions(title,location.displayName,notes,
+				start,end,calOptions,function(response){
+			console.log("Plugin create event success: " + JSON.stringify(response));
+		},function(error){
+			console.log("Plugin create event error: " + JSON.stringify(error));				
+		});
+	}
+	
 	return {
 		createEvent : function(event){
 			var deferred = $q.defer();
@@ -33,6 +51,8 @@ angular.module('AppToDate.Services')
 	            $.when(DB.insertEvent(event)).then(
 	              function(data) {
 	                console.log("event saved successfully : " + JSON.stringify(event));
+	            	insertEventInDevice(event.title,event.location,event.notes,
+        					event.start,event.end, event.remindBefore);
 	                deferred.resolve(event);
 	              },
 	              function(errorMsg) {
@@ -78,8 +98,6 @@ angular.module('AppToDate.Services')
 		    	            function(groupsData) {
 		    	            	event.groups = groupsData;
 		    	            	console.log("Event with groups: " + JSON.stringify(event));
-		    	            	insertEventInDevice(event.title,event.location,event.notes,
-		    	            					event.start,event.end, event.remindBefore);
 		    	            	deferred.resolve(event);
 		    	            },
 		    	            function(errorMsg) {
@@ -119,20 +137,6 @@ angular.module('AppToDate.Services')
             return deferred.promise;
 		},
 		
-		insertEventInDevice: function(title, location, notes, start, end, remindBefore){
-			console.log("Inserting event in device");
-			//prepare calendar options
-			var calOptions = window.plugins.calendar.getCalendarOptions();
-			calOptions.firstReminderMinutes = remindBefore;		
-			
-			window.plugins.calendar.createEventWithOptions(title,location,notes,
-					start,end,calOptions,function(response){
-				console.log("Plugin create event success: " + JSON.stringify(response));
-			},function(error){
-				console.log("Plugin create event error: " + JSON.stringify(error));				
-			});
-		}, 
-		
 		insertEventFromNotification: function(eventId){
 			$.when(DB.getEventClientIdFromServerId(eventId)).then(
               function(clientId) {
@@ -146,6 +150,8 @@ angular.module('AppToDate.Services')
           	            $.when(DB.insertEvent(event)).then(
           	              function(data) {
           	                console.log("event saved successfully : " + JSON.stringify(event));
+	    	            	insertEventInDevice(event.title,event.location,event.notes,
+	            					event.start,event.end, event.remindBefore);
           	              },
           	              function(errorMsg) {
           	                console.log("Error while saving event");

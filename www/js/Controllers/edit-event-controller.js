@@ -18,7 +18,12 @@ function($scope, $filter, $location, imageService,
 	$scope.addSelected = function(event){
 		if(event.attendees && event.attendees.length > 0){
 			angular.forEach(event.attendees, function(item){
-				$scope.selectedContacts.push(item.server_id);
+				$scope.selectedContacts.push(
+						{
+							server_id: item.server_id,
+							status: item.status
+						}
+					);
 			});
 			console.log("selected attendees of event: " + JSON.stringify($scope.selectedContacts));
 			if($scope.contacts.length > 0){
@@ -29,7 +34,11 @@ function($scope, $filter, $location, imageService,
 		}
 		if(event.groups && event.groups.length > 0){
 			angular.forEach(event.groups, function(item){
-				$scope.selectedGroups.push(item.server_id);
+				$scope.selectedGroups.push(
+					{
+						server_id: item.server_id
+					}
+				);
 			});
 			console.log("selected groups of event: " + JSON.stringify($scope.selectedGroups));
 			if($scope.groups.length > 0){
@@ -44,10 +53,11 @@ function($scope, $filter, $location, imageService,
 		if(selectedList && selectedList.length > 0){
 			console.log("Setting selected attendees");
 			angular.forEach(selectedList, function(item){
-				var filtered = $filter('filter')(contacts, {'server_id': item});
+				var filtered = $filter('filter')(contacts, {'server_id': item.server_id});
 				if(filtered && filtered.length > 0){
 					console.log("Setting selected to attendee: " + JSON.stringify(filtered[0]));
 					filtered[0].isSelected = true;
+					filtered[0].status = item.status;
 				}
 			});
 		} else {

@@ -33,9 +33,6 @@ angular.module('AppToDate.Controllers')
 	}
 	
 	$scope.createEvent = function(event){
-		if(event.start != undefined){
-			return;
-		}
 		$scope.setShowLoader(true);
 		event.start = new Date($filter('date')(event.date, 'MM-dd-yyyy'));
 		event.end = new Date($filter('date')(event.date, 'MM-dd-yyyy'))
@@ -79,14 +76,13 @@ angular.module('AppToDate.Controllers')
 			if(filtered && filtered.length > 0){
 				angular.forEach(filtered,function(item){
 					var attendee = {
-						AppToDateAttendee :{
 							Person: {
 								'ClientId': item.user_id,
 								'FirstName': item.first_name,
 								'LastName': item.last_name
-							}
+							},
+							status: item.status || eventStatus.unknown
 						}
-					}
 					event.EventAttendeeAssociations.push(attendee);
 				});
 			}
@@ -120,8 +116,10 @@ angular.module('AppToDate.Controllers')
 				 var serverUrl = appConfig.apiUrl + "Image/UploadEventPicture?eventId=" + response.server_id;
 				 imageService.uploadImageToServer(response.imageUrl, serverUrl, 
 				    		function(response){
+					    console.log("Image uploaded successfully");
 						$scope.setShowLoader(false);
 						$location.path('/calendar');
+						$scope.$apply();
 				 }, function(error){
 					 console.log("Error in event image upload: " + JSON.stringify(error));
 					 $scope.setShowLoader(false);

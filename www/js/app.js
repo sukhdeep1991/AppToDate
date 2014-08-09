@@ -20,31 +20,22 @@ angular.module('AppToDate', [
     StatusBar.styleDefault();
     
     //Check if device already already present
-    $.when(DB.selectDeviceId()).then(
-            function(deviceId) {
-            	if(deviceId){
-            		console.log("DeviceId already present no need to fetche: " + JSON.stringify(deviceId));
-             	} else {
-             		console.log("Fetching deviceId and saving into the data base");
-             		var pushNotification = window.plugins.pushNotification;
-             	    
-             	    pushNotification.register(
-             	    	    function(success){
-             	    	    	console.log("Successfully registered the device : " + JSON.stringify(success));
-             	                //DB.insertDeviceId(success);
-             	    	    },
-             	    	    function(error){
-             	    	    	console.log("Error occured while registering the device : " + JSON.stringify(error));
-             	    	    },
-             	    	    {
-             	    	        "senderID": appConfig.googleSenderId,
-             	    	        "ecb":"onNotificationGCM"
-             	    	    });
-             	}
-            },
-            function(errorMsg) {
-              console.log("Error while fetching deviceId : " + JSON.stringify(errorMsg));
-          });
+	console.log("Registering device for push notifications");
+	var pushNotification = window.plugins.pushNotification;
+    
+    pushNotification.register(
+    	    function(success){
+    	    	console.log("Successfully registered the device : " + JSON.stringify(success));
+    	    	//DB.insertDeviceId(success);
+    	    },
+    	    function(error){
+    	    	console.log("Error occured while registering the device : " + JSON.stringify(error));
+    	    },
+    	    {
+    	        "senderID": appConfig.googleSenderId,
+    	        "ecb":"onNotificationGCM"
+    	    });
+            
     
     
   //Admob show banner

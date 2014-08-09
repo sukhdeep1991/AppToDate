@@ -10,6 +10,7 @@ function($scope, $filter, $location, imageService,
 	$scope.eventId = $stateParams.id
 	$scope.statusMessages = {"0.0": "Wating for response"};
 	$scope.userImageSource = appConfig.apiUrl + "Image/Get?clientId=";
+	$scope.eventImageSource = appConfig.apiUrl + "Image/GetEventImage?eventId=";
 
 	if ($scope.userDetails && $scope.userDetails.user_id) {
 		eventService
@@ -25,6 +26,7 @@ function($scope, $filter, $location, imageService,
 						});
 	} else {
 		$scope.event = {
+				  "server_id": 48,
 				  "id": 1,
 				  "user_Id": "d464afc9-020b-4c48-9927-ea75d3cca2cf",
 				  "title": "test new event",
