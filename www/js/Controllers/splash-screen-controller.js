@@ -8,6 +8,9 @@ angular.module('AppToDate.Controllers')
 			console.log("User already found: " + JSON.stringify(user));
 			callLoginService(user, true);
 		}
+		else{
+			$location.path("/login");
+		}
 	}, function(error){
 		console.log("Error while fetching getLoggedInUser: " + JSON.stringify(error));
 	});

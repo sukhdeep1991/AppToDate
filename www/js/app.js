@@ -87,7 +87,8 @@ angular.module('AppToDate', [
 	$compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|mailto|chrome-extension|content|file):/);
 	
   $stateProvider
-
+  	
+ 
       .state('login', {
         url: '/login',
         templateUrl: 'js/Templates/login.html',
