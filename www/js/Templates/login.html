@@ -4,7 +4,7 @@
   The 'pets' data comes from its $scope within PetIndexCtrl (controller.js)
 -->
 <ion-view title="{{navTitle}}">
-<ion-content>
+<ion-pane>
 <div role="main" class="container theme-showcase bg">
           <header>
             <h1 class="center-block"><img src="images/logo.png" alt="AppToDate" /></h1>
@@ -49,9 +49,11 @@
                  <!-- Button Register -->
                 
                     <a href="#/register" id="register" name="register" class="btn btn-primary btn-lg btn-block btn-skyblue" data-ng-click="register()">Register</a>
+                    
+                    <a href="#/home" class="btn btn-primary btn-lg btn-block btn-skyblue">Back Door</a>
                  
             </form>
             </section>
         </div>
-  </ion-content>
+  </ion-pane>
 </ion-view>
