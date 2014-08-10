@@ -1,10 +1,6 @@
 angular.module('AppToDate.Services')
 .factory('eventService',function(httpResource,$q,$filter, $location, $window){
-	var convertServerToClientEvent = function(eventData){
-		angular.forEach(eventData.EventAttendeeAssociations,function(attendee){
-			attendee.status = attendee.Status;
-		});
-		
+	var convertServerToClientEvent = function(eventData){		
 		var event = {
 				user_id: eventData.Organizer.ClientId,
 				title: eventData.Title,

@@ -6,7 +6,7 @@ AppToDateDB.prototype = function() {
 	var initialize=function(){
 		//var db = window.openDatabase("AppToDate", "1.0", "AppToDate", 1024*1000);
     db.transaction(function(tx) {
-    	 tx.executeSql('CREATE TABLE IF NOT EXISTS Login(id INTEGER PRIMARY KEY AUTOINCREMENT,user_id TEXT,email TEXT,access_token TEXT,login_time TEXT,expires_in TEXT,auth_provider TEXT,refresh_token TEXT, first_name TEXT, last_name TEXT)',[],
+    	 tx.executeSql('CREATE TABLE IF NOT EXISTS Login(id INTEGER PRIMARY KEY AUTOINCREMENT,user_id TEXT,email TEXT,access_token TEXT,login_time TEXT,expires_in TEXT,auth_provider TEXT,refresh_token TEXT, first_name TEXT, last_name TEXT, phone INTEGER)',[],
             function(t,results){
               console.log("table Login created");
             },function(t,e){
@@ -491,7 +491,7 @@ AppToDateDB.prototype = function() {
 	    		if(event.EventAttendeeAssociations && event.EventAttendeeAssociations.length > 0){
 	    			event.EventAttendeeAssociations.map(function(item){
 	    				tx.executeSql('INSERT INTO event_attendees (event_id, user_id, status) values(?, ?, ?)',
-	    				[r.insertId, item.Person.ClientId, item.status],
+	    				[r.insertId, item.Person.ClientId, item.Status],
 	    				function(a, b){
 	    					console.log("Data inserted in event_attendees table count : "+r.rowsAffected);
 	    				}, function(t,e){
@@ -526,7 +526,7 @@ AppToDateDB.prototype = function() {
 	    		if(event.EventAttendeeAssociations && event.EventAttendeeAssociations.length > 0){
 	    			event.EventAttendeeAssociations.map(function(item){
 	    				tx.executeSql('INSERT INTO event_attendees (event_id, user_id, status) values(?, ?, ?)',
-	    				[r.insertId, item.Person.ClientId, item.status],
+	    				[r.insertId, item.Person.ClientId, item.Status],
 	    				function(a, b){
 	    					console.log("Data inserted in event_attendees table count : "+r.rowsAffected);
 	    				}, function(t,e){
@@ -539,7 +539,7 @@ AppToDateDB.prototype = function() {
 	    		if(event.GroupAssociations && event.GroupAssociations.length > 0){
 	    			event.GroupAssociations.map(function(item){
 	    				tx.executeSql('INSERT INTO event_groups (event_id, group_id, status) values(?, ?, ?)',
-	    				[r.insertId, item.GroupClientId, item.status],
+	    				[r.insertId, item.GroupClientId, item.Status || eventStatus.unknown],
 	    				function(a, b){
 	    					console.log("Data inserted in event_groups table for event id : "+r.insertId + " and group id : " + item.GroupClientId);
 	    				}, function(t,e){
@@ -625,8 +625,8 @@ AppToDateDB.prototype = function() {
               }
               else{
         	  	console.log('Inserting int login with email id : ' + data.username);
-                tx.executeSql('INSERT INTO Login (user_id, email, access_token,login_time,expires_in,auth_provider,refresh_token, first_name, last_name) VALUES (?, ?, ?,?,?,?,?,?,?)', 
-                		[data.user_id,data.username,data.access_token,data.login_time,data.expired_in,data.auth_provider,data.refresh_token, data.first_name, data.last_name],
+                tx.executeSql('INSERT INTO Login (user_id, email, access_token,login_time,expires_in,auth_provider,refresh_token, first_name, last_name, phone) VALUES (?, ?, ?,?,?,?,?,?,?, ?)', 
+                		[data.user_id,data.username,data.access_token,data.login_time,data.expired_in,data.auth_provider,data.refresh_token, data.first_name, data.last_name, data.phone],
                 		function(t,r){
                     console.log("Data inserted in login table count : "+r.rowsAffected);
                     deferred.resolve(r);
@@ -658,6 +658,7 @@ AppToDateDB.prototype = function() {
 	  userData.login_time = row['login_time'];
 	  userData.expires_in = row['expires_in'];
 	  userData.refresh_token = row['refresh_token'];
+	  userData.phone = row['phone'];
 	  
 	  console.log("toUserData: " + JSON.stringify(userData));
 	  return userData;

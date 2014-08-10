@@ -1,5 +1,5 @@
 angular.module('AppToDate.Services')
-.factory('userService', function($q, httpResource){
+.factory('userService', function($q, httpResource, $filter){
 	return {
 		getFriends: function(userId){
 			var deferred = $q.defer();
@@ -104,6 +104,74 @@ angular.module('AppToDate.Services')
 	          });
 			
 			return deferred.promise;	
+		},
+		
+		getUninvitedFriends: function(userId, searchKey){
+			var deferred = $q.defer();
+			this.getFriends(userId).then(function(invitedFriends){
+				console.log("Already invited friends: "+ JSON.stringify(invitedFriends));
+				
+				//Calling plugin to get friends
+				var options = {};
+				options.filter = searchKey;
+				var fields = ["displayName",
+						"phoneNumbers", "emails" ];
+				if(navigator.contacts){
+					navigator.contacts.find(fields, function(contacts) {
+						console.log("All friends from plugin length: " + JSON.stringify(contacts.length));
+						var filteredContacts = [];
+						angular.forEach(contacts, function(contact){
+							var isInvited = false;
+							if(contact.emails && contact.emails.length > 0){
+								angular.forEach(invitedFriends, function(friend){
+									if(friend.username && friend.username != "null" && friend.username != "undefined"){
+										var filteredEmail = $filter('filter')(contact.emails, {value:  friend.username});
+										if(filteredEmail.length > 0){
+											isInvited = true;
+										}
+									}
+								});
+							}
+							if(contact.phoneNumbers && contact.phoneNumbers.length > 0 && !isInvited){
+								angular.forEach(invitedFriends, function(friend){
+									if(friend.phone && friend.phone != 0){
+										var filteredPhone = $filter('filter')(contact.phoneNumbers, {value:  friend.phone});
+										if(filteredPhone.length > 0){
+											isInvited = true;
+										}
+									}
+								});
+							}
+							if(!isInvited){
+								filteredContacts.push(contact);
+							} else {
+								console.log("Filtered friend: " + JSON.stringify(contact));
+							}
+						});
+						console.log("Filtered contacts :"+ JSON.stringify(filteredContacts.length));
+						deferred.resolve(filteredContacts);
+					}, function(error){
+						console.log("Error while fetching contacts from plugin: " + JSON.stringify(error));
+					}, options);
+				} else {
+					console.log("navigator.contacts cannot be resolved");
+				}
+			}, function(error){
+				console.log("Error while getting friends of user: "+ JSON.stringify(error));
+			});
+			return deferred.promise;
+		},
+		
+		sendInvites: function(invites){
+			if(invites && invites.length > 0){
+				console.log("Inviting people: " + JSON.stringify(invites));
+				httpResource.loadUrl("Person/InvitePeople", "POST", invites)
+					.success(function(response){
+						console.log("Success invite API: " + JSON.stringify(response));
+					}).error(function(error){
+						console.log("Error while calling the invite API: " + JSON.stringify(error));
+					});
+			}			
 		}
 	}
 });

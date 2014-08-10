@@ -81,7 +81,7 @@ angular.module('AppToDate.Controllers')
 								'FirstName': item.first_name,
 								'LastName': item.last_name
 							},
-							status: item.status || eventStatus.unknown
+							Status: item.status || eventStatus.unknown
 						}
 					event.EventAttendeeAssociations.push(attendee);
 				});

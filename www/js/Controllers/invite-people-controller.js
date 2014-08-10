@@ -17,19 +17,11 @@ angular
 			}
 			
 			var fetchContacts = function(searchKey) {
-				var options = {};
-				options.filter = searchKey;
-				var fields = [ "displayName",
-						"phoneNumbers", "emails" ];
-				if(navigator.contacts){
-					navigator.contacts.find(fields, function(contacts) {
-						$scope.$apply(function() {
-							$scope.contacts = contacts;
-							
-							//console.log('Contacts fetched : ' + JSON.stringify($scope.contacts));
-						});
-					}, onError, options);
-				}
+				userService.getUninvitedFriends($scope.userDetails.user_id).then(function(response){
+					$scope.contacts = response;
+				}, function(error){
+					console.log("Error: "+ JSON.stringify(error));
+				});
 				
 //				console.log("Fetching friend facebook");
 //				facebookConnectPlugin.api("/me/friends",["user_friends"], function(response){
@@ -49,26 +41,40 @@ angular
 				var phones = [];
 				var emails = [];
 				var users = [];
+				var invites = [];
+				var inviteTemplate = {
+						Invitee: {
+							'ClientId': $scope.userDetails.user_id,
+							'FirstName': $scope.userDetails.first_name,
+							'LastName': $scope.userDetails.last_name							
+						}	
+				};
 				if(contacts){
 					$filter('filter')(contacts, $scope.searchKey).map(function(contact) {
-						var userSelected = undefined;
-						
+						var userEmailSelected = undefined;
+						var userPhoneSelected = undefined;						
         				
 						var selectedPhoneNumbers = $filter('filter')(contact.phoneNumbers, {isSelected: true});
 						var selectedEmails = $filter('filter')(contact.emails, {isSelected: true});
 						if(selectedPhoneNumbers){
 							selectedPhoneNumbers.map(function(phoneNumber){
 								phones.push(phoneNumber.value);
-								userSelected = phoneNumber.value;
+								userPhoneSelected = phoneNumber.value;
+								var invite = angular.copy(inviteTemplate);
+								invite.InvitedPhone = phoneNumber.value;
+								invites.push(invite);
 							});
 						}
 						if(selectedEmails){
 							selectedEmails.map(function(email){
 								emails.push(email.value);
-								userSelected = email.value;
+								userEmailSelected = email.value;
+								var invite = angular.copy(inviteTemplate);
+								invite.InvitedEmail = email.value;
+								invites.push(invite);
 							});
 						}
-						if(userSelected){
+						if(userEmailSelected || userPhoneSelected){
 							var userData = {};
 	        				//userData.username = user.username;
 	        				//userData.id = data.Person.Id;
@@ -76,6 +82,8 @@ angular
 	        				userData.first_name = contact.displayName;
 	        				userData.last_name = 'test';
 	        				userData.access_token = appConfig.accessToken;
+	        				userData.username = userEmailSelected || '';
+	        				userData.phone = userPhoneSelected || 0;
 	        				//userData.expired_in = data.TokenExpiryTime;
 	        				//userData.refresh_token = data.RefreshToken;
 	        				//appConfig.authorizationToken = data.AuthorizationToken;
@@ -85,6 +93,7 @@ angular
 					sendPhoneInvites(phones);
 					sendEmailInvites(emails);
 					saveUsers(users);
+					sendInvites(invites);
 				} else {
 					console.log("Empty contacts");
 				}
@@ -99,14 +108,14 @@ angular
 							phone,
 							appConfig.inviteMessage,
 							'',
-							function() {							
+							function() {	
+								alert('Message sent successfully');						
 							},
 							function(e) {
 								console.log('Message Failed:'
 										+ e);
 							});
 					});
-					alert('Message sent successfully');
 				}
 			}
 			
@@ -124,12 +133,19 @@ angular
 			
 			var saveUsers = function(users){
 				$scope.setShowLoader(true);
+				console.log("Users to save: " + JSON.stringify(users));
 				userService.addInvitedAttendees(users, $scope.userDetails.user_id).then(function(data){
 					$scope.setShowLoader(false);
-					$scope.$apply();
 				}, function(error){
 					$scope.setShowLoader(false);
-					$scope.$apply();
 				});
+			}
+			
+			//No need of loader, will be called asynchronously
+			var sendInvites = function(invites){
+				userService.sendInvites(invites);
+				$scope.searchKey = '';
+				fetchContacts('');
+				$scope.limit = 40;
 			}
 		})

@@ -21,6 +21,7 @@ angular.module('AppToDate.Services')
 	            			loginData.refresh_token = data.RefreshToken;
 	            			loginData.first_name = data.Person.FirstName;
 	            			loginData.last_name = data.Person.LastName;
+	            			loginData.phone = user.phone || 0;
 	            			appConfig.authorizationToken = data.AuthorizationToken;
 	            			
 	            			$.when(DB.insertLoginDetail(loginData)).then(
