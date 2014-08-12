@@ -12,12 +12,12 @@ angular.module('AppToDate.Controllers')
 					$scope.setUserDetails(response);
 					$location.path('/home');					
 				} else {
-					$scope.showErrorMessage('Could not register user');
+					$scope.showResponseMessage('An error occured', false);
 				}
 				$scope.setShowLoader(false);
 			},
 			function(errorData){
-				$scope.showErrorMessage('Could not register user');
+				$scope.showResponseMessage(errorData.Message||'An error occured', false);
 				console.log("Registering request failed : " + JSON.stringify(errorData));
 				$scope.setShowLoader(false);
 			});

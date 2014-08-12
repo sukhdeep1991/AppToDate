@@ -8,10 +8,6 @@ angular.module('AppToDate.Controllers')
 		 'title' : ''
 	 }
 	 $scope.selectAll = false;
-	 $scope.msg = {
-			 'success' : '',
-			 'error' : ''
-	 }
 	 
 	if ($scope.userDetails && $scope.userDetails.user_id) {
 		userService.getFriends($scope.userDetails.user_id).then(function(data){
@@ -35,7 +31,7 @@ angular.module('AppToDate.Controllers')
 	
 	$scope.createGroup = function(title){
 		if(!title || title.length == 0){
-			$scope.msg.error = 'Please enter the title!';
+			$scope.showResponseMessage('Please enter the title!', false);
 			return
 		}
 		if($scope.friends && $scope.friends.length > 0){
@@ -54,20 +50,15 @@ angular.module('AppToDate.Controllers')
 					console.log("Group Inserted : " + JSON.stringify(response));
 					$scope.setShowLoader(false);
 					$scope.goBack();
-				}, function(error){
+				}, function(error){error
 					console.log("Error occured userService.createGroup : " + JSON.stringify(error));
-					$scope.msg.error = 'Could not create group!';
+					$scope.showResponseMessage(error.Message||'An error occurred', false);
 					$scope.setShowLoader(false);
 				});
 				return
 			}
 		} 
-		$scope.msg.error = 'No attendees selected!';
+		$scope.showResponseMessage('No attendees selected!', false);
 		return
-	}
-	
-	$scope.clearMsg = function(){
-		$scope.msg.error = '';
-		$scope.msg.success = '';
 	}
 });

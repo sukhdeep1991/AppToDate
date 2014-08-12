@@ -1,9 +1,13 @@
 angular.module('AppToDate.Controllers',['AppToDate.Services'])
-.controller('parentController', function($scope, imageService, $location){
+.controller('parentController', function($scope, imageService, $location, $timeout){
 	$scope.imageSrc = "images/profile-icon.png";
 	$scope.spinnerImgSrc = "images/spinner.gif";
 	$scope.showLoader = false;
 	var history = [];
+	 $scope.msg = {
+			 'success' : '',
+			 'error' : ''
+	 }
 	//Keep pushing into the history
 	$scope.$on("$locationChangeStart", function(e, currentLocation, previousLocation){
 		var hashUrl = currentLocation.substring(currentLocation.lastIndexOf('#/')+1);
@@ -18,13 +22,6 @@ angular.module('AppToDate.Controllers',['AppToDate.Services'])
 		var prevUrl = history.length > 1 ? history.splice(-2)[0] : "/";
         $location.path(prevUrl);
 	}
-	
-	$scope.showErrorMessage = function(message){
-		$scope.errorMessage = message;
-		setTimeout(function(){
-			$scope.errorMessage = null;
-		}, 8000)
-	};
 	
 	$scope.setUserImage = function(imageURL){
 		console.log("Usage image updated");
@@ -64,5 +61,20 @@ angular.module('AppToDate.Controllers',['AppToDate.Services'])
 	}
 	$scope.editClicked = function(){
 		$scope.$broadcast('edit_clicked');
+	}
+	
+	$scope.showResponseMessage = function(msg, isSuccess){
+		$timeout.cancel($scope.msgTimeout);
+		if(isSuccess){
+			$scope.msg.success = msg;
+		} else {
+			$scope.msg.error = msg;
+		}
+		$scope.msgTimeout = $timeout($scope.clearMsg, 8000);
+	}
+	
+	$scope.clearMsg = function(){
+		$scope.msg.error = '';
+		$scope.msg.success = '';
 	}
 });

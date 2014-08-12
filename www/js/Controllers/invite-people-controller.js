@@ -109,7 +109,7 @@ angular
 							appConfig.inviteMessage,
 							'',
 							function() {	
-								alert('Message sent successfully');						
+								$scope.showResponseMessage('Message(s) sent successfully!', true);					
 							},
 							function(e) {
 								console.log('Message Failed:'
