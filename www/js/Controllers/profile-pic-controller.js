@@ -35,7 +35,7 @@ function($scope, imageService) {
 	    }, function(response){
 	    	console.log("Image upload failed: " + JSON.stringify(response));	
 			$scope.setShowLoader(false);
-	    }, options);
+	    });
 //		imageService.saveOrUpdateUserImage($scope.userDetails.user_id, imageURL).then(
 //				function(data) {
 //					console.log("image saved successfully");

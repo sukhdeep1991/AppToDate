@@ -241,28 +241,30 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
      */
     // TODO: Images selected from SDCARD don't display correctly, but from CAMERA ALBUM do!
     public void getImage(int srcType, int returnType) {
-        Intent intent = new Intent();
-        String title = GET_PICTURE;
-        if (this.mediaType == PICTURE) {
-            intent.setType("image/*");
-        }
-        else if (this.mediaType == VIDEO) {
-            intent.setType("video/*");
-            title = GET_VIDEO;
-        }
-        else if (this.mediaType == ALLMEDIA) {
-            // I wanted to make the type 'image/*, video/*' but this does not work on all versions
-            // of android so I had to go with the wildcard search.
-            intent.setType("*/*");
-            title = GET_All;
-        }
-
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        if (this.cordova != null) {
-            this.cordova.startActivityForResult((CordovaPlugin) this, Intent.createChooser(intent,
-                    new String(title)), (srcType + 1) * 16 + returnType + 1);
-        }
+//        Intent intent = new Intent();
+//        String title = GET_PICTURE;
+//        if (this.mediaType == PICTURE) {
+//            intent.setType("image/*");
+//        }
+//        else if (this.mediaType == VIDEO) {
+//            intent.setType("video/*");
+//            title = GET_VIDEO;
+//        }
+//        else if (this.mediaType == ALLMEDIA) {
+//            // I wanted to make the type 'image/*, video/*' but this does not work on all versions
+//            // of android so I had to go with the wildcard search.
+//            intent.setType("*/*");
+//            title = GET_All;
+//        }
+//
+//        intent.setAction(Intent.ACTION_GET_CONTENT);
+//        intent.addCategory(Intent.CATEGORY_OPENABLE);
+//        if (this.cordova != null) {
+//            this.cordova.startActivityForResult((CordovaPlugin) this, Intent.createChooser(intent,
+//                    new String(title)), (srcType + 1) * 16 + returnType + 1);
+//        }
+    	Intent i = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+    	this.cordova.startActivityForResult((CordovaPlugin) this, i, (srcType + 1) * 16 + returnType + 1);
     }
 
     /**
