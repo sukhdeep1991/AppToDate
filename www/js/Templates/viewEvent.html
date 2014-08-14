@@ -1,24 +1,27 @@
 <ion-view title="{{navTitle}}"> <ion-pane> <!-- Nav tabs -->
-<ul class="nav nav-tabs events" id="tab">
+<ul class="nav nav-tabs fixed-top" id="tab">
 	<li data-ng-class="{'active' : tab == 'details'}"><a
 		data-ng-click="loadEventDetails()">Details</a></li>
 	<li data-ng-class="{'active' : tab == 'attendees'}"><a
 		data-ng-click="loadAttendees()">Attendees</a></li>
 	<li data-ng-class="{'active' : tab == 'location'}"><a
 		data-ng-click="loadGoogleMap()">Location</a></li>
+	<li data-ng-class="{'active' : tab == 'notes'}"><a
+		data-ng-click="loadNotesTab()">Notes</a></li>
 </ul>
-<div class="bg">
+<div class="bg margin-top80">
 	<!-- Tab panes -->
 	<div class="tab-content">
 
 		<div role="main" class="container theme-showcase" id="viewEvent">
 			<div class="tab-pane" data-ng-show="tab == 'details'">
-				<section>
-					<h4 class="margin-top" data-ng-bind="event.title"></h4>
-					<p class="margin-top" data-ng-bind="event.notes"></p>
-					<img class="img-responsive"
-						ng-src="{{eventImageSource+event.server_id}}" />
-
+				<section class="details-body">
+                    <div class="event-detail"> 
+					    <h4 class="margin-top" data-ng-bind="event.title"></h4>
+					    <p class="margin-top" data-ng-bind="event.notes"></p>
+					    <img class="img-responsive"
+						    ng-src="{{eventImageSource+event.server_id}}" />
+                    </div>
 					<div class="event-box">
 						<hr />
 						<h3>Event Time</h3>
@@ -71,9 +74,48 @@
 					<div class="form-group has-feedback">
 						<h4 class="margin-top" data-ng-bind="event.location_title"></h4>
 					</div>
-					<div class="margin-top2" id="map"></div>
+					<div class="margin-top2" id="map" style="height: 350px;"></div>
 				</section>
 			</div>
+            <div class="tab-pane" data-ng-show="tab == 'notes'">
+                <div class="note">
+                    <div class="profile-row margin-top">
+                      <div class="profile-sm-pic">
+                        <div class="profile-sm-top-bg">
+                                 <img class="img-responsive" src="images/profile-pic.png" alt=""/>  
+                             </div>
+                        </div>
+                        <div class="profile-sm-text">
+                          <h4>Person Name</h4>
+                          <p>Comments</p>
+                        </div>
+                    </div>
+                    <div class="profile-row">
+                      <div class="profile-sm-pic">
+                        <div class="profile-sm-top-bg">
+                            <img class="img-responsive" src="images/profile-pic.png" alt=""/>  
+                        </div>
+                      </div>
+                      <div class="profile-sm-text">
+                        <h4>Person Name</h4>
+                        <p>Comments</p>
+                      </div>
+                  </div>
+                  <div class="clear"></div>
+                  <div class="comment">
+                    <section>
+                       <div class="event-box">
+                          <div class="form-group">   
+                                <textarea class="form-control" rows="3" placeholder="Add New Comment" required=""></textarea>
+                          </div>
+                          <div class="margin-top3 margin-bottom">
+                                <button type="button" id="btn-skylight" name="button sky light" class="btn btn-primary btn-lg btn-block btn-skylight">Add Comment</button>
+                          </div>
+                        </div> 
+                    </section>
+                  </div>
+                </div>
+            </div>
 			<!-- 		<div class="bottom-box"> -->
 			<!-- 			<hr /> -->
 			<!-- 			<h2>Are you Attending event?</h2> -->

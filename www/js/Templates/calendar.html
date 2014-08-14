@@ -1,36 +1,42 @@
 <ion-view title="My Calendar"> <ion-pane>
-<div class="search-box event">
-	<section>
-		<form role="form">
-			<!-- Text input Search-->
-			<div class="form-group has-feedback event-search search-top">
-				<input type="text" class="form-control search" id="Search"
-					placeholder="Search by event name" required=""><span
-					class="glyphicon glyphicon-search form-control-feedback"></span>
-			</div>
-			<a href="#/event/new" class="add"></a>
-		</form>
-	</section>
+<div class="search-box">          
+    <section> 
+        <form role="form">         
+        <!-- Text input Search-->
+
+            <div class="form-group has-feedback search-top">
+            <label for="textinput"></label>                  
+            <input type="text" class="form-control search" id="search" placeholder="Search by event name" required="">
+            <span class="glyphicon glyphicon-search margin-right form-control-feedback"></span>
+            <span class="glyphicon glyphicon-plus plus form-control-feedback"></span>
+
+        </div>
+                                        
+    </form>
+
+    </section>
 </div>
-<div role="main" class="header-events bg">
-	<section>
-		<div id='calendar' style="position: relative"></div>
-		<div class="header-option">
-			<table class="fc-header" style="width: 100%"></table>
-			<tr>
-				<td class="fc-header-right"><span
-					class="fc-button fc-button-agendaDay ui-state-default ui-corner-left"
-					unselectable="on" data-ng-click="changeView('agendaDay')"
-					data-ng-class="{'ui-state-active': view == 'agendaDay'}">day</span><span
-					class="fc-button fc-button-agendaWeek ui-state-default"
-					unselectable="on" data-ng-click="changeView('agendaWeek')"
-					data-ng-class="{'ui-state-active': view == 'agendaWeek'}">week</span><span
-					class="fc-button fc-button-month ui-state-default ui-corner-right"
-					unselectable="on" data-ng-click="changeView('month')"
-					data-ng-class="{'ui-state-active': view == 'month'}">month</span></td>
-			</tr>
-		</div>
-	</section>
-</div>
+<div class="search-box fixed-top">          
+        <section> 
+            <form role="form">         
+            <!-- Text input Search-->
+
+                <div class="form-group has-feedback search-top">
+                <label for="textinput"></label>                  
+                <input type="text" class="form-control search" id="Text1" placeholder="Search by event name" required="">
+                <span class="glyphicon glyphicon-search margin-right form-control-feedback"></span>
+                <a href="#/event/new"><span class="glyphicon glyphicon-plus plus form-control-feedback"></span></a>
+
+            </div>
+                                        
+        </form>
+
+        </section>
+    </div>
+    <div role="main" class="header-events bg">          
+        <section>               
+        <div id='calendar'></div>
+        </section>
+    </div>
 
 </ion-pane> </ion-view>

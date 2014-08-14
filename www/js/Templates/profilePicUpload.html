@@ -3,7 +3,7 @@
   It was wired up in the app config (app.js) 
   The 'pets' data comes from its $scope within PetIndexCtrl (controller.js)
 -->
-<ion-view title="{{navTitle}}"> <ion-content>
+<ion-view title="{{navTitle}}"> <ion-pane>
 <div role="main" class="theme-showcase bg">
 	<header class="container">
 		<h1 class="center-block">
@@ -11,20 +11,13 @@
 		</h1>
 	</header>
 	<section>
-		<div class="bg-top margin-top2">&nbsp;</div>
-		<div class="profile-pic-bg">
-
-			<div class="dashboard-top-bg edit-profile margin-top">
-				<a class="images_class" rel="images"><img id="profilePic"
-					class="img-responsive" ng-src="{{imageSrc}}" alt="image" /></a>
-			</div>
-
+		<div class="profile-pic-bg" >         
+	 		    <img class="img-responsive profile-top-bg" ng-src="{{imageSrc}}" alt="image" />
 		</div>
-		<div class="bg-top">&nbsp;</div>
 		<div class="container">
 			<!-- Button Upload -->
 
-			<div class="margin-top2">
+			<div class="margin-top3">
 				<button type="file" id="btn-skylight" name="button sky light"
 					class="btn btn-primary btn-lg btn-block btn-skylight"
 					ng-click="UploadPic()">{{uploadBtnText}}</button>
@@ -46,4 +39,4 @@
 
 	</section>
 </div>
-</ion-content> </ion-view>
+</ion-pane> </ion-view>

@@ -36,12 +36,12 @@ function($scope, $filter, $location, eventService) {
 								event.url = "#/event/" + event.id;
 							});
 							calendar.fullCalendar({
-								theme : true,
-								header : {
-									left : false,
-									center : "title",
-									right : false
-								},
+							    theme: true,
+							    header: {
+							        left: false,
+							        center: false,
+							        right: 'agendaDay,agendaWeek,month'
+							    },
 								defaultDate : new Date(),
 								editable : true,
 								events : $scope.events
@@ -94,12 +94,12 @@ function($scope, $filter, $location, eventService) {
 			url : 'http://google.com/'
 		} ];
 		calendar.fullCalendar({
-			theme : true,
-			header : {
-				left : false,
-				center : "title",
-				right : false
-			},
+		    theme: true,
+		    header: {
+		        left: false,
+		        center: false,
+		        right: 'agendaDay,agendaWeek,month'
+		    },
 			defaultDate : new Date(),
 			editable : true,
 			events : $scope.events

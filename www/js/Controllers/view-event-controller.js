@@ -84,6 +84,9 @@ function($scope, $filter, $location, imageService,
 			}, $scope.event);
 		}
 	}
+	$scope.loadNotesTab = function () {
+	    $scope.tab = 'notes';
+	}
 	$scope.attendeeClicked = function(attendee){
 		$scope.selectedAttendee = attendee;
 		$scope.showModal = true;
