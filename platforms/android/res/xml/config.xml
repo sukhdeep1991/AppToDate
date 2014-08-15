@@ -65,13 +65,10 @@
     <feature name="PayPalMobile">
         <param name="android-package" value="com.paypal.cordova.sdk.PayPalMobileCordovaPlugin" />
     </feature>
-    <feature name="ChromeStorage">
-        <param name="android-package" value="org.chromium.ChromeStorage" />
+    <feature name="LocalNotification">
+        <param name="android-package" value="de.appplant.cordova.plugin.localnotification.LocalNotification" />
     </feature>
-    <feature name="ChromeNotifications">
-        <param name="android-package" value="org.chromium.ChromeNotifications" />
-        <param name="onload" value="true" />
-    </feature>
+    <icon src="icon.png" />
     <name>AppToDate</name>
     <description>
         A sample Apache Cordova application that responds to the deviceready event.

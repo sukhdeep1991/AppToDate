@@ -35,6 +35,31 @@ angular.module('AppToDate.Services')
 		});
 	}
 	
+	var deleteEventInDevice = function(eventServerId){
+		var deferred = $q.defer();
+		console.log("finding event with server id: " + eventServerId);
+		if(!eventServerId){
+			deferred.resolve(false);
+			return;
+		}
+		$.when(DB.getEventByServerId(eventServerId)).then(
+              function(event) {
+        	  window.plugins.calendar.deleteEvent(event.title,event.location_title,event.notes,
+      				new Date(event.start), new Date(event.end),function(response){	            		    
+      				console.log("Plugin delete event success: " + JSON.stringify(response));
+      				deferred.resolve(true);
+          		},function(error){
+          			console.log("Plugin delete event error: " + JSON.stringify(error));
+          			deferred.reject(error);
+          		});
+          },
+            function(errorMsg) {
+              console.log("Error while fetching event: " + JSON.stringify(errorMsg));
+              deferred.reject(errorMsg);
+          });
+		return deferred.promise;
+	}
+	
 	return {
 		createEvent : function(event){
 			var deferred = $q.defer();
@@ -42,22 +67,26 @@ angular.module('AppToDate.Services')
 			if(event.client_id){
 				url = "Calendar/Edit";
 			}
-			httpResource.loadUrl(url, "POST", event).success(function(eventData){
-				event.server_id = eventData.Id;
-	            $.when(DB.insertEvent(event)).then(
-	              function(data) {
-	                console.log("event saved successfully : " + JSON.stringify(event));
-	            	insertEventInDevice(event.title,event.location,event.notes,
-        					event.start,event.end, event.remindBefore);
-	                deferred.resolve(event);
-	              },
-	              function(errorMsg) {
-	                console.log("Error while saving event");
-	                deferred.reject(errorMsg);
-	            });
-			}).error(function(data){
-				console.log("Error occured while saving the event : "+ JSON.stringify(data));
-                deferred.reject(data);
+			deleteEventInDevice(event.server_id).then(function(response){
+				httpResource.loadUrl(url, "POST", event).success(function(eventData){
+					event.server_id = eventData.Id;
+		            $.when(DB.insertEvent(event)).then(
+		              function(data) {
+		                console.log("event saved successfully : " + JSON.stringify(event));
+		            	insertEventInDevice(event.title,event.location,event.notes,
+	        					event.start,event.end, event.remindBefore);
+		                deferred.resolve(event);
+		              },
+		              function(errorMsg) {
+		                console.log("Error while saving event");
+		                deferred.reject(errorMsg);
+		            });
+				}).error(function(data){
+					console.log("Error occured while saving the event : "+ JSON.stringify(data));
+	                deferred.reject(data);
+				});
+			}, function(error){
+				console.log("Error while deleting event from device: "+ JSON.stringify(error));
 			});
             return deferred.promise;
 		},
@@ -116,19 +145,23 @@ angular.module('AppToDate.Services')
 		
 		deleteEvent: function(eventId){
 			var deferred = $q.defer();
-			httpResource.loadUrl("Calendar/Delete?appEventId="+eventId, "DELETE", null).success(function(response){
-				$.when(DB.deleteEvent(eventId)).then(
-	              function(data) {
-	                console.log("event deleted successfully : " + JSON.stringify(response));
-	                deferred.resolve(true);
-	              },
-	              function(errorMsg) {
-	                console.log("Error while deleting event");
-	                deferred.reject(errorMsg);
-	            });
-			}).error(function(data){
-				console.log("Error occured while deleting the event : "+ JSON.stringify(data));
-                deferred.reject(data);
+			deleteEventInDevice(eventId).then(function(response){
+				httpResource.loadUrl("Calendar/Delete?appEventId="+eventId, "DELETE", null).success(function(response){
+					$.when(DB.deleteEvent(eventId)).then(
+		              function(data) {
+		                console.log("event deleted successfully : " + JSON.stringify(response));
+		                deferred.resolve(true);
+		              },
+		              function(errorMsg) {
+		                console.log("Error while deleting event");
+		                deferred.reject(errorMsg);
+		            });
+				}).error(function(data){
+					console.log("Error occured while deleting the event : "+ JSON.stringify(data));
+	                deferred.reject(data);
+				});
+			}, function(error){
+				console.log("Error while deleting event from device: "+ JSON.stringify(error));
 			});
             return deferred.promise;
 		},
@@ -169,44 +202,58 @@ angular.module('AppToDate.Services')
 		
 		updateEventFromNotification: function(eventId){
 			var deferred = $q.defer();
-			console.log("insertEventFromNotification: fetching event from api")
-			httpResource.loadUrl("Calendar/Get?appEventId="+eventId, "GET", event).success(function(eventData){
-				console.log("Fetched event :" + JSON.stringify(eventData));
-	            $.when(DB.getEventClientIdFromServerId(eventId)).then(
-	              function(clientId) {
-	            	  if(clientId){
-	      				  var event = convertServerToClientEvent(eventData);
-	      				  event.client_id = clientId;
-	            		  $.when(DB.insertEvent(event)).then(
-	        	              function(data) {
-	        	                console.log("event updated successfully : " + JSON.stringify(event));
-		    	            	deferred.resolve(event.title);
-	        	              },
-	        	              function(errorMsg) {
-	        	                console.log("Error while saving event");
-	        	            });
-	            	  } else {
-	            		  console.log("Event in client db not found");
-	            	  }
-	              },
-	              function(errorMsg) {
-	                console.log("Error while saving event");
-	            });
-			}).error(function(data){
-				console.log("Error occured while saving the event : "+ JSON.stringify(data));
+			deleteEventInDevice(eventId).then(function(response){
+				console.log("insertEventFromNotification: fetching event from api")
+				httpResource.loadUrl("Calendar/Get?appEventId="+eventId, "GET", event).success(function(eventData){
+					console.log("Fetched event :" + JSON.stringify(eventData));
+		            $.when(DB.getEventClientIdFromServerId(eventId)).then(
+		              function(clientId) {
+		            	  if(clientId){
+		      				  var event = convertServerToClientEvent(eventData);
+		      				  event.client_id = clientId;
+		            		  $.when(DB.insertEvent(event)).then(
+		        	              function(data) {
+		        	                console.log("event updated successfully : " + JSON.stringify(event));
+			    	            	insertEventInDevice(event.title,event.location,event.notes,
+			            					event.start,event.end, event.remindBefore);
+			    	            	deferred.resolve(event.title);
+		        	              },
+		        	              function(errorMsg) {
+		        	                console.log("Error while saving event");
+		        	            });
+		            	  } else {
+		            		  console.log("Event in client db not found");
+		            	  }
+		              },
+		              function(errorMsg) {
+		                console.log("Error while saving event");
+		            });
+				}).error(function(data){
+					console.log("Error occured while saving the event : "+ JSON.stringify(data));
+				});
+			}, function(error){
+				console.log("Error while deleting event from device: "+ JSON.stringify(error));
 			});
             return deferred.promise;	
 		},
 		
 		deleteEventFromNotification: function(eventId){
-			$.when(DB.deleteEvent(eventId)).then(
-              function(data) {
-                console.log("event deleted successfully : " + JSON.stringify(data.rowsAffected));
-              },
-              function(errorMsg) {
-                console.log("Error while deleting event");
-                deferred.reject(errorMsg);
-            });
+			deleteEventInDevice(eventId).then(function(response){
+				if(response){
+					$.when(DB.deleteEvent(eventId)).then(
+		              function(data) {
+		                console.log("event deleted successfully : " + JSON.stringify(data.rowsAffected));
+		              },
+		              function(errorMsg) {
+		                console.log("Error while deleting event");
+		                deferred.reject(errorMsg);
+		            });
+				} else {
+					console.log("Unexpected response: " + JSON.stringify(response));
+				}
+			}, function(error){
+				console.log("Error while deleting event from device: "+ JSON.stringify(error));
+			});
 		},
 		
 		testMethod: function(){

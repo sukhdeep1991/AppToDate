@@ -1,13 +1,17 @@
 var showNotificationInTray = function(title, message){
-	var options = {
-		type: "basic",
-		iconUrl: "images/profile-icon.png",
-		title: title,
-		message: message,
-		priority: 1
-	};
-	chrome.notifications.create("id1", options, function(notificationId){
-		console.log("Notification created successfully with id: " + notificationId)
+//	var options = {
+//		type: "basic",
+//		iconUrl: "images/profile-icon.png",
+//		title: title,
+//		message: message,
+//		priority: 1
+//	};
+//	chrome.notifications.create("id1", options, function(notificationId){
+//		console.log("Notification created successfully with id: " + notificationId)
+//	});
+	window.plugin.notification.local.add({
+	    title:   title,
+	    message: message
 	});
 }
 
