@@ -40,7 +40,7 @@ angular.module('AppToDate.Services')
 		console.log("finding event with server id: " + eventServerId);
 		if(!eventServerId){
 			deferred.resolve(false);
-			return;
+			return deferred.promise;
 		}
 		$.when(DB.getEventByServerId(eventServerId)).then(
               function(event) {

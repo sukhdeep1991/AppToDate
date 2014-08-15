@@ -19,17 +19,17 @@ angular.module('AppToDate', [
   $ionicPlatform.ready(function() {
     StatusBar.styleDefault();
     
-    setTimeout(function(){
-        var notification = {
-            	event: "message",
-            	foreground: "test",
-            	payload: {
-            		NotificationType: "EventEdit",
-            		InformationId: 48
-            	}
-            };
-            onNotificationGCM(notification);
-    }, 5000);
+//    setTimeout(function(){
+//        var notification = {
+//            	event: "message",
+//            	foreground: "test",
+//            	payload: {
+//            		NotificationType: "EventEdit",
+//            		InformationId: 48
+//            	}
+//            };
+//            onNotificationGCM(notification);
+//    }, 5000);
     
     //Check if device already already present
 	console.log("Registering device for push notifications");
