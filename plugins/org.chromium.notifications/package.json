@@ -1,0 +1,15 @@
+{
+    "version": "1.0.3",
+    "name": "org.chromium.notifications",
+    "cordova_name": "Chrome Apps Notifications API",
+    "platforms": [
+        "android",
+        "ios"
+    ],
+    "engines": [
+        {
+            "name": "cordova",
+            "version": ">=3.0.0"
+        }
+    ]
+}

@@ -5,8 +5,8 @@ angular.module('AppToDate.Services')
 				user_id: eventData.Organizer.ClientId,
 				title: eventData.Title,
 				notes: eventData.Notes,
-				start: eventData.Start,
-				end: eventData.End,
+				start: new Date(eventData.Start),
+				end: new Date(eventData.End),
 				imageUrl: eventData.ImageUrl,
 				location: {
 					displayName: eventData.Location.DisplayName,
@@ -134,6 +134,7 @@ angular.module('AppToDate.Services')
 		},
 		
 		insertEventFromNotification: function(eventId){
+			var deferred = $q.defer();
 			$.when(DB.getEventClientIdFromServerId(eventId)).then(
               function(clientId) {
             	  console.log("Client id for event found: "+ clientId)
@@ -148,6 +149,7 @@ angular.module('AppToDate.Services')
           	                console.log("event saved successfully : " + JSON.stringify(event));
 	    	            	insertEventInDevice(event.title,event.location,event.notes,
 	            					event.start,event.end, event.remindBefore);
+	    	            	deferred.resolve(event.title);
           	              },
           	              function(errorMsg) {
           	                console.log("Error while saving event");
@@ -162,10 +164,11 @@ angular.module('AppToDate.Services')
               function(errorMsg) {
                 console.log("Error while saving event");
             });
-			
+            return deferred.promise;			
 		},
 		
 		updateEventFromNotification: function(eventId){
+			var deferred = $q.defer();
 			console.log("insertEventFromNotification: fetching event from api")
 			httpResource.loadUrl("Calendar/Get?appEventId="+eventId, "GET", event).success(function(eventData){
 				console.log("Fetched event :" + JSON.stringify(eventData));
@@ -177,6 +180,7 @@ angular.module('AppToDate.Services')
 	            		  $.when(DB.insertEvent(event)).then(
 	        	              function(data) {
 	        	                console.log("event updated successfully : " + JSON.stringify(event));
+		    	            	deferred.resolve(event.title);
 	        	              },
 	        	              function(errorMsg) {
 	        	                console.log("Error while saving event");
@@ -191,6 +195,7 @@ angular.module('AppToDate.Services')
 			}).error(function(data){
 				console.log("Error occured while saving the event : "+ JSON.stringify(data));
 			});
+            return deferred.promise;	
 		},
 		
 		deleteEventFromNotification: function(eventId){
