@@ -123,7 +123,17 @@ angular.module('AppToDate.Services')
 		    	            function(groupsData) {
 		    	            	event.groups = groupsData;
 		    	            	console.log("Event with groups: " + JSON.stringify(event));
-		    	            	deferred.resolve(event);
+		    	            	console.log("Fetching comments");
+		    	            	$.when(DB.getEventComments(eventId)).then(
+		    		    	            function(comments) {
+		    		    	            	event.comments = comments;
+		    		    	            	console.log("Event with comments: " + JSON.stringify(event));
+		    		    	            	deferred.resolve(event);
+		    		    	            },
+		    		    	            function(errorMsg) {
+		    			    	              console.log("Error while fetching comments: " + JSON.stringify(errorMsg));
+		    			    	              deferred.reject(errorMsg);
+		    			    	          });
 		    	            },
 		    	            function(errorMsg) {
 		    	              console.log("Error while fetching attendees: " + JSON.stringify(errorMsg));
@@ -256,8 +266,23 @@ angular.module('AppToDate.Services')
 			});
 		},
 		
-		testMethod: function(){
-			console.log("Test method called from injector");
+		postComment: function(event, comment){
+			var deferred = $q.defer();
+			httpResource.loadUrl("Calendar/PostComment?appEventId="+event.server_id, "POST", comment).success(function(response){
+				$.when(DB.postEventComment(event.id, comment)).then(
+						function(commentId) {
+							console.log("comment added successfully: " + commentId);
+							deferred.resolve(commentId);
+			              },
+			              function(errorMsg) {
+			                console.log("Error while adding comment to event");
+			                deferred.reject(errorMsg);
+			            });
+			}).error(function(error){
+				console.log("Error while calling post comment API API ")
+				deferred.reject(errorMsg);
+			});
+            return deferred.promise;
 		}
 	}
 });

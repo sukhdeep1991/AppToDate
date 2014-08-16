@@ -16,12 +16,12 @@
 		<div role="main" class="container theme-showcase" id="viewEvent">
 			<div class="tab-pane" data-ng-show="tab == 'details'">
 				<section class="details-body">
-                    <div class="event-detail"> 
-					    <h4 class="margin-top" data-ng-bind="event.title"></h4>
-					    <p class="margin-top" data-ng-bind="event.notes"></p>
-					    <img class="img-responsive"
-						    ng-src="{{eventImageSource+event.server_id}}" />
-                    </div>
+					<div class="event-detail">
+						<h4 class="margin-top" data-ng-bind="event.title"></h4>
+						<p class="margin-top" data-ng-bind="event.notes"></p>
+						<img class="img-responsive"
+							ng-src="{{eventImageSource+event.server_id}}" />
+					</div>
 					<div class="event-box">
 						<hr />
 						<h3>Event Time</h3>
@@ -77,45 +77,45 @@
 					<div class="margin-top2" id="map" style="height: 350px;"></div>
 				</section>
 			</div>
-            <div class="tab-pane" data-ng-show="tab == 'notes'">
-                <div class="note">
-                    <div class="profile-row margin-top">
-                      <div class="profile-sm-pic">
-                        <div class="profile-sm-top-bg">
-                                 <img class="img-responsive" src="images/profile-pic.png" alt=""/>  
-                             </div>
-                        </div>
-                        <div class="profile-sm-text">
-                          <h4>Person Name</h4>
-                          <p>Comments</p>
-                        </div>
-                    </div>
-                    <div class="profile-row">
-                      <div class="profile-sm-pic">
-                        <div class="profile-sm-top-bg">
-                            <img class="img-responsive" src="images/profile-pic.png" alt=""/>  
-                        </div>
-                      </div>
-                      <div class="profile-sm-text">
-                        <h4>Person Name</h4>
-                        <p>Comments</p>
-                      </div>
-                  </div>
-                  <div class="clear"></div>
-                  <div class="comment">
-                    <section>
-                       <div class="event-box">
-                          <div class="form-group">   
-                                <textarea class="form-control" rows="3" placeholder="Add New Comment" required=""></textarea>
-                          </div>
-                          <div class="margin-top3 margin-bottom">
-                                <button type="button" id="btn-skylight" name="button sky light" class="btn btn-primary btn-lg btn-block btn-skylight">Add Comment</button>
-                          </div>
-                        </div> 
-                    </section>
-                  </div>
-                </div>
-            </div>
+			<div class="tab-pane" data-ng-show="tab == 'notes'">
+				<div class="note">
+					<div class="profile-row margin-top"
+						data-ng-repeat="comment in event.comments">
+						<div class="profile-sm-pic">
+							<div class="profile-sm-top-bg">
+								<img class="img-responsive"
+									ng-src="{{userImageSource + comment.commentedByClientId}}"
+									alt="" />
+							</div>
+						</div>
+						<div class="profile-sm-text">
+							<h4>{{comment.commentedByName}}</h4>
+							<p>{{comment.text}}</p>
+						</div>
+					</div>
+					<div class="clear"></div>
+					<div class="comment">
+						<section>
+							<form name="commentForm">
+								<div class="event-box">
+									<div class="form-group">
+										<textarea class="form-control" rows="3" name="commentText"
+											placeholder="Add New Comment" required=""
+											data-ng-model="event.commentText"></textarea>
+									</div>
+									<div class="margin-top3 margin-bottom">
+										<button type="button" id="btn-skylight"
+											name="button sky light"
+											class="btn btn-primary btn-lg btn-block btn-skylight"
+											data-ng-click="postComment(event.commentText)"
+											data-ng-disabled="commentForm.$invalid">Add Comment</button>
+									</div>
+								</div>
+							</form>
+						</section>
+					</div>
+				</div>
+			</div>
 			<!-- 		<div class="bottom-box"> -->
 			<!-- 			<hr /> -->
 			<!-- 			<h2>Are you Attending event?</h2> -->

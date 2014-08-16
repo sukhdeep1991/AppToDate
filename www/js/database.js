@@ -144,21 +144,58 @@ AppToDateDB.prototype = function() {
           },function(t,e){
             console.log("Error while creating event_groups table : "+e.message);
           });
-          
-          tx.executeSql('select * from event_groups', 
-	        		[],
-	        		function(t,r){
-				if(r.rows.length > 0){
-					var eventGroups = [];
-					for(var i = 0 ; i < r.rows.length ; i++){
-						eventGroups.push(r.rows.item(i));
-					}
-					console.log("Event groups: " + JSON.stringify(eventGroups));
-				}
-          }, function(){
-        	  
-          });
+          tx.executeSql('CREATE TABLE IF NOT EXISTS event_comments (id INTEGER PRIMARY KEY AUTOINCREMENT, event_id INTEGER, user_id INTEGER, comment TEXT, user_name TEXT)',[],
+        		  
+                  function(t,results){
+                    console.log("event_comments table created");
+                  },function(t,e){
+                    console.log("Error while creating event_comments table : "+e.message);
+                  });
         });
+	}
+	
+	var getEventComments = function(eventId){
+		console.log("Getting comments of the event: " + eventId);	
+		var deferred = $.Deferred();
+		db.transaction(function(tx) {
+			tx.executeSql('select user_id, comment, user_name from event_comments where event_id = ?', [eventId],
+					function(t,r){
+				if(r.rows.length > 0){
+					var comments = [];
+					for(var i = 0 ; i < r.rows.length ; i++){
+						var row = r.rows.item(i);
+						comments.push({
+							commentedByClientId: row.user_id,
+							text: row.comment,
+							commentedByName: row.user_name
+						});
+					}					
+					deferred.resolve(comments);
+				} else {
+					deferred.resolve([]);
+				}
+			}, function(t,e){
+	            console.log("Error fetching comments :  "+ e.message);
+	            deferred.reject(e);
+	          });
+		});
+		return deferred.promise();
+	}
+	
+	var postEventComment = function(eventId, comment){
+		console.log("saving comment :  : " + JSON.stringify(comment));	
+		var deferred = $.Deferred();
+		db.transaction(function(tx) {
+			tx.executeSql('insert into event_comments(event_id, user_id, comment, user_name) values(?, ?, ?, ?)', [eventId, comment.commentedByClientId, comment.text, comment.commentedByName],
+					function(t,r){
+				console.log("comment inserted");
+				deferred.resolve(r.insertId);
+			}, function(t,e){
+	            console.log("Error inserting comment :  "+ e.message);
+	            deferred.reject(e);
+	          });
+		});
+		return deferred.promise();
 	}
 	
 	var getEventClientIdFromServerId = function(eventServerId){
@@ -866,7 +903,9 @@ AppToDateDB.prototype = function() {
     insertCurrentLoggedInUser: insertCurrentLoggedInUser,
     getGroupsByEvent: getGroupsByEvent,
     getEventClientIdFromServerId: getEventClientIdFromServerId,
-    getEventByServerId: getEventByServerId
+    getEventByServerId: getEventByServerId,
+    postEventComment: postEventComment,
+    getEventComments: getEventComments
   }
 }();
 return window.AppToDate=AppToDateDB;

@@ -84,6 +84,12 @@ function onNotificationGCM(e) {
 	            		case 'PersonJoined':
 	            			showNotificationInTray("Invitation accepted", "A friend has accepted your invitation");
 	        				break;
+	            		case 'CommentAdded':
+	            			eventService.updateEventFromNotification(payload.InformationId).then(function(title){
+		            			showNotificationInTray("Comment added", "A new comment added to event "+ title);
+		            			console.log();
+	            			});
+	        				break;
         			
             		}
             	}

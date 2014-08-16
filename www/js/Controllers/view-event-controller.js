@@ -63,7 +63,14 @@ function($scope, $filter, $location, imageService,
 				      "refresh_token": "undefined",
 				      "status": "0.0"
 				    }
-				  ]
+				  ],
+				  "comments": [
+				               {
+				                 "commentedByClientId": "435e357c-aad1-4b5a-b914-5a9e39e92184",
+				                 "text": "New commdhjvcf",
+				                 "commentedByName": "ssh"
+				               }
+				             ]
 				}
 
 		$scope.event.start = new Date($scope.event.start);
@@ -120,5 +127,32 @@ function($scope, $filter, $location, imageService,
 		} else {
 			console.log("Do nothing");
 		}
+	}
+	
+	$scope.postComment = function(text){
+		var comment = {
+			commentedByClientId: $scope.userDetails ? $scope.userDetails.user_id : "435e357c-aad1-4b5a-b914-5a9e39e92184",
+			text: text,
+			commentedByName: $scope.userDetails ? $scope.userDetails.first_name : "test name"
+		}
+		$scope.setShowLoader(true);
+		if(!$scope.userDetails){
+			console.log("Comment added successfully");
+			$scope.showResponseMessage('Comment added successfully!', true);
+			$scope.event.comments.push(comment);			
+			$scope.event.commentText = '';
+			$scope.setShowLoader(false);
+			return;
+		}
+		eventService.postComment($scope.event, comment).then(function(response){
+			console.log("Comment added successfully");
+			$scope.showResponseMessage('Comment added successfully!', true);
+			$scope.event.comments.push(comment);			
+			$scope.event.commentText = '';
+			$scope.setShowLoader(false);
+		}, function(error){
+			$scope.showResponseMessage(error.Message||"An error occured!", false);	
+			$scope.setShowLoader(false);		
+		});
 	}
 });
