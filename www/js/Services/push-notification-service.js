@@ -94,8 +94,6 @@ function onNotificationGCM(e) {
             		}
             	}
             	console.log("Revieved notification event: " + JSON.stringify(e));
-               //alert("Notification Received");
-               navigator.notification.alert("Message Recieved !!!");
             }
             else {  
               // otherwise we were launched because the user touched a notification in the notification tray.

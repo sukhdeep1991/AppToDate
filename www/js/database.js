@@ -395,26 +395,47 @@ AppToDateDB.prototype = function() {
 	
 	var insertGroup = function(group){
 		var deferred = $.Deferred();
-		db.transaction(function(tx) {
-			tx.executeSql('INSERT INTO AttendeeGroup (group_name, owner_id, server_id) VALUES (?, ?, ?)', [group.title, group.Owner.ClientId, group.server_id], 
-			function(t,r){
-				console.log("Result of insert query + " + JSON.stringify(r));
-				var personIds = [];
-				group.groupPersonAssociations.map(function(item){
-					tx.executeSql('INSERT INTO User_Group (group_id, user_name) VALUES (?, ?)', [r.insertId, item.user_id], 
-					function(t,r){
-						console.log("row inserted : " + item.user_id)
-					},function(t,e){
-			          console.log("Error while inserting group : "+ e.message);
-			          deferred.reject(e.message);
-			        });
-				});
-				deferred.resolve(group);
-			},function(t,e){
-	          console.log("Error while inserting group : "+ e.message);
-	          deferred.reject(e.message);
-	        });
-		});
+		if(!group){
+			deferred.resolve(group); 
+		} else {
+			db.transaction(function(tx) {
+				tx.executeSql('SELECT * FROM AttendeeGroup where server_id = ?', [group.server_id], 
+		          function(t,r){
+		            if(r.rows.length){
+		            	console.log("Group already present");
+		            } else {
+		    			console.log("Inserting group: " + JSON.stringify(group));
+						tx.executeSql('INSERT INTO AttendeeGroup (group_name, owner_id, server_id) VALUES (?, ?, ?)', [group.title, group.Owner.ClientId, group.server_id], 
+						function(t,r){
+							console.log("Result of insert query + " + JSON.stringify(r));
+							var personIds = [];
+							db.transaction(function(newtx) {
+								group.groupPersonAssociations = group.groupPersonAssociations || group.GroupPersonAssociations;
+								group.groupPersonAssociations.map(function(item){
+									console.log("Inserting into user group: " + item.Person.ClientId)
+									newtx.executeSql('INSERT INTO User_Group (group_id, user_name) VALUES (?, ?)', [r.insertId, item.Person.ClientId], 
+									function(t,nr){
+										console.log("row inserted : " + item.user_id);
+				    					insertServerPersonIfNeeded(item.Person);
+									},function(t,e){
+							          console.log("Error while inserting group : "+ e.message);
+							          deferred.reject(e.message);
+							        });
+								});
+							});
+							group.GroupClientId = r.insertId;
+							deferred.resolve(group);
+						},function(t,e){
+					          console.log("Error while inserting group : "+ e.message);
+					          deferred.reject(e.message);
+					        });
+		            }
+				},function(t,e){
+		          console.log("Error while inserting group : "+ e.message);
+		          deferred.reject(e.message);
+		        });
+			});
+		}
         return deferred.promise();
 	}
 	
@@ -525,32 +546,17 @@ AppToDateDB.prototype = function() {
 	    					console.log("Error while deleting data in event_attendees table : "+ e.message);
 	    		            deferred.reject(e.message);
 	    				});
-	    		if(event.EventAttendeeAssociations && event.EventAttendeeAssociations.length > 0){
-	    			event.EventAttendeeAssociations.map(function(item){
-	    				tx.executeSql('INSERT INTO event_attendees (event_id, user_id, status) values(?, ?, ?)',
-	    				[event.client_id, item.Person.ClientId, item.Status],
-	    				function(a, b){
-	    					console.log("Data inserted in event_attendees table count : "+r.rowsAffected);
-	    				}, function(t,e){
-	    					console.log("Error while inserting data in event_attendees table : "+ e.message);
-	    		            deferred.reject(e.message);
-	    				});
-	    			});
-	    			
-	    		}
-	    		if(event.GroupAssociations && event.GroupAssociations.length > 0){
-	    			event.GroupAssociations.map(function(item){
-	    				tx.executeSql('INSERT INTO event_groups (event_id, group_id, status) values(?, ?, ?)',
-	    				[event.client_id, item.GroupClientId, item.Status || eventStatus.unknown],
-	    				function(a, b){
-	    					console.log("Data inserted in event_groups table for event id : "+event.client_id + " and group id : " + item.GroupClientId);
-	    				}, function(t,e){
-	    					console.log("Error while inserting data in event_groups table : "+ e.message);
-	    		            deferred.reject(e.message);
-	    				});
-	    			});
-	    			
-	    		}
+	    			tx.executeSql('delete from event_groups where event_id = ?',
+		    				[event.client_id],
+		    				function(a, b){
+		    					console.log("Data deleted in event_groups table count : "+r.rowsAffected);
+		    				}, function(t,e){
+		    					console.log("Error while deleting data in event_groups table : "+ e.message);
+		    		            deferred.reject(e.message);
+		    				});
+
+	    		insertEventAttendees(event);
+	    		insertEventGroups(event);
 	    		deferred.resolve(event);
 	            console.log("Data inserted in Events table count : "+r.rowsAffected);
 	          },function(t,e){
@@ -559,6 +565,57 @@ AppToDateDB.prototype = function() {
 	          });
     	});
     	return deferred.promise();
+	}
+	
+	var insertEventAttendees = function(event){
+		if(event.EventAttendeeAssociations && event.EventAttendeeAssociations.length > 0){
+			event.EventAttendeeAssociations.map(function(item){
+				setTimeout(function(){
+					db.transaction(function(newtx) {
+						newtx.executeSql('INSERT INTO event_attendees (event_id, user_id, status) values(?, ?, ?)',
+						[event.client_id, item.Person.ClientId, item.Status],
+						function(a, b){
+							console.log("Data inserted in event_attendees table count ");
+							insertServerPersonIfNeeded(item.Person);
+						}, function(t,e){
+							console.log("Error while inserting data in event_attendees table : "+ e.message);
+				            deferred.reject(e.message);
+						});
+					});
+				});
+			});
+			
+		}
+	}
+	
+	var insertEventGroups = function(event){
+		if(event.GroupAssociations && event.GroupAssociations.length > 0){
+			event.GroupAssociations.map(function(item){
+	    		if(item.Group){
+		    		item.Group.title = item.Group.title || item.Group.Title;
+	    			item.Group.server_id = item.Group.server_id || item.Group.Id;
+	    		}
+				insertGroup(item.Group).then(function(insertedGroup){
+					setTimeout(function(){
+						db.transaction(function(newtx) {
+							item.GroupClientId = item.GroupClientId || insertedGroup.GroupClientId;
+							console.log("event_id: " +event.client_id + ", group_id: " + item.GroupClientId + ", status: "+eventStatus.unknown);
+							newtx.executeSql('INSERT INTO event_groups (event_id, group_id, status) values(?, ?, ?)',
+				    				[event.client_id, item.GroupClientId, eventStatus.unknown],
+				    				function(a, b){
+				    					console.log("Data inserted in event_groups table for event id : "+event.client_id + " and group id : " + item.GroupClientId);
+				    				}, function(t,e){
+				    					console.log("Error while inserting data in event_groups table : "+ e.message);
+				    		            deferred.reject(e.message);
+				    				});
+						});
+					}, 1000);
+				}, function(error){
+					console.log("Error while saving group");
+				});
+			});
+			
+		}
 	}
 	
     var insertEvent = function(event){
@@ -573,32 +630,9 @@ AppToDateDB.prototype = function() {
 	        		[event.user_id, event.title, event.notes, event.start, event.end, event.imageUrl, 
 	        		 event.location.displayName, event.location.latitude, event.location.longitude, event.remindBefore, event.server_id],
 	        		function(t,r){
-	    		if(event.EventAttendeeAssociations && event.EventAttendeeAssociations.length > 0){
-	    			event.EventAttendeeAssociations.map(function(item){
-	    				tx.executeSql('INSERT INTO event_attendees (event_id, user_id, status) values(?, ?, ?)',
-	    				[r.insertId, item.Person.ClientId, item.Status],
-	    				function(a, b){
-	    					console.log("Data inserted in event_attendees table count : "+r.rowsAffected);
-	    				}, function(t,e){
-	    					console.log("Error while inserting data in event_attendees table : "+ e.message);
-	    		            deferred.reject(e.message);
-	    				});
-	    			});
-	    			
-	    		}
-	    		if(event.GroupAssociations && event.GroupAssociations.length > 0){
-	    			event.GroupAssociations.map(function(item){
-	    				tx.executeSql('INSERT INTO event_groups (event_id, group_id, status) values(?, ?, ?)',
-	    				[r.insertId, item.GroupClientId, item.Status || eventStatus.unknown],
-	    				function(a, b){
-	    					console.log("Data inserted in event_groups table for event id : "+r.insertId + " and group id : " + item.GroupClientId);
-	    				}, function(t,e){
-	    					console.log("Error while inserting data in event_groups table : "+ e.message);
-	    		            deferred.reject(e.message);
-	    				});
-	    			});
-	    			
-	    		}
+	    		event.client_id = r.insertId;
+	    		insertEventAttendees(event);
+	    		insertEventGroups(event);
 	    		deferred.resolve(event);
 	            console.log("Data inserted in Events table count : "+r.rowsAffected);
 	          },function(t,e){
@@ -669,13 +703,32 @@ AppToDateDB.prototype = function() {
     	});            
         return deferred.promise();
     }
+    
+    var insertServerPersonIfNeeded = function(serverPerson){
+    	if(!serverPerson.Email){
+    		return;
+    	}
+    	var person = {
+				user_id: serverPerson.ClientId,
+				username: serverPerson.Email,
+				access_token: "",
+				login_time: "",
+				expired_in: "",
+				auth_provider: "",
+				refresh_token: "",
+				first_name: serverPerson.FirstName,
+				last_name: serverPerson.LastName,
+				phone: serverPerson.PhoneNo || 0
+		}
+		insertLoginDetail(person, true);
+    }
 
-  var insertLoginDetail=function(data){
+  var insertLoginDetail=function(data, dontUpdate){
 	  var deferred = $.Deferred();
     db.transaction(function(tx) {
-          tx.executeSql('SELECT * FROM Login WHERE (user_id=? and email=? and auth_provider=?)', [data.user_id,data.username,data.auth_provider], 
+          tx.executeSql('SELECT * FROM Login WHERE (user_id=?)', [data.user_id], 
             function(t,r){
-              if(r.rows.length){
+              if(r.rows.length && !dontUpdate){
 
                 var row = r.rows.item(0);
                 var record_id=row["id"];
@@ -692,7 +745,7 @@ AppToDateDB.prototype = function() {
 
 
               }
-              else{
+              else if(!r.rows.length){
         	  	console.log('Inserting int login with email id : ' + data.username);
                 tx.executeSql('INSERT INTO Login (user_id, email, access_token,login_time,expires_in,auth_provider,refresh_token, first_name, last_name, phone) VALUES (?, ?, ?,?,?,?,?,?,?, ?)', 
                 		[data.user_id,data.username,data.access_token,data.login_time,data.expired_in,data.auth_provider,data.refresh_token, data.first_name, data.last_name, data.phone],
