@@ -66,6 +66,7 @@
 <script src="js/Controllers/edit-event-controller.js"></script>
 <script src="js/Controllers/create-view-event-common.js"></script>
 <script src="js/Controllers/splash-screen-controller.js"></script>
+<script src="js/Controllers/edit-profile-controller.js"></script>
 
 <script type="text/javascript">
 	var DB = new AppToDate();
@@ -100,6 +101,7 @@
                 <ul class="nav navbar-nav top-nav">
                   <li><div class="profile-pic"><img class="img-responsive" ng-src="{{imageSrc}}" alt=""/></div><a href="#/home">{{userDetails.first_name}}</a></li>
                   <li><div class="profile-pic no-border"><img class="img-responsive" ng-src="{{imageSrc}}" alt=""/></div><a href="#/profile">Profile</a></li>
+                  <li><a href="#/editProfile">Edit profile</a></li>
                   <li><a href="#/upgrade">Upgrade</a></li>
                        
                 </ul>

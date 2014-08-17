@@ -172,6 +172,22 @@ angular.module('AppToDate.Services')
 						console.log("Error while calling the invite API: " + JSON.stringify(error));
 					});
 			}			
+		},
+		
+		saveUserProfile: function(user){
+			var deferred = $q.defer();
+            console.log('Saving user: ' + JSON.stringify(user));
+            $.when(DB.insertLoginDetail(user)).then(
+	            function(data) {
+	            	console.log("Information saved successfully");
+	            	deferred.resolve(user);
+	            },
+	            function(errorMsg) {
+	              console.log("Error while saving groups: " + JSON.stringify(errorMsg));
+	              deferred.reject(errorMsg);
+	          });
+			
+			return deferred.promise;	
 		}
 	}
 });

@@ -205,10 +205,15 @@ angular.module('AppToDate', [
             controller: 'editEventCtrl'
           })
           .state('splashScreen', {
-            url: "/splashScreen",
-    		templateUrl: "js/Templates/splashScreen.html",
-            controller: 'splashScreenCtrl'
-          });
+              url: "/splashScreen",
+      		templateUrl: "js/Templates/splashScreen.html",
+              controller: 'splashScreenCtrl'
+            })
+            .state('editProfile', {
+                url: "/editProfile",
+        		templateUrl: "js/Templates/editProfile.html",
+                controller: 'editProfileCtrl'
+              });
 
 
   $urlRouterProvider.otherwise('/splashScreen');
