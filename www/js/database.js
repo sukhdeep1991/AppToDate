@@ -12,12 +12,6 @@ AppToDateDB.prototype = function() {
             },function(t,e){
               console.log("Error while creating Login table : "+e.message);
             });
-    	 tx.executeSql('drop TABLE IF EXISTS Group_Master',[],
-            function(t,results){
-              console.log("Group_Master table dropped");
-            },function(t,e){
-              console.log("Error while dropping Group_Master table : "+e.message);
-            });
           tx.executeSql('CREATE TABLE IF NOT EXISTS AttendeeGroup(id INTEGER PRIMARY KEY AUTOINCREMENT,group_name TEXT, owner_id TEXT, server_id INTEGER)',[],
             function(t,results){
               console.log("Group_Master table created");
@@ -440,11 +434,7 @@ AppToDateDB.prototype = function() {
 	}
 	
 	var getUsers = function(ids, deferred, tx){
-		var query = "select * FROM Login where user_id in (";
-		for(var i = 0 ; i < ids.length ; i++){
-			query += "?, ";
-		}
-		query = query.substring(0, query.lastIndexOf(",")) + ")";
+		var query = "select * FROM Login where user_id in " + getQuestionMarksForQuery(ids.length);
 		console.log("Resulting query : " + query);
 		console.log("ids : " + JSON.stringify(ids));
 		tx.executeSql(query, ids, 
@@ -643,26 +633,93 @@ AppToDateDB.prototype = function() {
     	return deferred.promise();
     }
     
-    var getUserEvents = function(userId){
+    var getQuestionMarksForQuery = function(length){
+    	var query = '(';
+		for(var i = 0 ; i < length ; i++){
+			query += '?, ';
+		}
+		query = query.substring(0, query.lastIndexOf(',')) + ")"
+		return query;
+    }
+    
+    var getEventIdsForUser = function(userId){
+    	console.log("Getting eventIds for the user");
     	var deferred = $.Deferred();
     	db.transaction(function(tx) {
-            tx.executeSql('SELECT * FROM Events WHERE (user_id=?)', [userId], 
-              function(t,r){
-                if(r.rows.length){
-                	console.log("events found");
-                	var events = [];
-                	for(i = 0 ; i < r.rows.length ; i++){
-                		events.push(r.rows.item(i));
-                	}
-                	deferred.resolve(events);
-                } else {
-                	deferred.resolve([]);
-                }
-            }, function(t,e){
-            	console.log("Error while selecting events data : "+ e.message);
+    		var eventIds = [];
+    		tx.executeSql('SELECT id FROM Events WHERE (user_id=?)', [userId], 
+    			function(t, r){
+    			for(var i = 0 ; i < r.rows.length ; i++){
+    				eventIds.push(r.rows.item(i)['id']);
+    			}
+    			console.log("User's own events: " + JSON.stringify(eventIds));
+    			tx.executeSql('SELECT event_id FROM event_attendees WHERE (user_id=?)', [userId],
+    				function(at, ar){
+    				for(var i = 0 ; i < ar.rows.length ; i++){
+        				eventIds.push(ar.rows.item(i)['event_id']);
+        			}
+        			console.log("User's own + attendees events: " + JSON.stringify(eventIds));
+        			tx.executeSql('SELECT group_Id FROM User_Group WHERE (user_name=?)', [userId],
+        				function(gt, gr){
+        				var groupIds = [];
+        				for(var i = 0 ; i < gr.rows.length ; i++){
+        					groupIds.push(gr.rows.item(i)['group_Id']);
+            			}
+        				console.log("Groups of the user: "+ JSON.stringify(groupIds));
+        				var query = 'SELECT event_id FROM event_groups WHERE group_id in '+ getQuestionMarksForQuery(groupIds.length);
+        				console.log("The query is : " + query);
+        				tx.executeSql(query, groupIds,
+        					function(et, er){
+        					for(var i = 0 ; i < er.rows.length ; i++){
+                				eventIds.push(er.rows.item(i)['event_id']);
+                			}
+        					console.log("Final list of events: " + JSON.stringify(eventIds));
+        					deferred.resolve(eventIds);
+        				}, function(t,e){
+                        	console.log("Error while fetching eventIds from group table: "+ e.message);
+                        	deferred.reject(e);
+                        });
+        			}, function(t,e){
+                    	console.log("Error while fetching groups for user: "+ e.message);
+                    	deferred.reject(e);
+                    });
+    			}, function(t,e){
+                	console.log("Error while fetching eventIds from event_attendees table: "+ e.message);
+                	deferred.reject(e);
+                });
+    		}, function(t,e){
+            	console.log("Error while fetching eventIds from events table: "+ e.message);
             	deferred.reject(e);
             });
-    	});            
+    	});
+    	return deferred.promise();
+    }
+    
+    var getUserEvents = function(userId){
+    	var deferred = $.Deferred();
+    	getEventIdsForUser(userId).then(function(eventIds){
+    		db.transaction(function(tx) {
+                tx.executeSql('SELECT * FROM Events WHERE id in ' + getQuestionMarksForQuery(eventIds.length), eventIds, 
+                  function(t,r){
+                    if(r.rows.length){
+                    	console.log("events found");
+                    	var events = [];
+                    	for(i = 0 ; i < r.rows.length ; i++){
+                    		events.push(r.rows.item(i));
+                    	}
+                    	deferred.resolve(events);
+                    } else {
+                    	deferred.resolve([]);
+                    }
+                }, function(t,e){
+                	console.log("Error while selecting events data : "+ e.message);
+                	deferred.reject(e);
+                });
+        	});
+    	}, function(error){
+    		console.log("Could not get the event ids of user: " + JSON.stringify(error));
+    	});
+    	          
         return deferred.promise();
     }
     
