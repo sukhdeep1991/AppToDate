@@ -11,10 +11,11 @@ function($scope, $filter, $location, imageService,
 	$scope.statusMessages = {"0.0": "Wating for response"};
 	$scope.userImageSource = appConfig.apiUrl + "Image/Get?clientId=";
 	$scope.eventImageSource = appConfig.apiUrl + "Image/GetEventImage?eventId=";
+	$scope.eventStatus = eventStatus;
 
 	if ($scope.userDetails && $scope.userDetails.user_id) {
 		eventService
-				.getEvent($scope.eventId)
+				.getEvent($scope.eventId, $scope.userDetails.user_id)
 				.then(
 						function(data) {
 							$scope.event = data
@@ -154,5 +155,18 @@ function($scope, $filter, $location, imageService,
 			$scope.showResponseMessage(error.Message||"An error occured!", false);	
 			$scope.setShowLoader(false);		
 		});
+	}
+	
+	$scope.postEventStatus = function(status){	
+		$scope.setShowLoader(true);
+		eventService.postEventStatus($scope.event, $scope.userDetails.user_id, status).then(function(response){
+			console.log("Response saved successfully");
+			$scope.showResponseMessage('Response saved successfully!', true);
+			$scope.event.status = status;
+			$scope.setShowLoader(false);
+		}, function(error){
+			$scope.showResponseMessage(error.Message||"An error occured!", false);	
+			$scope.setShowLoader(false);
+		})
 	}
 });

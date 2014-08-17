@@ -148,6 +148,22 @@ AppToDateDB.prototype = function() {
         });
 	}
 	
+	var saveStatusForEvent = function(eventId, userId, status){
+		console.log("Saving the status: " + status + " of event: " + eventId + " for user: " + userId);
+		var deferred = $.Deferred();
+		db.transaction(function(tx) {
+			tx.executeSql('update event_attendees set status =? where event_id=? and user_id=?', [status, eventId, userId],
+				function(t,r){
+					console.log("Status of the user updated: " + r.rowsAffected);
+					deferred.resolve(true);
+				}, function(t,e){
+		            console.log("Error fetching comments :  "+ e.message);
+		            deferred.reject(e);
+	          });
+		});
+		return deferred.promise();
+	}
+	
 	var getEventComments = function(eventId){
 		console.log("Getting comments of the event: " + eventId);	
 		var deferred = $.Deferred();
@@ -723,14 +739,28 @@ AppToDateDB.prototype = function() {
         return deferred.promise();
     }
     
-    var getEventById = function(eventId){
+    var getEventById = function(eventId, userId){
     	var deferred = $.Deferred();
     	db.transaction(function(tx) {
             tx.executeSql('SELECT * FROM Events WHERE (id=?)', [eventId], 
               function(t,r){
                 if(r.rows.length){
                 	console.log("event found");
-                	deferred.resolve(r.rows.item(0));
+                	var event = angular.copy(r.rows.item(0));
+                	console.log("Fetching status");
+                	tx.executeSql('SELECT status FROM event_attendees WHERE event_id=? and user_id=?', [eventId, userId], 
+                		function(st, sr){
+                		if(sr.rows.length){
+                			console.log("Status found");
+                			event.status = sr.rows.item(0)['status'];
+                		} else {
+                			console.log("Status not found");
+                		}
+                    	deferred.resolve(event);
+                	}, function(t,e){
+                    	console.log("Error while selecting status of event: "+ e.message);
+                    	deferred.reject(e);
+                    });
                 } else {
                 	deferred.resolve([]);
                 }
@@ -1015,7 +1045,8 @@ AppToDateDB.prototype = function() {
     getEventClientIdFromServerId: getEventClientIdFromServerId,
     getEventByServerId: getEventByServerId,
     postEventComment: postEventComment,
-    getEventComments: getEventComments
+    getEventComments: getEventComments,
+    saveStatusForEvent: saveStatusForEvent
   }
 }();
 return window.AppToDate=AppToDateDB;

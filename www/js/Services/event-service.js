@@ -107,10 +107,10 @@ angular.module('AppToDate.Services')
             return deferred.promise;
 		},
 		
-		getEvent : function(eventId){
+		getEvent : function(eventId, userId){
 			var deferred = $q.defer();
 
-            $.when(DB.getEventById(eventId)).then(
+            $.when(DB.getEventById(eventId, userId)).then(
               function(event) {
                 console.log("event found successfully : " + JSON.stringify(event));
                 console.log("Fetching attendees");
@@ -282,6 +282,18 @@ angular.module('AppToDate.Services')
 				console.log("Error while calling post comment API API ")
 				deferred.reject(errorMsg);
 			});
+            return deferred.promise;
+		},
+		
+		postEventStatus: function(event, userId, status){
+			var deferred = $q.defer();
+			$.when(DB.saveStatusForEvent(event.id, userId, status))
+				.then(function(response){
+					console.log("Saved the status");
+					deferred.resolve(response);
+				}, function(errorMsg){
+					console.log("Error while posting status of the attendee");
+				});
             return deferred.promise;
 		}
 	}

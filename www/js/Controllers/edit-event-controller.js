@@ -93,7 +93,7 @@ function($scope, $filter, $location, imageService,
 	
 	if ($scope.userDetails && $scope.userDetails.user_id) {
 		eventService
-				.getEvent($scope.eventId)
+				.getEvent($scope.eventId, $scope.userDetails.user_id)
 				.then(
 						function(data) {
 							$scope.event = data

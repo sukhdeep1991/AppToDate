@@ -57,7 +57,7 @@ function onNotificationGCM(e) {
 	            			});
 	            			break;
 	            		case 'EventDelete':
-	            			eventService.getEvent(payload.InformationId).then(function(event){
+	            			eventService.getEvent(payload.InformationId, 0).then(function(event){
 		            			eventService.deleteEventFromNotification(payload.InformationId);
 		            			showNotificationInTray("Event Deleted", "'" + event.title + "' has been deleted.");	
 		            			console.log("'" + event.title + "' has been deleted.");
