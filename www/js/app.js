@@ -66,7 +66,7 @@ angular.module('AppToDate', [
     	        "ecb":"onNotificationGCM"
     	    });
             
-    
+    appConfig.timezone = jstz.determine().name();
     
   //Admob show banner
 //    admob.createBannerView(

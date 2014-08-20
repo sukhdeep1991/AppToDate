@@ -53,7 +53,7 @@ angular.module('AppToDate.Services')
 			var deferred = $q.defer();
 			user.AccessToken = appConfig.accessToken;
 			user.type = 2;
-			user.person.timeZoneInfo = "UTC";
+			user.person.timeZoneInfo = appConfig.timezone;
 			user.person.LastName = "test";
 			
 			registerIncomingUser(user, deferred);

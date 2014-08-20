@@ -1,23 +1,23 @@
 /* Empty. Add your own CSS if you like */
 
-	.circular {
-	width: 300px;
-	height: 300px;
-	border-radius: 150px;
-	-webkit-border-radius: 150px;
-	-moz-border-radius: 150px;
-	background: url(../img/ionic.png) no-repeat;
-	}
-/**/
-.circular img {
-	opacity: 0;
-	filter: alpha(opacity=0);
-	}
+/* 	.circular { */
+/* 	width: 300px; */
+/* 	height: 300px; */
+/* 	border-radius: 150px; */
+/* 	-webkit-border-radius: 150px; */
+/* 	-moz-border-radius: 150px; */
+/* 	background: url(../img/ionic.png) no-repeat; */
+/* 	} */
+/* /**/ */
+/* .circular img { */
+/* 	opacity: 0; */
+/* 	filter: alpha(opacity=0); */
+/* 	} */
 	
-.inner.padded div {
-	padding-left: 20px;
-	border-top: solid #dee 1px;
-}
+/* .inner.padded div { */
+/* 	padding-left: 20px; */
+/* 	border-top: solid #dee 1px; */
+/* } */
 
 div.phone, div.email{
 background-repeat: no-repeat;
@@ -44,9 +44,6 @@ position: absolute;
 top: 46%;
 left: 46%;
 }
-.has-feedback.no-label .form-control-feedback{
-	top: 15px;
-}
 span.glyphicon.form-control-feedback.input-valid {
 background-image: url('../images/tick-green.png');
 background-repeat: no-repeat;
@@ -56,64 +53,69 @@ background-image: url('../images/cross-red.png');
 background-repeat: no-repeat;
 }
 
-.form-control .fileinput-filename{
-	width: 80px;
-	text-overflow: ellipsis;
-}
 
-#map{
-	width: 100%;
-	height: 400px;
-}
+/* .has-feedback.no-label .form-control-feedback{ */
+/* 	top: 15px; */
+/* } */
 
-#viewEvent{
-	height: 570px;
-}
-.edit-profile{
-    line-height:180px;
-    text-align:center;
-}
-.edit-profile img{
-	vertical-align: middle;
-	width:100%;
-}
-.fc-header-title{
-	font-size: 10px;
-}
-nav {
-	position: fixed;
-	width: 100%;
-	z-index: 100000;
-}
-.nav-margin{
-	height: 40px;
-}
-.event-search{
-	width:82%;
-	display: inline-block;
-}
-a.add{
-	background-image: url('../images/plus.png');
-	padding: 12px 25px;
-	background-repeat: no-repeat;
-	background-position: center;
-	vertical-align: -4px;
-	left: -25px;
-	border-left: 2px solid #3366cc;
-}
-div.search-box.event{
-	border-bottom: 2px solid #3366cc;
-}
-.event-search .form-control{
-	background-color: inherit !important;
-}
-.glyphicon-time{
-	color: #428bca;
-}
-.navBar-right.glyphicon.glyphicon-edit{
-	color: white;
-	padding: 12px;
-}
+/* .form-control .fileinput-filename{ */
+/* 	width: 80px; */
+/* 	text-overflow: ellipsis; */
+/* } */
+
+/* #map{ */
+/* 	width: 100%; */
+/* 	height: 400px; */
+/* } */
+
+/* #viewEvent{ */
+/* 	height: 570px; */
+/* } */
+/* .edit-profile{ */
+/*     line-height:180px; */
+/*     text-align:center; */
+/* } */
+/* .edit-profile img{ */
+/* 	vertical-align: middle; */
+/* 	width:100%; */
+/* } */
+/* .fc-header-title{ */
+/* 	font-size: 10px; */
+/* } */
+/* nav { */
+/* 	position: fixed; */
+/* 	width: 100%; */
+/* 	z-index: 100000; */
+/* } */
+/* .nav-margin{ */
+/* 	height: 40px; */
+/* } */
+/* .event-search{ */
+/* 	width:82%; */
+/* 	display: inline-block; */
+/* } */
+/* a.add{ */
+/* 	background-image: url('../images/plus.png'); */
+/* 	padding: 12px 25px; */
+/* 	background-repeat: no-repeat; */
+/* 	background-position: center; */
+/* 	vertical-align: -4px; */
+/* 	left: -25px; */
+/* 	border-left: 2px solid #3366cc; */
+/* } */
+/* div.search-box.event{ */
+/* 	border-bottom: 2px solid #3366cc; */
+/* } */
+/* .event-search .form-control{ */
+/* 	background-color: inherit !important; */
+/* } */
+/* .glyphicon-time{ */
+/* 	color: #428bca; */
+/* } */
+/* .navBar-right.glyphicon.glyphicon-edit{ */
+/* 	color: white; */
+/* 	padding: 12px; */
+/* } */
 /* div.scroll-bar.scroll-bar-v { */
 /* display: none; */
 /* } */

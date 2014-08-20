@@ -177,16 +177,27 @@ angular.module('AppToDate.Services')
 		saveUserProfile: function(user){
 			var deferred = $q.defer();
             console.log('Saving user: ' + JSON.stringify(user));
-            $.when(DB.insertLoginDetail(user)).then(
-	            function(data) {
-	            	console.log("Information saved successfully");
-	            	deferred.resolve(user);
-	            },
-	            function(errorMsg) {
-	              console.log("Error while saving groups: " + JSON.stringify(errorMsg));
-	              deferred.reject(errorMsg);
-	          });
-			
+            var serverUser = {
+        		FirstName: user.first_name,
+        		LastName: "test",
+        		ClientId: user.user_id,
+        		PhoneNo: user.phone,
+        		Email: user.username, 
+        		TimeZoneInfo: appConfig.timezone
+            }
+            httpResource.loadUrl("Person/Edit", "POST", serverUser).success(function(person){
+	            $.when(DB.insertLoginDetail(user)).then(
+		            function(data) {
+		            	console.log("Information saved successfully");
+		            	deferred.resolve(user);
+		            },
+		            function(errorMsg) {
+		              console.log("Error while saving groups: " + JSON.stringify(errorMsg));
+		              deferred.reject(errorMsg);
+		          });
+            }).error(function(error){
+				console.log("Error occured while calling the edit person API: " + JSON.stringify(error));
+			});
 			return deferred.promise;	
 		},
 		
