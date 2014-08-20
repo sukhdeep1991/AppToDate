@@ -188,6 +188,37 @@ angular.module('AppToDate.Services')
 	          });
 			
 			return deferred.promise;	
+		},
+		
+		insertPersonDetailsFromNotification: function(clientId){
+			var deferred = $q.defer();
+			httpResource.loadUrl("Person/GetPerson?clientId=" + clientId, "GET", null).success(function(person){
+				var userData = {
+					user_id: person.ClientId,
+					username: person.Email,
+					access_token: "",
+					login_time: "",
+					expired_in: "",
+					auth_provider: "",
+					refresh_token: "",
+					first_name: person.FirstName,
+					last_name: person.LastName,
+					phone: person.PhoneNo
+				}
+				$.when(DB.insertLoginDetail(userData)).then(
+			            function(data) {
+			            	console.log("Information saved successfully");
+			            	deferred.resolve(userData.first_name);
+			            },
+			            function(errorMsg) {
+			              console.log("Error while saving groups: " + JSON.stringify(errorMsg));
+			              deferred.reject(errorMsg);
+			          });
+				
+			}).error(function(error){
+				console.log("Error occured while calling the get person API: " + JSON.stringify(error));
+			});
+			return deferred.promise;	
 		}
 	}
 });

@@ -39,6 +39,7 @@ function onNotificationGCM(e) {
             if (e.foreground) {
             	console.log("Notification message incoming: " + JSON.stringify(e.payload));
             	var eventService = injector.get('eventService');
+            	var userService = injector.get('userService');
                // var my_media = new Media("beep.wav");
                // my_media.play();
             	var payload = e.payload;
@@ -82,12 +83,13 @@ function onNotificationGCM(e) {
 	            			});
 	        				break;
 	            		case 'PersonJoined':
-	            			showNotificationInTray("Invitation accepted", "A friend has accepted your invitation");
+	            			userService.insertPersonDetailsFromNotification(payload.InformationId).then(function(name){
+	            				showNotificationInTray("Invitation accepted", name +" has accepted your invitation");
+	            			});
 	        				break;
 	            		case 'CommentAdded':
 	            			eventService.updateEventFromNotification(payload.InformationId).then(function(title){
 		            			showNotificationInTray("Comment added", "A new comment added to event "+ title);
-		            			console.log();
 	            			});
 	        				break;
         			
