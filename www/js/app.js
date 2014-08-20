@@ -24,11 +24,11 @@ angular.module('AppToDate', [
 //            	event: "message",
 //            	foreground: "test",
 //            	payload: {
-//            		NotificationType: "EventCreate",
-//            		InformationId: 54
+//            		NotificationType: "EventEdit",
+//            		InformationId: 48
 //            	}
 //            };
-//            onNotificationGCM(notification);
+            onNotificationGCM(notification);
 //            var notification = {
 //                	event: "message",
 //                	foreground: "test",

@@ -16,7 +16,8 @@ angular.module('AppToDate.Services')
 				remindBefore: eventData.RemindBefore,
 				server_id: eventData.Id,
 				EventAttendeeAssociations: eventData.EventAttendeeAssociations,
-				GroupAssociations: eventData.GroupAssociations
+				GroupAssociations: eventData.GroupAssociations,
+				CommentAssociations: eventData.CommentAssociations
 			};
 		return event;
 	}

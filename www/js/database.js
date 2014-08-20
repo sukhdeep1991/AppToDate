@@ -560,9 +560,18 @@ AppToDateDB.prototype = function() {
 		    					console.log("Error while deleting data in event_groups table : "+ e.message);
 		    		            deferred.reject(e.message);
 		    				});
+	    			tx.executeSql('delete from event_comments where event_id = ?',
+		    				[event.client_id],
+		    				function(a, b){
+		    					console.log("Data deleted in event_comments table count : "+r.rowsAffected);
+		    				}, function(t,e){
+		    					console.log("Error while deleting data in event_comments table : "+ e.message);
+		    		            deferred.reject(e.message);
+		    				});
 
 	    		insertEventAttendees(event);
 	    		insertEventGroups(event);
+	    		createEventComments(event);
 	    		deferred.resolve(event);
 	            console.log("Data inserted in Events table count : "+r.rowsAffected);
 	          },function(t,e){
@@ -571,6 +580,43 @@ AppToDateDB.prototype = function() {
 	          });
     	});
     	return deferred.promise();
+	}
+	
+	var getUserByClientId = function(clientId){
+		console.log("finding user with id: " + clientId);
+		var deferred = $.Deferred();  
+		db.transaction(function(tx) {
+			getUsers([clientId], deferred, tx);
+		});
+    	return deferred.promise();
+	}
+	
+	var createEventComments = function(event){
+		console.log("Inserting comments");
+		if(event.CommentAssociations && event.CommentAssociations.length > 0){
+			console.log("Comments found: inserting");
+			event.CommentAssociations.map(function(commentAssociation){
+				getUserByClientId(commentAssociation.Comment.CommentedByClientId).then(function(users){
+					setTimeout(function(){
+						db.transaction(function(tx) {
+							if(!users || !users.length >0){
+								return;
+							}
+							console.log("Users found: " + JSON.stringify(users));
+							tx.executeSql('insert into event_comments(event_id, user_id, comment, user_name) values(?, ?, ?, ?)',
+									[event.client_id, users[0].user_id, commentAssociation.Comment.Text, users[0].first_name],
+									function(t, r){
+									console.log("Comment added: " + JSON.stringify([event.client_id, users[0].user_id, commentAssociation.Comment.Text, users[0].first_name]));
+								}, function(t,e){
+									console.log("Error while inserting data in comments table : "+ e.message);
+								});
+						});
+					}, 1000);
+				}, function(error){
+					console.log("Error while getting user");
+				});
+			});
+		}
 	}
 	
 	var insertEventAttendees = function(event){
@@ -585,7 +631,6 @@ AppToDateDB.prototype = function() {
 							insertServerPersonIfNeeded(item.Person);
 						}, function(t,e){
 							console.log("Error while inserting data in event_attendees table : "+ e.message);
-				            deferred.reject(e.message);
 						});
 					});
 				});
@@ -639,6 +684,7 @@ AppToDateDB.prototype = function() {
 	    		event.client_id = r.insertId;
 	    		insertEventAttendees(event);
 	    		insertEventGroups(event);
+	    		createEventComments(event);
 	    		deferred.resolve(event);
 	            console.log("Data inserted in Events table count : "+r.rowsAffected);
 	          },function(t,e){
