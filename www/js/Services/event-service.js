@@ -288,13 +288,19 @@ angular.module('AppToDate.Services')
 		
 		postEventStatus: function(event, userId, status){
 			var deferred = $q.defer();
-			$.when(DB.saveStatusForEvent(event.id, userId, status))
-				.then(function(response){
-					console.log("Saved the status");
-					deferred.resolve(response);
-				}, function(errorMsg){
-					console.log("Error while posting status of the attendee");
-				});
+			httpResource.loadUrl("Calendar/PostAttendeeStatus?appEventId="+event.server_id+"&clientId="+userId+"&status="+status,
+					"POST", null).success(function(response){
+				$.when(DB.saveStatusForEvent(event.id, userId, status))
+					.then(function(response){
+						console.log("Saved the status");
+						deferred.resolve(response);
+					}, function(errorMsg){
+						console.log("Error while posting status of the attendee");
+					});
+			}).error(function(error){
+				console.log("Error while calling post status API ")
+				deferred.reject(errorMsg);
+			});
             return deferred.promise;
 		}
 	}
