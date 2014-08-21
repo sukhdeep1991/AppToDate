@@ -5,9 +5,7 @@ angular
 function($scope) {
 	$scope.setNavTitle("Upgrade");
 	var config = new PayPalConfiguration({
-		merchantName: "AppToDate", 
-		merchantPrivacyPolicyURL: "https://mytestshop.com/policy", 
-		merchantUserAgreementURL: "https://mytestshop.com/agreement"
+		merchantName: "AppToDate"
 	});
 	
 	var clientIDs = {
@@ -15,17 +13,18 @@ function($scope) {
 	    "PayPalEnvironmentSandbox": appConfig.paypalSanboxId
 	  };
 	
-	PayPalMobile.init(clientIDs, onPayPalMobileInit);
-	
+	var onPrepareRender = function(){
+		console.log("Pay pal rendered");		
+	}
 	var onPayPalMobileInit = function(){
+		console.log("Pay pal initialized");
 		// must be called
 	      // use PayPalEnvironmentNoNetwork mode to get look and feel of the flow
 	      PayPalMobile.prepareToRender("PayPalEnvironmentNoNetwork", config, onPrepareRender);
 	}
-			
-	var onPrepareRender = function(){
-		
-	}
+	console.log("Initializing with Ids: " + JSON.stringify(clientIDs));
+	PayPalMobile.init(clientIDs, onPayPalMobileInit);
+	
 	
 	$scope.upgrade = function(){
 		// single payment
