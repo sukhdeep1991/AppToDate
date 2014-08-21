@@ -1,5 +1,5 @@
 angular.module('AppToDate.Controllers',['AppToDate.Services'])
-.controller('parentController', function($scope, imageService, $location, $timeout, userService){
+.controller('parentController', function($scope, imageService, $location, $timeout, userService, adService){
 	$scope.imageSrc = "images/profile-icon.png";
 	$scope.spinnerImgSrc = "images/spinner.gif";
 	$scope.showLoader = false;
@@ -38,6 +38,7 @@ angular.module('AppToDate.Controllers',['AppToDate.Services'])
 		if($scope.userDetails && $scope.userDetails.user_id){
 			$scope.setUserImage(appConfig.apiUrl + "Image/Get?clientId=" + $scope.userDetails.user_id);
 			userService.processUninvitedContacts($scope.userDetails.user_id);
+			adService.showAds($scope.userDetails.user_id);
 //			console.log("Fetching user image");
 //			imageService.getUserImage($scope.userDetails.user_id).then(
 //					function(data) {

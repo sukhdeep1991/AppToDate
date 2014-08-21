@@ -138,14 +138,54 @@ AppToDateDB.prototype = function() {
           },function(t,e){
             console.log("Error while creating event_groups table : "+e.message);
           });
-          tx.executeSql('CREATE TABLE IF NOT EXISTS event_comments (id INTEGER PRIMARY KEY AUTOINCREMENT, event_id INTEGER, user_id INTEGER, comment TEXT, user_name TEXT)',[],
-        		  
+          tx.executeSql('CREATE TABLE IF NOT EXISTS event_comments (id INTEGER PRIMARY KEY AUTOINCREMENT, event_id INTEGER, user_id TEXT, comment TEXT, user_name TEXT)',[],
                   function(t,results){
                     console.log("event_comments table created");
                   },function(t,e){
                     console.log("Error while creating event_comments table : "+e.message);
                   });
+          tx.executeSql('CREATE TABLE IF NOT EXISTS users_upgraded (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id TEXT, status INTEGER)',[],
+                  function(t,results){
+                    console.log("users_upgraded table created");
+                  },function(t,e){
+                    console.log("Error while creating users_upgraded table : "+e.message);
+                  });
         });
+	}
+	
+	var insertUserUpgraded = function(userId){
+		var deferred = $.Deferred();
+		db.transaction(function(tx) {
+			tx.executeSql('insert into users_upgraded(user_id, status) values(?, ?)', [userId, 0],
+					function(t,r){
+				console.log("inserted user_upgraded :  ");
+				deferred.resolve(null);
+			}, function(t,e){
+				console.log("Error inserting user_upgraded :  "+ e.message);
+	            deferred.reject(e);
+			});
+		});
+		return deferred.promise();
+	}
+	
+	var isUserUpgraded = function(userId){
+		var deferred = $.Deferred();
+		db.transaction(function(tx) {
+			tx.executeSql('select id from users_upgraded where user_id = ?', [userId],
+					function(t,r){
+				if(r.rows.length > 0){
+					console.log("User upgraded");
+					deferred.resolve(true);
+				} else {
+					console.log("User not upgraded");
+					deferred.resolve(false);
+				}
+			}, function(t,e){
+				console.log("Error fetching user_upgraded :  "+ e.message);
+	            deferred.reject(e);
+			});
+		});
+		return deferred.promise();
 	}
 	
 	var saveStatusForEvent = function(eventId, userId, status){
@@ -1092,7 +1132,9 @@ AppToDateDB.prototype = function() {
     getEventByServerId: getEventByServerId,
     postEventComment: postEventComment,
     getEventComments: getEventComments,
-    saveStatusForEvent: saveStatusForEvent
+    saveStatusForEvent: saveStatusForEvent,
+    insertUserUpgraded: insertUserUpgraded,
+    isUserUpgraded: isUserUpgraded
   }
 }();
 return window.AppToDate=AppToDateDB;

@@ -2,7 +2,7 @@ angular
 .module('AppToDate.Controllers')
 .controller(
 		'upgradeCtrl',
-function($scope) {
+function($scope, adService) {
 	$scope.setNavTitle("Upgrade");
 	var config = new PayPalConfiguration({
 		merchantName: "AppToDate"
@@ -31,6 +31,12 @@ function($scope) {
         PayPalMobile.renderSinglePaymentUI(createPayment(), 
 			function(success){
         	 console.log("Payment was successfull: " + JSON.stringify(success));
+
+     		adService.upgradeUser($scope.userDetails.user_id).then(function(){
+     			$scope.showResponseMessage('Upgraded successfully!', true);			
+     		}, function(error){
+     			$scope.showResponseMessage(error.Message || "An error occured!", false);
+     		});
         }, function(error){
         	console.log("Payment canceled by user: " + JSON.stringify(error));
         });
@@ -38,7 +44,7 @@ function($scope) {
 	var createPayment = function () {
       // for simplicity use predefined amount
       var paymentDetails = new PayPalPaymentDetails("1.50", "0.40", "0.05");
-      var payment = new PayPalPayment("1.95", "USD", "AppToDate activation", "Sale", paymentDetails);
+      var payment = new PayPalPayment("0.017", "USD", "AppToDate activation", "Sale", paymentDetails);
       return payment;
     }
 });
