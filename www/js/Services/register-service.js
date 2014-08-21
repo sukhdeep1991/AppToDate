@@ -55,6 +55,8 @@ angular.module('AppToDate.Services')
 			user.type = 2;
 			user.person.timeZoneInfo = appConfig.timezone;
 			user.person.LastName = "test";
+			user.person.PhoneNo = user.phone;
+			user.person.Email = user.username;
 			
 			registerIncomingUser(user, deferred);
 			return deferred.promise;

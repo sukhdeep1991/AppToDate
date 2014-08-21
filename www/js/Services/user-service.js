@@ -230,6 +230,47 @@ angular.module('AppToDate.Services')
 				console.log("Error occured while calling the get person API: " + JSON.stringify(error));
 			});
 			return deferred.promise;	
+		},
+		
+		processUninvitedContacts: function(userId){
+			userService = this;
+			
+			userService.getUninvitedFriends(userId, "").then(function(contacts){
+				if(contacts && contacts.length > 0){
+					var emails = [];
+					var phones = [];
+					contacts.map(function(contact){
+						if(contact.emails && contact.emails.length > 0){
+							contact.emails.map(function(email){
+								emails.push(email.value);
+							});
+						}
+						if(contact.phoneNumbers && contact.phoneNumbers.length > 0){
+							contact.phoneNumbers.map(function(phone){
+								phones.push(phone.value);
+							});
+						}
+					});
+					httpResource.loadUrl("Person/GetFriendsByEmailList", "POST", emails).success(function(clientIds){
+						console.log("Email client ids: " + JSON.stringify(clientIds));
+						clientIds.map(function(clientId){
+							userService.insertPersonDetailsFromNotification(clientId);
+						});
+					}).error(function(error){
+						console.log("Error while calling emails api call: " + JSON.stringify(error));
+					});
+					httpResource.loadUrl("Person/GetFriendsByPhoneList", "POST", phones).success(function(clientIds){
+						console.log("Email client ids: " + JSON.stringify(clientIds));
+						clientIds.map(function(clientId){
+							userService.insertPersonDetailsFromNotification(clientId);
+						});
+					}).error(function(error){
+						console.log("Error while calling emails api call: " + JSON.stringify(error));
+					});
+				}
+			}, function(error){
+				console.log("Error getting uninvited frieds from contacts");
+			});
 		}
 	}
 });
