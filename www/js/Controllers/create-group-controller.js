@@ -9,14 +9,16 @@ angular.module('AppToDate.Controllers')
 	 }
 	 $scope.selectAll = false;
 	 
-	if ($scope.userDetails && $scope.userDetails.user_id) {
-		userService.getFriends($scope.userDetails.user_id).then(function(data){
-			console.log("Got friends : " + JSON.stringify(data));
-			$scope.friends = data;
-		}, function(error){
-			console.log("Error occured while getFriends: "+ JSON.stringify(error));
-		})
-	}
+	 if ($scope.userDetails && $scope.userDetails.user_id) {
+	     userService.getFriends($scope.userDetails.user_id).then(function (data) {
+	         console.log("Got friends : " + JSON.stringify(data));
+	         $scope.friends = data;
+	     }, function (error) {
+	         console.log("Error occured while getFriends: " + JSON.stringify(error));
+	     })
+	 } else {
+	     $scope.friends = [{ first_name: "Attendee 1" }, { first_name: "Attendee 2" }, { first_name: "Attendee 3" }, { first_name: "Attendee 4" }];
+	 }
 	
 	$scope.selectAllFriends = function(list, searchKey, flag){
 		if(list){

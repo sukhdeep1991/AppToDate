@@ -16,13 +16,16 @@ angular
 				$scope.limit += 20;
 			}
 			
-			var fetchContacts = function(searchKey) {
-				userService.getUninvitedFriends($scope.userDetails.user_id).then(function(response){
-					$scope.contacts = response;
-				}, function(error){
-					console.log("Error: "+ JSON.stringify(error));
-				});
-				
+			var fetchContacts = function (searchKey) {
+			    if ($scope.userDetails && $scope.userDetails.user_id) {
+			        userService.getUninvitedFriends($scope.userDetails.user_id).then(function (response) {
+			            $scope.contacts = response;
+			        }, function (error) {
+			            console.log("Error: " + JSON.stringify(error));
+			        });
+			    } else {
+			        $scope.contacts = invitePeopleData;
+			    }
 //				console.log("Fetching friend facebook");
 //				facebookConnectPlugin.api("/me/friends",["user_friends"], function(response){
 //					console.log("Friend api response : " + JSON.stringify(response));

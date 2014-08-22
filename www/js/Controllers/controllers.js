@@ -5,8 +5,8 @@ angular.module('AppToDate.Controllers',['AppToDate.Services'])
 	$scope.showLoader = false;
 	var history = [];
 	 $scope.msg = {
-			 'success' : '',
-			 'error' : ''
+			 'success' : 'The success message',
+			 'error' : 'The error message'
 	 }
 	//Keep pushing into the history
 	$scope.$on("$locationChangeStart", function(e, currentLocation, previousLocation){
