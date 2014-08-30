@@ -5,8 +5,8 @@ angular.module('AppToDate.Controllers',['AppToDate.Services'])
 	$scope.showLoader = false;
 	var history = [];
 	 $scope.msg = {
-			 'success' : 'The success message',
-			 'error' : 'The error message'
+			 'success' : '',
+			 'error' : ''
 	 }
 	//Keep pushing into the history
 	$scope.$on("$locationChangeStart", function(e, currentLocation, previousLocation){
@@ -31,7 +31,7 @@ angular.module('AppToDate.Controllers',['AppToDate.Services'])
 		
 	}
 	
-	$scope.userDetails = {first_name: "Zufir"};
+	//$scope.userDetails = {first_name: "Zufir"};
 	
 	$scope.setUserDetails = function(userData){
 		$scope.userDetails = userData;

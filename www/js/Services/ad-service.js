@@ -41,17 +41,22 @@ angular.module('AppToDate.Services')
 		
 		upgradeUser: function(userId){
 			var deferred = $q.defer();
-			DB.insertUserUpgraded(userId).then(function(response){
-				admob.killAd(function(){
-					console.log("Ads removed successfully");
-					deferred.resolve();
-				},function(){
-					console.log("Error while removing ads using plugin");
+			httpResource.loadUrl("Person/ConvertToPaidUser?clientId="+userId, "POST", null).success(function(eventData){
+				DB.insertUserUpgraded(userId).then(function(response){
+					admob.killAd(function(){
+						console.log("Ads removed successfully");
+						deferred.resolve();
+					},function(){
+						console.log("Error while removing ads using plugin");
+						deferred.reject();
+					});
+				}, function(error){
+					console.log("Error inserting upgraded info: " + JSON.stringify(error));
 					deferred.reject();
 				});
-			}, function(error){
-				console.log("Error inserting upgraded info: " + JSON.stringify(error));
-				deferred.reject();
+			}).error(function(error){
+				console.log("Error occured while calling paid user API: " + JSON.stringify(error));
+				deferred.reject(error);
 			});
 			return deferred.promise;
 		}

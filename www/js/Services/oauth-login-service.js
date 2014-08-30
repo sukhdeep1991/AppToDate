@@ -46,6 +46,17 @@ angular.module('AppToDate.Services')
 	        	              function(savedData) {
 	        	                console.log("Saved login information in db : " + JSON.stringify(userData));
 	        					deferred.resolve(userData);
+	        					if(data.IsPaidUser === true){
+	        						DB.insertUserUpgraded(userData.user_id).then(function(response){
+	        							console.log("User upgrade information inserted");
+	        							deferred.resolve(userData);
+	        						}, function(error){
+	        							console.log("Error while inserting user upgrade information: "+ JSON.stringify(error));
+	        							deferred.resolve(userData);
+	        						});
+	        					} else{
+	        						deferred.resolve(userData);
+	        					}
 	        	              },
 	        	              function(errorMsg) {
 	        	                console.log("Error while saving login information");

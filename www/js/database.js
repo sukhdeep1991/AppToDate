@@ -155,15 +155,22 @@ AppToDateDB.prototype = function() {
 	
 	var insertUserUpgraded = function(userId){
 		var deferred = $.Deferred();
-		db.transaction(function(tx) {
-			tx.executeSql('insert into users_upgraded(user_id, status) values(?, ?)', [userId, 0],
-					function(t,r){
-				console.log("inserted user_upgraded :  ");
-				deferred.resolve(null);
-			}, function(t,e){
-				console.log("Error inserting user_upgraded :  "+ e.message);
-	            deferred.reject(e);
-			});
+		isUserUpgraded(userId).then(function(response){
+			if(!response){
+				db.transaction(function(tx) {
+					tx.executeSql('insert into users_upgraded(user_id, status) values(?, ?)', [userId, 0],
+							function(t,r){
+						console.log("inserted user_upgraded :  ");
+						deferred.resolve(null);
+					}, function(t,e){
+						console.log("Error inserting user_upgraded :  "+ e.message);
+			            deferred.reject(e);
+					});
+				});
+			}
+		}, function(error){
+			console.log("Error inserting user_upgraded :  "+ e.message);
+            deferred.reject(error);
 		});
 		return deferred.promise();
 	}
