@@ -45,8 +45,8 @@ angular.module('AppToDate.Services')
 	        				$.when(DB.insertLoginDetail(userData)).then(
 	        	              function(savedData) {
 	        	                console.log("Saved login information in db : " + JSON.stringify(userData));
-	        					deferred.resolve(userData);
-	        					if(data.IsPaidUser === true){
+	        					if(data.Person.IsPaidUser){
+	        						console.log("User is paid user");
 	        						DB.insertUserUpgraded(userData.user_id).then(function(response){
 	        							console.log("User upgrade information inserted");
 	        							deferred.resolve(userData);
@@ -55,12 +55,13 @@ angular.module('AppToDate.Services')
 	        							deferred.resolve(userData);
 	        						});
 	        					} else{
+	        						console.log("User is not paid user");
 	        						deferred.resolve(userData);
 	        					}
 	        	              },
 	        	              function(errorMsg) {
 	        	                console.log("Error while saving login information");
-	        					deferred.resolve(false);
+	        					deferred.reject(errorMsg);
 	        	            });	
 	        			}).error(function(data, status) {
 	        				console.log("Login failed: " + JSON.stringify(user));
@@ -68,7 +69,7 @@ angular.module('AppToDate.Services')
 	        			});
 	             	} else {
 	             		console.log("DeviceId not found cannot login");
-	             		deferred.reject(deviceId);
+	             		deferred.reject({deviceId: deviceId, Message: "Device id not found. Could not login."});
 	             	}
 	            },
 	            function(errorMsg) {

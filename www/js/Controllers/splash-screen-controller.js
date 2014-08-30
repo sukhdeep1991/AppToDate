@@ -33,12 +33,12 @@ angular.module('AppToDate.Controllers')
 					$location.path('/home');
 				}
 			} else {
-				$scope.showErrorMessage("Username/password combination does not exist.");
+				$scope.showResponseMessage("Username/password combination does not exist.", false);
 			}
 			$scope.setShowLoader(false);
 		}, function(data){
 			console.log("Login failded due to : " + JSON.stringify(data));
-			$scope.showErrorMessage("Username/password combination does not exist.");
+			$scope.showResponseMessage("Username/password combination does not exist.", false);
 			$scope.setShowLoader(false);
 		});
 	}

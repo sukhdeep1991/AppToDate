@@ -8,7 +8,7 @@ angular.module('AppToDate.Controllers')
 		userService.saveUserProfile(user).then(function(response){
 			$scope.setUserDetails(response);
 			$scope.showResponseMessage('Profile saved successfully', true);
-			$scope.setShowLoader(true);
+			$scope.setShowLoader(false);
 		}, function(error){
 			$scope.showResponseMessage(error.Message||'An error occured', false);
 			$scope.setShowLoader(false);

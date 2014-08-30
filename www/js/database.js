@@ -167,6 +167,8 @@ AppToDateDB.prototype = function() {
 			            deferred.reject(e);
 					});
 				});
+			} else {
+				deferred.resolve(null);
 			}
 		}, function(error){
 			console.log("Error inserting user_upgraded :  "+ e.message);
@@ -285,14 +287,18 @@ AppToDateDB.prototype = function() {
 				if(r.rows.length > 0){
 		            console.log("Groups found for event: " + JSON.stringify(groups));
 					var groups = [];
-		            var query = 'select * from AttendeeGroup where id in ('
-					for(var i = 0 ; i < r.rows.length ; i++){
+		            var query = 'select * from AttendeeGroup where id in (';
+	            	for(var i = 0 ; i < r.rows.length ; i++){
 						var row = r.rows.item(i);
 						groups.push(row['group_id']);
 						query += '?, ';
 					}
 					query = query.substring(0, query.lastIndexOf(',')) + ")"
 					console.log("The group query is: " + query);
+					if(groups && groups.length > 0){
+					} else {
+						query = 'select * from AttendeeGroup where id in (0)';
+					}
 		            tx.executeSql(query, groups, function(t,groupR){
 						if(groupR.rows.length > 0){
 							groups = [];
@@ -320,18 +326,39 @@ AppToDateDB.prototype = function() {
 	}
 	
 	var insertCurrentLoggedInUser = function(user){
-		console.log("Inserting logged in user");
 		var deferred = $.Deferred();
 		db.transaction(function(tx) {
-			tx.executeSql('INSERT INTO LoggedInUser (username, password, type) VALUES (?, ?, ?)', 
-	        		[user.username, user.password, user.type],
-	        		function(t,r){
-	            console.log("Data inserted LoggedInUser usename: " + user.username + " : friend " + user.password);
-	            deferred.resolve(true);
-	          },function(t,e){
-	            console.log("Error Data inserted in LoggedInUser table:  "+ e.message);
+			console.log("Selecting password for username: " + user.username);
+			tx.executeSql('select password from LoggedInUser where username=?', [user.username], 
+					function(ot,or){
+				console.log('select query result: ' + JSON.stringify(or.rows));
+				if(!or.rows.length){
+					console.log("no existing information. inserting");
+					tx.executeSql('INSERT INTO LoggedInUser (username, password, type) VALUES (?, ?, ?)', 
+			        		[user.username, user.password, user.type],
+			        		function(t,r){
+			            console.log("Data inserted LoggedInUser usename: " + user.username + " : friend " + user.password);
+			            deferred.resolve(true);
+			          },function(t,e){
+			            console.log("Error Data inserted in LoggedInUser table:  "+ e.message);
+			            deferred.reject(e);
+			          });
+				} else {
+					console.log("Already inserting updaing");
+					tx.executeSql('update LoggedInUser set password=? where username=?',
+							[user.password, user.username],
+							function(t,r){
+						console.log("Data updated LoggedInUser usename: " + user.username + " : friend " + user.password);
+			            deferred.resolve(true);
+					},function(t,e){
+			            console.log("Error Data inserted in LoggedInUser table:  "+ e.message);
+			            deferred.reject(e);
+			          });
+				}
+			}, function(t,e){
+				console.log("Error Data selecting in LoggedInUser table:  "+ e.message);
 	            deferred.reject(e);
-	          });
+			});
 		});
 		return deferred.promise();
 	}
@@ -498,6 +525,10 @@ AppToDateDB.prototype = function() {
 	
 	var getUsers = function(ids, deferred, tx){
 		var query = "select * FROM Login where user_id in " + getQuestionMarksForQuery(ids.length);
+		if(ids && ids.length){
+		} else {
+			query = "select * FROM Login where user_id in (0)";
+		}
 		console.log("Resulting query : " + query);
 		console.log("ids : " + JSON.stringify(ids));
 		tx.executeSql(query, ids, 
@@ -776,6 +807,10 @@ AppToDateDB.prototype = function() {
             			}
         				console.log("Groups of the user: "+ JSON.stringify(groupIds));
         				var query = 'SELECT event_id FROM event_groups WHERE group_id in '+ getQuestionMarksForQuery(groupIds.length);
+        				if(groupIds && groupIds.length > 0){	
+        				} else {
+        					query = 'SELECT event_id FROM event_groups WHERE group_id in (0)';
+        				}
         				console.log("The query is : " + query);
         				tx.executeSql(query, groupIds,
         					function(et, er){
@@ -807,24 +842,31 @@ AppToDateDB.prototype = function() {
     var getUserEvents = function(userId){
     	var deferred = $.Deferred();
     	getEventIdsForUser(userId).then(function(eventIds){
-    		db.transaction(function(tx) {
-                tx.executeSql('SELECT * FROM Events WHERE id in ' + getQuestionMarksForQuery(eventIds.length), eventIds, 
-                  function(t,r){
-                    if(r.rows.length){
-                    	console.log("events found");
-                    	var events = [];
-                    	for(i = 0 ; i < r.rows.length ; i++){
-                    		events.push(r.rows.item(i));
-                    	}
-                    	deferred.resolve(events);
-                    } else {
-                    	deferred.resolve([]);
-                    }
-                }, function(t,e){
-                	console.log("Error while selecting events data : "+ e.message);
-                	deferred.reject(e);
-                });
-        	});
+    		if(eventIds && eventIds.length > 0){
+	    		db.transaction(function(tx) {
+	    			console.log("event ids" + JSON.stringify(eventIds));
+	    			var query = 'SELECT * FROM Events WHERE id in ' + getQuestionMarksForQuery(eventIds.length);
+	    			console.log("Get event query is: " + query);
+	                tx.executeSql(query, eventIds, 
+	                  function(t,r){
+	                    if(r.rows.length){
+	                    	console.log("events found");
+	                    	var events = [];
+	                    	for(i = 0 ; i < r.rows.length ; i++){
+	                    		events.push(r.rows.item(i));
+	                    	}
+	                    	deferred.resolve(events);
+	                    } else {
+	                    	deferred.resolve([]);
+	                    }
+	                }, function(t,e){
+	                	console.log("Error while selecting events data : "+ e.message);
+	                	deferred.reject(e);
+	                });
+	        	});
+    		} else {
+    			deferred.resolve([]);
+    		}
     	}, function(error){
     		console.log("Could not get the event ids of user: " + JSON.stringify(error));
     	});

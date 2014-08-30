@@ -46,7 +46,14 @@ angular.module('AppToDate.Controllers')
 		//Prepare the end date
 		time = event.endTime.split(":");
 		event.end.setHours(time[0], time[1]);
-		
+		console.log("Event start date: " + JSON.stringify(event.start));
+		console.log("Event end date: " + JSON.stringify(event.end));
+		if(event.start > event.end){
+			console.log("Start time is less that end time");
+			$scope.setShowLoader(false);
+			$scope.showResponseMessage("Start time cannot be greater than end time.", false);
+			return;
+		}
 		//Extract the utc string from the date time
 		//event.start = new Date( event.start.getTime() - (event.start.getTimezoneOffset() * 60000));
 		//event.end = new Date( event.end.getTime() - (event.end.getTimezoneOffset() * 60000));

@@ -185,19 +185,38 @@ angular.module('AppToDate.Services')
         		Email: user.username, 
         		TimeZoneInfo: appConfig.timezone
             }
-            httpResource.loadUrl("Person/Edit", "POST", serverUser).success(function(person){
-	            $.when(DB.insertLoginDetail(user)).then(
-		            function(data) {
-		            	console.log("Information saved successfully");
-		            	deferred.resolve(user);
-		            },
-		            function(errorMsg) {
-		              console.log("Error while saving groups: " + JSON.stringify(errorMsg));
-		              deferred.reject(errorMsg);
-		          });
-            }).error(function(error){
-				console.log("Error occured while calling the edit person API: " + JSON.stringify(error));
-			});
+            DB.isUserUpgraded(user.user_id).then(function(response){
+            	if(response){
+            		serverUser.IsPaidUser = true;
+            	}
+	            httpResource.loadUrl("Person/Edit", "POST", serverUser).success(function(person){
+	            	httpResource.loadUrl("Person/ChangePassword?clientId=" + user.user_id + "&password=" + user.password, 
+	            			"POST", serverUser).success(function(nperson){
+			            $.when(DB.insertLoginDetail(user)).then(
+				            function(data) {
+				            	userService.insertLoggedInUser(user).then(function(response){
+					            	console.log("Information saved successfully");
+					            	deferred.resolve(user);
+				            	}, function(error){
+				            		console.log("Error while saving groups: " + JSON.stringify(error));
+						            deferred.reject(error);
+				            	});
+				            },
+				            function(errorMsg) {
+				              console.log("Error while saving groups: " + JSON.stringify(errorMsg));
+				              deferred.reject(errorMsg);
+				          });
+	    			}).error(function(error){
+	    				console.log("Error occured while calling the change password API: " + JSON.stringify(error));
+	    				deferred.reject(error);
+	    			});
+	            }).error(function(error){
+					console.log("Error occured while calling the edit person API: " + JSON.stringify(error));
+					deferred.reject(error);
+				});
+            }, function(error){
+            	console.log("Error while selecting upgrade information");
+            });
 			return deferred.promise;	
 		},
 		
