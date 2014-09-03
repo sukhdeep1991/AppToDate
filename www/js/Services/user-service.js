@@ -290,6 +290,76 @@ angular.module('AppToDate.Services')
 			}, function(error){
 				console.log("Error getting uninvited frieds from contacts");
 			});
+		},
+		
+		updateUserImage: function(userId){
+			var deferred = $q.defer();
+			window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem){
+				var dowloadLink = encodeURI(appConfig.apiUrl + "Image/Get?clientId=" + userId);
+				var fileName = userId + ".jpg";
+				var directoryEntry = fileSystem.root;
+				directoryEntry.getDirectory(appConfig.userImagesFolder, { create: true, exclusive: false }, 
+						function(){
+					console.log("Directory created successfully");
+					var rootdir = fileSystem.root;
+					//var fp = rootdir.toUrl();
+					var fp = "file:///storage/sdcard0" + "/" + appConfig.userImagesFolder + "/" + fileName;
+					console.log("The full path of the file to update is : " + fp);
+					var fileTransfer = new FileTransfer();
+					// File download function with URL and local path
+					fileTransfer.download(dowloadLink, fp,
+					                    function (entry) {
+					                        deferred.resolve(fp);
+					                    },
+					                 function (error) {
+					                     //Download abort errors or download failed errors
+					    				 console.log("Error while downloading file: " + JSON.stringify(error));
+					                     //alert("download error target " + error.target);
+					                     //alert("upload error code" + error.code);
+					                     deferred.reject(error);
+					                 }
+					            );
+				}, function(error){
+					console.log("Error while creating/opening directory: " + JSON.stringify(error));
+	                deferred.reject(error);
+				});
+			}, function(error){
+				console.log("Error while requesting file system: " + JSON.stringify(error));
+                deferred.reject(error);
+			});
+			return deferred.promise;
+		},
+		
+		getUserImage: function(userId){
+			var deferred = $q.defer();
+			var userService = this;
+			var fileName = userId + ".jpg";
+			var fp = "file:///storage/sdcard0" + "/" + appConfig.userImagesFolder + "/" + fileName;
+			console.log("The path of file to get is : " + fp)
+			window.resolveLocalFileSystemURI(fp, function(fileSystem){
+				console.log("File found :" + fp);
+				deferred.resolve(fp);
+				
+				console.log("Error while getting the file from file system. Downloading from server.");
+				userService.updateUserImage(userId).then(function(filePath){
+					console.log("File found" + filePath);
+					deferred.resolve(filePath);						
+				}, function(error){
+					console.log("Error while updating user image: " + JSON.stringify(error));
+					deferred.reject(error);	
+				});
+			}, function(error){
+				console.log("Error while requesting file system: " + JSON.stringify(error));
+				console.log("Error while getting the file from file system. Downloading from server.");
+				userService.updateUserImage(userId).then(function(filePath){
+					console.log("File found" + filePath);
+					deferred.resolve(filePath);						
+				}, function(error){
+					console.log("Error while updating user image: " + JSON.stringify(error));
+					deferred.reject(error);	
+				});
+			});
+			return deferred.promise;
 		}
 	}
 });

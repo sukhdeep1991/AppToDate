@@ -22,14 +22,14 @@ function($scope, imageService) {
 	    imageService.uploadImageToServer(imageURL, serverUrl, 
     		function(response){
 	    	$scope.$apply(function(){
-	    		console.log("Image uploaded: " + JSON.stringify(response));		    
-				$scope.setUserImage("about:blank");
-				setTimeout(function(){
-					$scope.$apply(function(){
-						$scope.setUserImage(appConfig.apiUrl + "Image/Get?clientId=" + $scope.userDetails.user_id);	
-						$scope.setShowLoader(false);
-					});
-				}, 500);
+	    		$scope.setUserImage("about:blank");
+	    		userService.updateUserImage($scope.userDetails.user_id).then(function(fullPath){
+	    			$scope.setUserImage(imageURL);	
+					$scope.setShowLoader(false);
+		    		console.log("Image uploaded: " + JSON.stringify(response));	
+	    		}, function(error){
+	    			console.log("Error while updating the image: " + JSON.stringify(error));
+	    		});
 	    	});
 	    	
 	    }, function(response){

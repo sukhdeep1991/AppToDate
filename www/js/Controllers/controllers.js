@@ -36,9 +36,14 @@ angular.module('AppToDate.Controllers',['AppToDate.Services'])
 	$scope.setUserDetails = function(userData){
 		$scope.userDetails = userData;
 		if($scope.userDetails && $scope.userDetails.user_id){
-			$scope.setUserImage(appConfig.apiUrl + "Image/Get?clientId=" + $scope.userDetails.user_id);
+			//$scope.setUserImage(appConfig.apiUrl + "Image/Get?clientId=" + $scope.userDetails.user_id);
 			userService.processUninvitedContacts($scope.userDetails.user_id);
 			adService.showAds($scope.userDetails.user_id);
+			userService.getUserImage($scope.userDetails.user_id).then(function(fullPath){
+				$scope.setUserImage(fullPath);
+			}, function(error){
+				console.log("Error while getting the image: " + JSON.stringify(error));
+			});
 //			console.log("Fetching user image");
 //			imageService.getUserImage($scope.userDetails.user_id).then(
 //					function(data) {

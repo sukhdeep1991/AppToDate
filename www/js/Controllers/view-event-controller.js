@@ -3,15 +3,15 @@ angular
 .controller(
 		'viewEventCtrl',
 function($scope, $filter, $location, imageService,
-		eventService, googleMapService, $stateParams) {
+		eventService, googleMapService, $stateParams, userService) {
     $scope.setNavTitle("View Event");
 	$scope.mapLoaded = false;
 	$scope.tab = 'details';
 	$scope.eventId = $stateParams.id
 	$scope.statusMessages = {"0.0": "Wating for response"};
-	$scope.userImageSource = appConfig.apiUrl + "Image/Get?clientId=";
 	$scope.eventImageSource = appConfig.apiUrl + "Image/GetEventImage?eventId=";
 	$scope.eventStatus = eventStatus;
+	$scope.attendeeImageUrl = "";
 
 	if ($scope.userDetails && $scope.userDetails.user_id) {
 		eventService
@@ -97,6 +97,11 @@ function($scope, $filter, $location, imageService,
 	}
 	$scope.attendeeClicked = function(attendee){
 		$scope.selectedAttendee = attendee;
+		userService.getUserImage(attendee.user_id).then(function(fullPath){
+			$scope.attendeeImageUrl = fullPath;
+		}, function(error){
+			console.log("Error while getting the image: " + JSON.stringify(error));
+		});
 		$scope.showModal = true;
 	}
 	$scope.closeModal = function(){
