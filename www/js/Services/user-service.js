@@ -333,7 +333,16 @@ angular.module('AppToDate.Services')
 		getUserImage: function(userId){
 			var deferred = $q.defer();
 			var userService = this;
-			var fileName = userId + ".jpg";
+			//console.log("Error while requesting file system: " + JSON.stringify(error));
+			console.log("Error while getting the file from file system. Downloading from server.");
+			userService.updateUserImage(userId).then(function(filePath){
+				console.log("File found" + filePath);
+				deferred.resolve(filePath);						
+			}, function(error){
+				console.log("Error while updating user image: " + JSON.stringify(error));
+				deferred.reject(error);	
+			});
+			/*var fileName = userId + ".jpg";
 			var fp = "file:///storage/sdcard0" + "/" + appConfig.userImagesFolder + "/" + fileName;
 			console.log("The path of file to get is : " + fp)
 			window.resolveLocalFileSystemURI(fp, function(fileSystem){
@@ -358,7 +367,7 @@ angular.module('AppToDate.Services')
 					console.log("Error while updating user image: " + JSON.stringify(error));
 					deferred.reject(error);	
 				});
-			});
+			});*/
 			return deferred.promise;
 		}
 	}
