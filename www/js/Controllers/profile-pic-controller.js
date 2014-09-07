@@ -29,6 +29,7 @@ function($scope, imageService) {
 		    		console.log("Image uploaded: " + JSON.stringify(response));	
 	    		}, function(error){
 	    			console.log("Error while updating the image: " + JSON.stringify(error));
+	    			$scope.setShowLoader(false);
 	    		});
 	    	});
 	    	
@@ -45,7 +46,7 @@ function($scope, imageService) {
 	}
 	
 	function onError(message) {
-		alert('Failed because: ' + message);
+		console.log("Failed because:: " + message);
 
 	}
 });

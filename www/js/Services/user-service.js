@@ -303,7 +303,7 @@ angular.module('AppToDate.Services')
 					console.log("Directory created successfully");
 					var rootdir = fileSystem.root;
 					//var fp = rootdir.toUrl();
-					var fp = "file:///storage/sdcard0" + "/" + appConfig.userImagesFolder + "/" + fileName;
+					var fp = fileSystem.root.toURL() + "/" + appConfig.userImagesFolder + "/" + fileName;
 					console.log("The full path of the file to update is : " + fp);
 					var fileTransfer = new FileTransfer();
 					// File download function with URL and local path

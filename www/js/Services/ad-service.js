@@ -1,6 +1,8 @@
 angular.module('AppToDate.Services')
 .factory('adService',function(httpResource,$q){
 	var showAdsPluginCall = function(){
+		
+		if(!GlobalProperties.IsAdsShown){
 		//Admob show banner
 	    admob.createBannerView(
 	  	     {
@@ -21,11 +23,13 @@ angular.module('AppToDate.Services')
 	  	    		    	 console.log("Error occurred while calling admob.requestAd : " + JSON.stringify(error));
 	  	    		     }
 	  	    		 );
+	  	    	GlobalProperties.IsAdsShown = true;
 	  	     },
 	  	     function(error){
 	  	    	 console.log("Error occurred while calling admob.createBannerView : " + JSON.stringify(error));
 	  	     }
 	  	 );
+		}
 	}
 	
 	return {

@@ -171,4 +171,9 @@ angular.module('AppToDate', [
 });
 //handle GCM notifications for Android
 
+var GlobalProperties = {
+		
+		IsAdsShown : false
+};
+
 

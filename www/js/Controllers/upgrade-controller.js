@@ -44,7 +44,7 @@ function($scope, adService) {
 	var createPayment = function () {
       // for simplicity use predefined amount
       var paymentDetails = new PayPalPaymentDetails("1.50", "0.40", "0.05");
-      var payment = new PayPalPayment("0.017", "USD", "AppToDate activation", "Sale", paymentDetails);
+      var payment = new PayPalPayment("0.99", "USD", "AppToDate activation", "Sale", paymentDetails);
       return payment;
     }
 });
