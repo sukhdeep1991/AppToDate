@@ -33,7 +33,7 @@ angular.module('AppToDate.Controllers',['AppToDate.Services'])
 		
 	}
 	
-	$scope.userDetails = {first_name: "Zufir"};
+	//$scope.userDetails = {first_name: "Zufir"};
 	
 	$scope.setUserDetails = function(userData){
 		$scope.userDetails = userData;
