@@ -11,7 +11,9 @@ var showNotificationInTray = function(title, message){
 //	});
 	window.plugin.notification.local.add({
 	    title:   title,
-	    message: message
+	    message: message,
+	    smallIcon:'logo',
+	    icon:'logo'
 	});
 }
 
@@ -91,6 +93,12 @@ function onNotificationGCM(e) {
 	            			eventService.updateEventFromNotification(payload.InformationId).then(function(title){
 		            			showNotificationInTray("Comment added", "A new comment added to event "+ title);
 	            			});
+	        				break;
+	            		case 'ProfilePicUpdated':
+	            			/*eventService.updateEventFromNotification(payload.InformationId).then(function(title){
+		            			showNotificationInTray("Comment added", "A new comment added to event "+ title);
+	            			});*/
+	            			showNotificationInTray("Profile pic updated", "Profile pic has been updated");
 	        				break;
         			
             		}
