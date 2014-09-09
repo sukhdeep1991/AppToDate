@@ -89,6 +89,7 @@
 </head>
 <body ng-app="AppToDate" animation="slide-left-right-ios7"
 	data-ng-controller="parentController">
+	<div class="logoPad" data-ng-show="userDetails"></div>
     <!-- <div class="navbar-fixed-top" data-ng-show="userDetails">
 	    <nav> Top Navigation     
           <div class="navbar navbar-inverse">
@@ -114,7 +115,7 @@
           </div>
         </nav>
     </div> -->
-        <div class="navbar-fixed-top navbar-slide" style="position:relative;">
+        <!-- <div class="navbar-fixed-top navbar-slide" style="position:relative;">
     
     <div class="navbar-collapse" style="background:transparent;">
       <ul class="nav navbar-nav">
@@ -135,14 +136,60 @@
                   <li style=" clear:both;"></li>
                   <!--<li><a href="#/editProfile">Edit profile</a></li>
                   <li style=" clear:both;"></li>
-                  <li><a href="#/upgrade">Upgrade</a></li>-->
+                  <li><a href="#/upgrade">Upgrade</a></li>
           </ul>
         </li>
         
       </ul>
       
     </div>    
+    </div> -->
+    <div class="navbar-fixed-top navbar-slide" data-ng-show="userDetails">
+    
+    <div class="navbar-collapse" style="background:transparent;">
+      <ul class="nav navbar-nav">
+        <li style="width:12% !important; border:none;" class="extColor"><a href="" class="navbar-brand btn-back text-center" data-ng-click="goBack()">Back</a></li>
+        <li style="width:12% !important; border:none;" class="extColor"><a href="#/home" class="navbar-brand btn-home text-center">Home</a> </li>
+        <li style="width:52%;" class="extColor extBdr"><a><h4 class="navbar-heading text-center " style="margin-top:0px; margin-bottom:1px;">{{navTitle}}</h4></a></li>
+        
+        <li class="dropdown extColor extBdr" style="width:12% !important; border:none; float:right;">
+          <a class="dropdown-toggle" data-toggle="dropdown" >
+            More <span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu">
+                  
+              <li> <div class="profile-pic"><img class="img-responsive" ng-src="{{imageSrc}}" alt=""/></div><a href="#/editProfile">Profile</a></li>
+              <li style=" clear:both;"></li>
+                  
+              <li><div class="profile-pic no-border"><img class="img-responsive" ng-src="{{imageSrc}}" alt=""/></div><a href="#/upgrade">Upgrade</a></li>
+                  <li style=" clear:both;"></li>
+                  <!--<li><a href="#/editProfile">Edit profile</a></li>
+                  <li style=" clear:both;"></li>
+                  <li><a href="#/upgrade">Upgrade</a></li>-->
+          </ul>
+        </li>
+        
+        <li class="dropdown extColor extBdr" style="width:12% !important; border:none; float:right;">
+          <a class="dropdown-toggle" data-toggle="dropdown" >
+            More <span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu">
+                  
+              <li> <div class="profile-pic"><img class="img-responsive" ng-src="{{imageSrc}}" alt=""/></div><a href="#/editProfile">Profile</a></li>
+              <li style=" clear:both;"></li>
+                  
+              <li><div class="profile-pic no-border"><img class="img-responsive" ng-src="{{imageSrc}}" alt=""/></div><a href="#/upgrade">Upgrade</a></li>
+                  <li style=" clear:both;"></li>
+                  <!--<li><a href="#/editProfile">Edit profile</a></li>
+                  <li style=" clear:both;"></li>
+                  <li><a href="#/upgrade">Upgrade</a></li>-->
+          </ul>
+        </li>
+        
+      </ul>
+      
     </div>
+     </div>
 	<div class="nav-margin"></div>
 	<div class="loading-widget" data-ng-show="showLoader">
 		<img class="img-center" alt="Loading..." ng-src="{{spinnerImgSrc}}">

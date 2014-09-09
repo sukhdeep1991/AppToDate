@@ -30,39 +30,47 @@ angular.module('AppToDate.Services')
 	            		console.log("User to login: " + JSON.stringify(user));
 	            		httpResource.loadUrl("authentication/login", "POST", user).success(function(data){
 	        				console.log("User authenticated")
-	        				var userData = {};
-	        				userData.username = user.username;
-	        				userData.id = data.Person.Id;
-	        				userData.user_id = data.Person.ClientId;
-	        				userData.first_name = data.Person.FirstName;
-	        				userData.last_name = data.Person.LastName;
-	        				userData.access_token = appConfig.accessToken;
-	        				userData.expired_in = data.TokenExpiryTime;
-	        				userData.refresh_token = data.RefreshToken;
-	        				userData.phone = data.PhoneNo || 0;
-	        				appConfig.authorizationToken = data.AuthorizationToken;
+	        				httpResource.loadUrl("person/UpdatePersonDeviceAssociation?clientId="+data.Person.ClientId+"&deviceId="+user.deviceId+"&deviceType=1", "POST", null).success(function(data1){
+	        					console.log("device Id updated");
+	        					var userData = {};
+		        				userData.username = user.username;
+		        				userData.id = data.Person.Id;
+		        				userData.user_id = data.Person.ClientId;
+		        				userData.first_name = data.Person.FirstName;
+		        				userData.last_name = data.Person.LastName;
+		        				userData.access_token = appConfig.accessToken;
+		        				userData.expired_in = data.TokenExpiryTime;
+		        				userData.refresh_token = data.RefreshToken;
+		        				userData.phone = data.PhoneNo || 0;
+		        				appConfig.authorizationToken = data.AuthorizationToken;
+		        				
+		        				$.when(DB.insertLoginDetail(userData)).then(
+		        	              function(savedData) {
+		        	                console.log("Saved login information in db : " + JSON.stringify(userData));
+		        					if(data.Person.IsPaidUser){
+		        						console.log("User is paid user");
+		        						DB.insertUserUpgraded(userData.user_id).then(function(response){
+		        							console.log("User upgrade information inserted");
+		        							deferred.resolve(userData);
+		        						}, function(error){
+		        							console.log("Error while inserting user upgrade information: "+ JSON.stringify(error));
+		        							deferred.resolve(userData);
+		        						});
+		        					} else{
+		        						console.log("User is not paid user");
+		        						deferred.resolve(userData);
+		        					}
+		        	              },
+		        	              function(errorMsg) {
+		        	                console.log("Error while saving login information");
+		        					deferred.reject(errorMsg);
+		        	            });	
+	        					
+	        				}).error(function(data1, status) {
+		        				console.log("Device Id Updated failed: " + JSON.stringify(data1));
+		        				deferred.reject(data);
+		        			});
 	        				
-	        				$.when(DB.insertLoginDetail(userData)).then(
-	        	              function(savedData) {
-	        	                console.log("Saved login information in db : " + JSON.stringify(userData));
-	        					if(data.Person.IsPaidUser){
-	        						console.log("User is paid user");
-	        						DB.insertUserUpgraded(userData.user_id).then(function(response){
-	        							console.log("User upgrade information inserted");
-	        							deferred.resolve(userData);
-	        						}, function(error){
-	        							console.log("Error while inserting user upgrade information: "+ JSON.stringify(error));
-	        							deferred.resolve(userData);
-	        						});
-	        					} else{
-	        						console.log("User is not paid user");
-	        						deferred.resolve(userData);
-	        					}
-	        	              },
-	        	              function(errorMsg) {
-	        	                console.log("Error while saving login information");
-	        					deferred.reject(errorMsg);
-	        	            });	
 	        			}).error(function(data, status) {
 	        				console.log("Login failed: " + JSON.stringify(user));
 	        				deferred.reject(data);

@@ -11,32 +11,38 @@ angular.module('AppToDate.Services')
 	            		console.log("Registering user : " + JSON.stringify(user));
 	            		httpResource.loadUrl("authentication/register", "POST", user).success(function(data){
 	            			console.log("Registering user api done: " + JSON.stringify(data));
-	            			var loginData = {};
-	            			loginData.id = data.Person.Id;
-	            			loginData.username = user.username;
-	            			loginData.auth_provider = "oauth";
-	            			loginData.user_id = data.Person.ClientId;
-	            			loginData.access_token = appConfig.accessToken;
-	            			loginData.expired_in = data.TokenExpiryTime;
-	            			loginData.refresh_token = data.RefreshToken;
-	            			loginData.first_name = data.Person.FirstName;
-	            			loginData.last_name = data.Person.LastName;
-	            			loginData.phone = user.phone || 0;
-	            			appConfig.authorizationToken = data.AuthorizationToken;
+	            			httpResource.loadUrl("person/UpdatePersonDeviceAssociation?clientId="+data.Person.ClientId+"&deviceId="+user.deviceId+"&deviceType=1", "POST", null).success(function(data1){
+	            				var loginData = {};
+		            			loginData.id = data.Person.Id;
+		            			loginData.username = user.username;
+		            			loginData.auth_provider = "oauth";
+		            			loginData.user_id = data.Person.ClientId;
+		            			loginData.access_token = appConfig.accessToken;
+		            			loginData.expired_in = data.TokenExpiryTime;
+		            			loginData.refresh_token = data.RefreshToken;
+		            			loginData.first_name = data.Person.FirstName;
+		            			loginData.last_name = data.Person.LastName;
+		            			loginData.phone = user.phone || 0;
+		            			appConfig.authorizationToken = data.AuthorizationToken;
+		            			
+		            			$.when(DB.insertLoginDetail(loginData)).then(
+		                          function(data) {
+		                            console.log("Saved register information in db : " + JSON.stringify(loginData));
+		            				deferred.resolve(loginData);
+		                          },
+		                          function(errorMsg) {
+		                            console.log("Error while saving register information");
+		            				deferred.resolve(false);
+		                        });
+		            		}).error(function(data){
+		                    	console.log("Error occured while registering : " + JSON.stringify(data));
+		                    	deferred.reject(data);
+		                    });
+	            			}).error(function(data1, status) {
+		        				console.log("Device Id Updated failed: " + JSON.stringify(user));
+		        				deferred.reject(data);
+		        			});
 	            			
-	            			$.when(DB.insertLoginDetail(loginData)).then(
-	                          function(data) {
-	                            console.log("Saved register information in db : " + JSON.stringify(loginData));
-	            				deferred.resolve(loginData);
-	                          },
-	                          function(errorMsg) {
-	                            console.log("Error while saving register information");
-	            				deferred.resolve(false);
-	                        });
-	            		}).error(function(data){
-	                    	console.log("Error occured while registering : " + JSON.stringify(data));
-	                    	deferred.reject(data);
-	                    });
 	            	} else {
 	            		console.log("Deviceid not found");
 	            		deferred.reject(deviceId);
