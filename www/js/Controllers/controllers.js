@@ -16,6 +16,8 @@ angular.module('AppToDate.Controllers',['AppToDate.Services'])
 			return;
 		}
 		history.push(hashUrl);
+		$scope.isEditVisible = false;
+		$scope.isDeleteVisible = false;
 	});
 	
 	$scope.goBack = function(){
@@ -31,14 +33,18 @@ angular.module('AppToDate.Controllers',['AppToDate.Services'])
 		
 	}
 	
-	//$scope.userDetails = {first_name: "Zufir"};
+	$scope.userDetails = {first_name: "Zufir"};
 	
 	$scope.setUserDetails = function(userData){
 		$scope.userDetails = userData;
 		if($scope.userDetails && $scope.userDetails.user_id){
 			//$scope.setUserImage(appConfig.apiUrl + "Image/Get?clientId=" + $scope.userDetails.user_id);
 			userService.processUninvitedContacts($scope.userDetails.user_id);
-			adService.showAds($scope.userDetails.user_id);
+			adService.showAds($scope.userDetails.user_id).then(function(fullPath){
+				$scope.userDetails.isUpgraded = true;
+			}, function(error){
+				console.log("Error while getting the image: " + JSON.stringify(error));
+			});
 			userService.getUserImage($scope.userDetails.user_id).then(function(fullPath){
 				$scope.setUserImage(fullPath);
 			}, function(error){
@@ -69,6 +75,9 @@ angular.module('AppToDate.Controllers',['AppToDate.Services'])
 	$scope.editClicked = function(){
 		$scope.$broadcast('edit_clicked');
 	}
+	$scope.deleteClicked = function(){
+		$scope.$broadcast('delete_clicked');
+	}
 	
 	$scope.showResponseMessage = function(msg, isSuccess){
 		$timeout.cancel($scope.msgTimeout);
@@ -83,5 +92,13 @@ angular.module('AppToDate.Controllers',['AppToDate.Services'])
 	$scope.clearMsg = function(){
 		$scope.msg.error = '';
 		$scope.msg.success = '';
+	}
+	
+	$scope.showEditButton = function(){
+		$scope.isEditVisible = true;
+	}
+	
+	$scope.showDeleteButton = function(){
+		$scope.isDeleteVisible = true;
 	}
 });

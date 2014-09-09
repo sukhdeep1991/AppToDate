@@ -163,7 +163,7 @@
               <li> <div class="profile-pic"><img class="img-responsive" ng-src="{{imageSrc}}" alt=""/></div><a href="#/editProfile">Profile</a></li>
               <li style=" clear:both;"></li>
                   
-              <li><div class="profile-pic no-border"><img class="img-responsive" src="images/upgrade.png" alt=""/></div><a href="#/upgrade">Upgrade</a></li>
+              <li ng-hide="userDetails.isUpgraded"><div class="profile-pic no-border"><img class="img-responsive" src="images/upgrade.png" alt=""/></div><a href="#/upgrade">Upgrade</a></li>
                   <li style=" clear:both;"></li>
                   <!--<li><a href="#/editProfile">Edit profile</a></li>
                   <li style=" clear:both;"></li>
@@ -171,16 +171,17 @@
           </ul>
         </li>
         
-        <li class="dropdown extColor extBdr" style="width:12% !important; border:none; float:right;">
+        <li class="dropdown extColor extBdr" style="width:12% !important; border:none; float:right;" 
+        			ng-show="isEditVisible || isDeleteVisible">
           <a class="dropdown-toggle" data-toggle="dropdown" >
             More <span class="caret"></span>
           </a>
           <ul class="dropdown-menu">
                   
-              <li> <div class="profile-pic  no-border"><img class="img-responsive" src="images/edit.png" alt=""/></div><a href="#/editProfile">Edit</a></li>
+              <li ng-show="isEditVisible"> <div class="profile-pic  no-border"><img class="img-responsive" src="images/edit.png" alt=""/></div><a href="" ng-click="editClicked()">Edit</a></li>
               <li style=" clear:both;"></li>
                   
-              <li><div class="profile-pic no-border"><img class="img-responsive" src="images/delete.png" alt=""/></div><a href="#/upgrade">Delete</a></li>
+              <li ng-show="isEditVisible"><div class="profile-pic no-border"><img class="img-responsive" src="images/delete.png" alt=""/></div><a href="" ng-click="deleteClicked()">Delete</a></li>
                   <li style=" clear:both;"></li>
                   <!--<li><a href="#/editProfile">Edit profile</a></li>
                   <li style=" clear:both;"></li>

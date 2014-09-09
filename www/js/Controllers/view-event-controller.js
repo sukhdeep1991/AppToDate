@@ -12,6 +12,9 @@ function($scope, $filter, $location, imageService,
 	$scope.eventImageSource = appConfig.apiUrl + "Image/GetEventImage?eventId=";
 	$scope.eventStatus = eventStatus;
 	$scope.attendeeImageUrl = "";
+	
+	$scope.showEditButton();	
+	$scope.showDeleteButton();
 
 	if ($scope.userDetails && $scope.userDetails.user_id) {
 		eventService
@@ -109,31 +112,31 @@ function($scope, $filter, $location, imageService,
 	}
 
 	$scope.$on('edit_clicked', function(){
-		 navigator.notification.confirm('What do you want?', confirmCallback, 'Event', 'Edit, Delete, Cancel');  
+		console.log("Editing event");
+		$location.path('/event/edit/' + $scope.eventId);
 	});
-	
-	var confirmCallback = function(message){
-		if(message == 1){
-			console.log("Editing event");
-			$location.path('/event/edit/' + $scope.eventId);
-			$scope.$apply();
-		} else if(message == 2){
-			$scope.setShowLoader(true);
-			console.log("Delete event");
-			eventService.deleteEvent(parseInt($scope.event.server_id))
-				.then(function(data){
-					navigator.notification.alert('Event deleted successfully!', function(){
+
+	$scope.$on('delete_clicked', function(){
+		navigator.notification.confirm('Are you sure you want to delete this event?', function(message){
+			if(message == 2){
+				$scope.setShowLoader(true);
+				console.log("Delete event");
+				eventService.deleteEvent(parseInt($scope.event.server_id))
+					.then(function(data){
+						navigator.notification.alert('Event deleted successfully!', function(){
+							$scope.setShowLoader(false);
+							$location.path('/calendar');
+							$scope.$apply();
+						}, 'Alert', 'OK');  
+					}, function(data){
+						console.log("Error occured while deleting event: "+ JSON.stringify(data));
+						$scope.showResponseMessage(data.Message||"An error occured!", false);	
 						$scope.setShowLoader(false);
-						$location.path('/calendar');
-						$scope.$apply();
-					}, 'Alert', 'OK');  
-				}, function(data){
-					console.log("Error occured while deleting event: "+ JSON.stringify(data));
-				})
-		} else {
-			console.log("Do nothing");
-		}
-	}
+					});
+			}
+		}, 'Delete Event', 'No, Yes');
+		
+	});
 	
 	$scope.postComment = function(text){
 		var comment = {

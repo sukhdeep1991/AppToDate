@@ -55,7 +55,7 @@ angular.module('AppToDate', [
 .config(function($stateProvider, $urlRouterProvider, $compileProvider) {
 
 	$compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|chrome-extension|content):/);
-	$compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|mailto|chrome-extension|content|file):/);
+	$compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|mailto|chrome-extension|content|file|cdvfile):/);
 	
   $stateProvider
   	

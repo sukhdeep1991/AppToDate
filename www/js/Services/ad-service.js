@@ -34,13 +34,17 @@ angular.module('AppToDate.Services')
 	
 	return {
 		showAds: function(userId){
+			var deferred = $q.defer();
 			DB.isUserUpgraded(userId).then(function(response){
 				if(!response){
 					showAdsPluginCall();
 				}
+				deferred.resolve(response);
 			}, function(error){
 				console.log("Error getting upgraded info: " + JSON.stringify(error));
+				deferred.reject(error);
 			});
+			return deferred.promise;
 		},
 		
 		upgradeUser: function(userId){

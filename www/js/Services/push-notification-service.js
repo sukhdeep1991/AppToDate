@@ -95,9 +95,9 @@ function onNotificationGCM(e) {
 	            			});
 	        				break;
 	            		case 'ProfilePicUpdated':
-	            			/*eventService.updateEventFromNotification(payload.InformationId).then(function(title){
-		            			showNotificationInTray("Comment added", "A new comment added to event "+ title);
-	            			});*/
+	            			userService.updateUserImage(payload.InformationId).then(function(name){
+	            				console.log("The picture has been updated");
+	            			});
 	            			showNotificationInTray("Profile pic updated", "Profile pic has been updated");
 	        				break;
         			

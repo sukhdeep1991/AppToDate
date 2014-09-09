@@ -33,7 +33,8 @@ function($scope, adService) {
         	 console.log("Payment was successfull: " + JSON.stringify(success));
 
      		adService.upgradeUser($scope.userDetails.user_id).then(function(){
-     			$scope.showResponseMessage('Upgraded successfully!', true);			
+     			$scope.showResponseMessage('Upgraded successfully!', true);
+     			$scope.userDetails.isUpgraded = true;
      		}, function(error){
      			$scope.showResponseMessage(error.Message || "An error occured!", false);
      		});
