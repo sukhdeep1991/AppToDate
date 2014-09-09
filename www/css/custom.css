@@ -3611,7 +3611,8 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#5d90f6', end
 }
 
 .navbar-nav {
-	margin:0px 0px
+	margin:0px 0px;
+	background: #df6160;
 }
 .navbar-nav>li>a {
 	padding-top:10px;
