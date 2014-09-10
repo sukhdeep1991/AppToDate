@@ -40,8 +40,8 @@ angular.module('AppToDate.Controllers',['AppToDate.Services'])
 		if($scope.userDetails && $scope.userDetails.user_id){
 			//$scope.setUserImage(appConfig.apiUrl + "Image/Get?clientId=" + $scope.userDetails.user_id);
 			userService.processUninvitedContacts($scope.userDetails.user_id);
-			adService.showAds($scope.userDetails.user_id).then(function(fullPath){
-				$scope.userDetails.isUpgraded = true;
+			adService.showAds($scope.userDetails.user_id).then(function(response){
+				$scope.userDetails.isUpgraded = response;
 			}, function(error){
 				console.log("Error while getting the image: " + JSON.stringify(error));
 			});
