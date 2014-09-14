@@ -1670,8 +1670,8 @@ margin: 20px 0px;
     -webkit-box-shadow:0px 0px 30px 0px rgba(78, 50, 50, 0.75);
     -moz-box-shadow:0px 0px 30px 0px rgba(78, 50, 50, 0.75);
 	box-shadow:0px 0px 30px 0px rgba(78, 50, 50, 0.75);
-	position: absolute;
-left: 28%;
+	/* position: absolute;
+left: 28%; */
     overflow: hidden;
     text-align: center;
 }
