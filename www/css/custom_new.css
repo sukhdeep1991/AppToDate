@@ -1,6 +1,17 @@
 /*!
  Author: Chandan Singh
  */
+ 
+ @font-face {
+	font-family: 'codropsicons';
+	src:url('../fonts/codropsicons/codropsicons.eot');
+	src:url('../fonts/codropsicons/codropsicons.eot?#iefix') format('embedded-opentype'),
+		url('../fonts/codropsicons/codropsicons.woff') format('woff'),
+		url('../fonts/codropsicons/codropsicons.ttf') format('truetype'),
+		url('../fonts/codropsicons/codropsicons.svg#codropsicons') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
 
  html {
 	font-family:sans-serif;
@@ -1294,7 +1305,7 @@ input[type="date"] {
 .header-top{margin-top:60px !important;}
 .header-top2{margin-top:40px !important;}
 .header-ad{margin-top:139px !important;}
-.header-events{margin-top:65px !important;}
+.header-events{margin-top:61px !important;}
 form#email .radio, form#email .checkbox,form#contact .radio, form#contact .checkbox,form#face .radio, form#face .checkbox,form#group .radio, form#group .checkbox {
 	display:block;
 	min-height:20px;
@@ -1358,10 +1369,10 @@ textarea.input-lg, select[multiple].input-lg {
 	height:auto
 }
 .has-feedback {
-	position:relative
+	position:relative;
 }
 .has-feedback .form-control {
-	padding-right:42.5px
+	padding-right:42.5px;
 }
 .has-feedback .form-control-feedback {
 	position:absolute;
@@ -1371,9 +1382,11 @@ textarea.input-lg, select[multiple].input-lg {
 	width:34px;
 	height:34px;
 	line-height:34px;
-	text-align:center
+	text-align:center;
 }
 .has-feedback .hasPo{top:24px;}
+
+
 .has-feedback.search-top .form-control-feedback{top:28px;}
 .has-success .help-block, .has-success .control-label, .has-success .radio, .has-success .checkbox, .has-success .radio-inline, .has-success .checkbox-inline {
 	color:#3c763d
@@ -1952,11 +1965,12 @@ left: 28%;
 	border-radius:3px
 }
 .btn-block {
- display:block;
- width:100%;
- padding-left:0;
- padding-right:0;
- 
+	display:block;
+	width:100%;
+	padding-left:0;
+	padding-right:0;
+	
+	
 }
 
 .btn-block2 {
@@ -1966,6 +1980,7 @@ left: 28%;
  padding-right:0;
  margin:0 auto;
 }
+
 .btn-block+.btn-block {
 	margin-top:0px
 }
@@ -3565,7 +3580,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#5d90f6', end
 	position:fixed;
 	right:0;
 	left:0;
-	z-index:1034;
+	z-index:1045;
 }
 
 .navbar-fixed-top {
@@ -3620,15 +3635,15 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#5d90f6', end
 }
 
 .navbar-nav {
-	margin:0px 0px;
-	background: #df6160;
+	margin:0px 0px
 }
 .navbar-nav>li>a {
 	padding-top:10px;
 	padding-bottom:10px;
 	line-height:20px
 }
-@media (max-width:768px) {
+
+@media (min-width:768px) {
 .navbar-nav .open .dropdown-menu {
 	/*position:static;
 	float:none;
@@ -3653,7 +3668,6 @@ border-right:1px solid #ac182a;
 border-bottom:1px solid #ac182a;
 }
 }
-
 
 .navbar-nav .open .dropdown-menu>li>a, .navbar-nav .open .dropdown-menu .dropdown-header {
 	padding: 19px 15px 22px 25px;
@@ -4673,7 +4687,7 @@ a.list-group-item-danger.active, a.list-group-item-danger.active:hover, a.list-g
 }
 .modal-body-attendee{
 
-	margin-top: 110px;
+	margin-top: 85px;
 	padding:0 !important;
 }
 
@@ -4709,7 +4723,7 @@ button.close {
 	overflow:auto;
 	overflow-y:scroll;
 	position:fixed;
-	top:33%;
+	top:0;
 	right:0;
 	bottom:0;
 	left:0;
@@ -5724,3 +5738,4 @@ th.visible-print, td.visible-print {
 .ddd{ width:100%; height:100%; position:absolute; bottom:0px; z-index:-1;}
 
 .ddd img{ width:100%; height:auto; position:absolute; bottom:0px;}
+
