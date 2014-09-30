@@ -328,7 +328,7 @@ AppToDateDB.prototype = function() {
 	var deleteCurrentLoggedInUser = function(){
 		var deferred = $.Deferred();
 		db.transaction(function(tx) {
-			console.log("Deleting curently logged in user");LoggedInUser
+			console.log("Deleting curently logged in user");
 			tx.executeSql('delete from LoggedInUser', [],
 					function(ot,or){
 				console.log('query result: ' + JSON.stringify(or.rows));
