@@ -964,6 +964,7 @@ AppToDateDB.prototype = function() {
 
   var insertLoginDetail=function(data, dontUpdate){
 	  var deferred = $.Deferred();
+	  console.log("Phone number is: " + data.phone);
     db.transaction(function(tx) {
           tx.executeSql('SELECT * FROM Login WHERE (user_id=?)', [data.user_id], 
             function(t,r){
@@ -971,8 +972,8 @@ AppToDateDB.prototype = function() {
 
                 var row = r.rows.item(0);
                 var record_id=row["id"];
-                tx.executeSql("UPDATE Login SET access_token=?, login_time=?, expires_in=?, refresh_token=?, first_name=?, last_name=? WHERE id = ?", 
-                		[data.access_token, data.login_time, data.expired_in, data.refresh_token, data.first_name, data.last_name, record_id],
+                tx.executeSql("UPDATE Login SET access_token=?, login_time=?, expires_in=?, refresh_token=?, first_name=?, last_name=?, phone=? WHERE id = ?", 
+                		[data.access_token, data.login_time, data.expired_in, data.refresh_token, data.first_name, data.last_name, data.phone, record_id],
                   function(t,r){
                     console.log("Login table record updated count : "+r.rowsAffected);
                     deferred.resolve(r);
@@ -1009,6 +1010,7 @@ AppToDateDB.prototype = function() {
   }
   
   var toUserData = function(row){
+	  console.log("row is : " + JSON.stringify(row));
 	  var userData = { person : {}};
 	  userData.username = row['email'];
 	  userData.first_name = row['first_name'];

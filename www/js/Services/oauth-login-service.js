@@ -41,7 +41,7 @@ angular.module('AppToDate.Services')
 		        				userData.access_token = appConfig.accessToken;
 		        				userData.expired_in = data.TokenExpiryTime;
 		        				userData.refresh_token = data.RefreshToken;
-		        				userData.phone = data.PhoneNo || 0;
+		        				userData.phone = data.Person.PhoneNo || 0;
 		        				appConfig.authorizationToken = data.AuthorizationToken;
 		        				
 		        				$.when(DB.insertLoginDetail(userData)).then(
