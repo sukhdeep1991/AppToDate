@@ -163,7 +163,11 @@ angular.module('AppToDate', [
                 url: "/editProfile",
         		templateUrl: "js/Templates/editProfile.html",
                 controller: 'editProfileCtrl'
-              });
+              })
+              .state('logout', {
+                  url: "/logout",
+                  controller: 'logoutCtrl'
+                });
 
 
   $urlRouterProvider.otherwise('/splashScreen');

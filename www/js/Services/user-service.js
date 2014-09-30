@@ -369,6 +369,20 @@ angular.module('AppToDate.Services')
 				});
 			});*/
 			return deferred.promise;
+		},
+		
+		logout: function(){
+			var deferred = $q.defer();
+			$.when(DB.deleteCurrentLoggedInUser()).then(
+	            function(data) {
+	            	console.log("Logged in user delete successfully");
+	            	deferred.resolve(true);
+	            },
+	            function(errorMsg) {
+	              console.log("Error while deleting logged in user: " + JSON.stringify(errorMsg));
+	              deferred.reject(errorMsg);
+	          });
+			return deferred.promise;
 		}
 	}
 });

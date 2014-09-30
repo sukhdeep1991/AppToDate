@@ -95,7 +95,7 @@ angular
 					});
 					sendPhoneInvites(phones);
 					sendEmailInvites(emails);
-					saveUsers(users);
+					//saveUsers(users);
 					sendInvites(invites);
 				} else {
 					console.log("Empty contacts");

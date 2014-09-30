@@ -325,6 +325,23 @@ AppToDateDB.prototype = function() {
 		return deferred.promise();
 	}
 	
+	var deleteCurrentLoggedInUser = function(){
+		var deferred = $.Deferred();
+		db.transaction(function(tx) {
+			console.log("Deleting curently logged in user");LoggedInUser
+			tx.executeSql('delete from LoggedInUser', [],
+					function(ot,or){
+				console.log('query result: ' + JSON.stringify(or.rows));
+				console.log('Logged in user deleted');
+				deferred.resolve(true);
+			}, function(error){
+				Console.log("Error while deleting currently logged in user: " + JSON.stringify(error));
+				deferred.reject(error);
+			});
+		});
+		return deferred.promise();
+	}
+	
 	var insertCurrentLoggedInUser = function(user){
 		var deferred = $.Deferred();
 		db.transaction(function(tx) {
@@ -1183,7 +1200,8 @@ AppToDateDB.prototype = function() {
     getEventComments: getEventComments,
     saveStatusForEvent: saveStatusForEvent,
     insertUserUpgraded: insertUserUpgraded,
-    isUserUpgraded: isUserUpgraded
+    isUserUpgraded: isUserUpgraded,
+    deleteCurrentLoggedInUser: deleteCurrentLoggedInUser
   }
 }();
 return window.AppToDate=AppToDateDB;

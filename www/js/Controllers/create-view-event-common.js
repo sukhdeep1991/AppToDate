@@ -48,7 +48,14 @@ angular.module('AppToDate.Controllers')
 		event.end.setHours(time[0], time[1]);
 		console.log("Event start date: " + JSON.stringify(event.start));
 		console.log("Event end date: " + JSON.stringify(event.end));
-		if(event.start > event.end){
+		var currentDate = new Date();
+		console.log("Current date is: " + JSON.stringify(currentDate));
+		if(event.start <currentDate){
+			console.log("Start time is less than current time");
+			$scope.setShowLoader(false);
+			$scope.showResponseMessage("Start time should be greater than current time.", false);
+			return;
+		} else if(event.start > event.end){
 			console.log("Start time is less that end time");
 			$scope.setShowLoader(false);
 			$scope.showResponseMessage("Start time cannot be greater than end time.", false);

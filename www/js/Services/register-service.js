@@ -35,13 +35,13 @@ angular.module('AppToDate.Services')
 		            				deferred.resolve(false);
 		                        });
 		            		}).error(function(data){
-		                    	console.log("Error occured while registering : " + JSON.stringify(data));
+		        				console.log("Device Id Updated failed: " + JSON.stringify(data));
 		                    	deferred.reject(data);
 		                    });
-	            			}).error(function(data1, status) {
-		        				console.log("Device Id Updated failed: " + JSON.stringify(user));
-		        				deferred.reject(data);
-		        			});
+            			}).error(function(data, status) {
+	                    	console.log("Error occured while registering : " + JSON.stringify(data));
+	        				deferred.reject(data);
+	        			});
 	            			
 	            	} else {
 	            		console.log("Deviceid not found");
