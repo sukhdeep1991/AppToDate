@@ -1185,10 +1185,12 @@ legend {
 	border-bottom:1px solid #e5e5e5
 }
 label {
-	color: #7e7e7e;
+ color: #7e7e7e;
     display: inline-block;
     font-weight: normal;
     margin-bottom: 5px;
+ line-height:23px;
+ padding-left: 6px;
 }
 input[type="search"] {
 	-webkit-box-sizing:border-box;
@@ -1199,6 +1201,12 @@ input[type="radio"], input[type="checkbox"] {
 	margin:4px 0 0;
 	margin-top:1px \9;
 	line-height:normal
+}
+input[type="checkbox"] {
+    height:22px;
+ width:22px;
+ float:left;
+ margin:0px 0px 0px 6px;
 }
 input[type="file"] {
 	display:block
@@ -3197,8 +3205,8 @@ padding: 10px 12px;
 .edit-profile{height:180px !important;width:180px !important;}
 .group-btn{
 position: absolute;
-bottom: 100px;
-width: 76%;
+bottom: 0;
+width: 100%;
 }
 .btn-create-group,.btn-create-group:hover{background:#46c4cf !important;border-radius: 0 !important;border:0 !important;box-shadow: none !important}
  #emails, .group-text, #contacts, #facebook{padding:10px;}
@@ -3516,8 +3524,11 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#5d90f6', end
 	display:none
 }
 .tab-content>.active {
-	display:block
+display: block;
+position: relative;
+height: 100%;
 }
+
 .nav-tabs .dropdown-menu {
 	margin-top:-1px;
 	border-top-right-radius:0;
@@ -4115,10 +4126,14 @@ a.thumbnail:hover, a.thumbnail:focus, a.thumbnail.active {
 	color:#333
 }
 .alert {
-	padding:15px;
-	margin-bottom:20px;
-	border:1px solid transparent;
-	border-radius:4px
+ padding:15px;
+ margin-bottom:20px;
+ border:1px solid transparent;
+ border-radius:4px;
+   position: fixed;
+   top:50px;
+   width: 100%;
+   z-index: 99999;
 }
 .alert h4 {
 	margin-top:0;
