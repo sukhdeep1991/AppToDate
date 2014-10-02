@@ -18,6 +18,15 @@ body {
 -o-background-size: cover;
 }
 
+@media (min-width:592px) {
+
+body {
+ margin:0;
+ padding:0;
+ background: url(../images/bg.gif);
+}
+
+}
 .bg{position:relative;min-height: 534px;padding-bottom: 15px !important}
 
 article, aside, details, figcaption, figure, footer, header, hgroup, main, nav, section, summary {
