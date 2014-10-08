@@ -81,10 +81,10 @@
 				<div class="note">
 					<div class="profile-row margin-top"
 						data-ng-repeat="comment in event.comments">
-						<div class="profile-sm-pic">
+						<div class="profile-sm-pic" ng-init="loadUserImage(comment.commentedByClientId)">
 							<div class="profile-sm-top-bg">
 								<img class="img-responsive"
-									ng-src="{{userImageSource + comment.commentedByClientId}}"
+									ng-src="{{userImages[comment.commentedByClientId]}}"
 									alt="" />
 							</div>
 						</div>

@@ -12,6 +12,7 @@ function($scope, $filter, $location, imageService,
 	$scope.eventImageSource = appConfig.apiUrl + "Image/GetEventImage?eventId=";
 	$scope.eventStatus = eventStatus;
 	$scope.attendeeImageUrl = "";
+	$scope.userImages = {};
 	
 	$scope.showEditButton();	
 	$scope.showDeleteButton();
@@ -107,6 +108,16 @@ function($scope, $filter, $location, imageService,
 		});
 		$scope.showModal = true;
 	}
+	$scope.loadUserImage = function(userId){
+		console.log("Fetching image for: " + userId)
+		userService.getUserImage(userId).then(function(fullPath){
+			$scope.userImages[userId] = fullPath;
+			console.log(JSON.stringify($scope.userImages));
+			
+		}, function(error){
+			console.log("Error while getting the image: " + JSON.stringify(error));
+		});
+	}
 	$scope.closeModal = function(){
 		$scope.showModal = false;
 	}
@@ -169,7 +180,13 @@ function($scope, $filter, $location, imageService,
 		$scope.setShowLoader(true);
 		eventService.postEventStatus($scope.event, $scope.userDetails.user_id, status).then(function(response){
 			console.log("Response saved successfully");
-			$scope.showResponseMessage('Response saved successfully!', true);
+			var msg = 'Response saved successfully!';
+			if(status === $scope.eventStatus.attending){
+				msg = 'You accepted the invitation!';
+			} else if(status === $scope.eventStatus.notAttending){
+				msg = 'You declined the invitation!';
+			}
+			$scope.showResponseMessage(msg, true);
 			$scope.event.status = status;
 			$scope.setShowLoader(false);
 		}, function(error){

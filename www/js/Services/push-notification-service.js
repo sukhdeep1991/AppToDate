@@ -85,7 +85,10 @@ function onNotificationGCM(e) {
 	            			});
 	        				break;
 	            		case 'PersonJoined':
-	            			userService.insertPersonDetailsFromNotification(payload.InformationId).then(function(name){
+	            			var scope = angular.element('ion-nav-view').scope();
+	            			var userId = scope.userDetails.user_id;
+	            			console.log("User Id: "+ userId);
+	            			userService.insertPersonDetailsFromNotification(payload.InformationId, userId).then(function(name){
 	            				showNotificationInTray("Invitation accepted", name +" has accepted your invitation");
 	            			});
 	        				break;
@@ -98,7 +101,6 @@ function onNotificationGCM(e) {
 	            			userService.updateUserImage(payload.InformationId).then(function(name){
 	            				console.log("The picture has been updated");
 	            			});
-	            			showNotificationInTray("Profile pic updated", "Profile pic has been updated");
 	        				break;
         			
             		}

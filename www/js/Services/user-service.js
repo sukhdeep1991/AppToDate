@@ -220,7 +220,7 @@ angular.module('AppToDate.Services')
 			return deferred.promise;	
 		},
 		
-		insertPersonDetailsFromNotification: function(clientId){
+		insertPersonDetailsFromNotification: function(clientId, userId){
 			var deferred = $q.defer();
 			httpResource.loadUrl("Person/GetPerson?clientId=" + clientId, "GET", null).success(function(person){
 				var userData = {
@@ -235,13 +235,22 @@ angular.module('AppToDate.Services')
 					last_name: person.LastName,
 					phone: person.PhoneNo
 				}
-				$.when(DB.insertLoginDetail(userData)).then(
+				
+				$.when(DB.insertFriend(userId, clientId)).then(
 			            function(data) {
-			            	console.log("Information saved successfully");
-			            	deferred.resolve(userData.first_name);
+			            	console.log("user Friend added successfully");
+			            	$.when(DB.insertLoginDetail(userData)).then(
+						            function(data) {
+						            	console.log("friend saved successfully");
+						            	deferred.resolve(userData.first_name);
+						            },
+						            function(errorMsg) {
+						              console.log("Error while saving friend: " + JSON.stringify(errorMsg));
+						              deferred.reject(errorMsg);
+						          });
 			            },
 			            function(errorMsg) {
-			              console.log("Error while saving groups: " + JSON.stringify(errorMsg));
+			              console.log("Error while saving user friend: " + JSON.stringify(errorMsg));
 			              deferred.reject(errorMsg);
 			          });
 				

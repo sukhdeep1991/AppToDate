@@ -24,8 +24,8 @@ angular.module('AppToDate', [
 //            	event: "message",
 //            	foreground: "test",
 //            	payload: {
-//            		NotificationType: "EventCreate",
-//            		InformationId: 54
+//            		NotificationType: "PersonJoined",
+//            		InformationId: 'b4326482-2f50-43f6-a7e1-5f35229a4cc0'
 //            	}
 //            };
 //            onNotificationGCM(notification);
