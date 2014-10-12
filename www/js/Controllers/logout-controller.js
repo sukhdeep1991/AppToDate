@@ -9,6 +9,7 @@ function($scope, $filter, $location, userService) {
 	userService.logout().then(function(){
 		$scope.showResponseMessage('Logged out successfully', true);
 		$scope.setShowLoader(false);
+		$scope.setUserDetails(undefined);
 		$location.path("/login");
 		console.log("Location.Path set to Login");
 	}, function(error){
