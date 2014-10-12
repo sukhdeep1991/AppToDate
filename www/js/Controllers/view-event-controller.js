@@ -14,74 +14,77 @@ function($scope, $filter, $location, imageService,
 	$scope.attendeeImageUrl = "";
 	$scope.userImages = {};
 
-	if ($scope.userDetails && $scope.userDetails.user_id) {
-		eventService
-				.getEvent($scope.eventId, $scope.userDetails.user_id)
-				.then(
-						function(data) {
-							$scope.event = data
-							$scope.event.start = new Date($scope.event.start);
-							if($scope.event.user_Id === $scope.userDetails.user_id){
-								$scope.showEditButton();	
-								$scope.showDeleteButton();
-							}
-						},
-						function(error) {
-							console
-									.log("Error occured while fetching the event data")
-						});
-	} else {
-		$scope.event = {
-				  "server_id": 48,
-				  "id": 1,
-				  "user_Id": "d464afc9-020b-4c48-9927-ea75d3cca2cf",
-				  "title": "test new event",
-				  "notes": "test notes",
-				  "start": "Thu Jul 31 2014 15:43:00 GMT-0400 (EDT)",
-				  "end": "Thu Jul 31 2014 16:43:00 GMT-0400 (EDT)",
-				  "image_url": "undefined",
-				  "location_title": "sector 61",
-				  "lat": 28.37999999999999,
-				  "lng": 77.12,
-				  "remind_before": "25",
-				  "attendees": [
-				    {
-				      "person": {},
-				      "username": "undefined",
-				      "first_name": "Contact1",
-				      "last_name": "test",
-				      "access_token": "testAccessToken",
-				      "user_id": "af079bd7-af59-4e76-b33e-5d369c69b054",
-				      "login_time": "undefined",
-				      "expires_in": "undefined",
-				      "refresh_token": "undefined",
-				      "status": "0.0"
-				    },
-				    {
-				      "person": {},
-				      "username": "undefined",
-				      "first_name": "Sumit",
-				      "last_name": "test",
-				      "access_token": "testAccessToken",
-				      "user_id": "2c3d480e-62d5-4aeb-9240-ce001222b593",
-				      "login_time": "undefined",
-				      "expires_in": "undefined",
-				      "refresh_token": "undefined",
-				      "status": "0.0"
-				    }
-				  ],
-				  "comments": [
-				               {
-				                 "commentedByClientId": "435e357c-aad1-4b5a-b914-5a9e39e92184",
-				                 "text": "New commdhjvcf",
-				                 "commentedByName": "ssh"
-				               }
-				             ]
-				}
-
-		$scope.event.start = new Date($scope.event.start);
+	var loadEvent = function(){
+		if ($scope.userDetails && $scope.userDetails.user_id) {
+			eventService
+					.getEvent($scope.eventId, $scope.userDetails.user_id)
+					.then(
+							function(data) {
+								$scope.event = data
+								$scope.event.start = new Date($scope.event.start);
+								if($scope.event.user_Id === $scope.userDetails.user_id){
+									$scope.showEditButton();	
+									$scope.showDeleteButton();
+								}
+							},
+							function(error) {
+								console
+										.log("Error occured while fetching the event data")
+							});
+		} else {
+			$scope.event = {
+					  "server_id": 48,
+					  "id": 1,
+					  "user_Id": "d464afc9-020b-4c48-9927-ea75d3cca2cf",
+					  "title": "test new event",
+					  "notes": "test notes",
+					  "start": "Thu Jul 31 2014 15:43:00 GMT-0400 (EDT)",
+					  "end": "Thu Jul 31 2014 16:43:00 GMT-0400 (EDT)",
+					  "image_url": "undefined",
+					  "location_title": "sector 61",
+					  "lat": 28.37999999999999,
+					  "lng": 77.12,
+					  "remind_before": "25",
+					  "attendees": [
+					    {
+					      "person": {},
+					      "username": "undefined",
+					      "first_name": "Contact1",
+					      "last_name": "test",
+					      "access_token": "testAccessToken",
+					      "user_id": "af079bd7-af59-4e76-b33e-5d369c69b054",
+					      "login_time": "undefined",
+					      "expires_in": "undefined",
+					      "refresh_token": "undefined",
+					      "status": "0.0"
+					    },
+					    {
+					      "person": {},
+					      "username": "undefined",
+					      "first_name": "Sumit",
+					      "last_name": "test",
+					      "access_token": "testAccessToken",
+					      "user_id": "2c3d480e-62d5-4aeb-9240-ce001222b593",
+					      "login_time": "undefined",
+					      "expires_in": "undefined",
+					      "refresh_token": "undefined",
+					      "status": "0.0"
+					    }
+					  ],
+					  "comments": [
+					               {
+					                 "commentedByClientId": "435e357c-aad1-4b5a-b914-5a9e39e92184",
+					                 "text": "New commdhjvcf",
+					                 "commentedByName": "ssh"
+					               }
+					             ]
+					}
+	
+			$scope.event.start = new Date($scope.event.start);
+		}
 	}
-
+	loadEvent();
+	
 	$scope.loadEventDetails = function() {
 		$scope.tab = 'details';
 	}
@@ -195,4 +198,11 @@ function($scope, $filter, $location, imageService,
 			$scope.setShowLoader(false);
 		})
 	}
+	
+	$scope.$on('event_refreshed', function(listenerEvent, eventServerId){
+		console.log("refreshing event event: " + JSON.stringify(eventServerId));
+		if($scope.event.server_id == eventServerId){
+			loadEvent();
+		}
+	});
 });

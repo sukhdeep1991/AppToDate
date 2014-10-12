@@ -94,16 +94,57 @@ angular.module('AppToDate.Services')
 		
 		getEvents : function(userId){
 			var deferred = $q.defer();
-
-            $.when(DB.getUserEvents(userId)).then(
-              function(data) {
-                console.log("events found successfully : " + JSON.stringify(data));
-                deferred.resolve(data);
-              },
-              function(errorMsg) {
-                console.log("Error while fetching event");
-                deferred.reject(errorMsg);
-            });
+			var currentMonth = new Date().getMonth()+1;
+			httpResource.loadUrl("Calendar/GetUserEventsForMonth?clientId="+ userId + "&month=" + currentMonth, "GET", null).success(function(events){
+				console.log("found events: " + JSON.stringify(events));
+				var returnEvents = function(){
+		            $.when(DB.getUserEvents(userId)).then(
+		              function(data) {
+		                console.log("events found successfully : " + JSON.stringify(data));
+		                deferred.resolve(data);
+		              },
+		              function(errorMsg) {
+		                console.log("Error while fetching event");
+		                deferred.reject(errorMsg);
+		            });
+				}
+				if(events.length > 0){
+					events.map(function(event, eventIndex){
+						$.when(DB.getEventClientIdFromServerId(event.Id)).then(
+			              function(clientId) {
+			            	  console.log("Client id for event found: "+ clientId)
+			            	  if(!clientId){
+			            		  var clientEvent = convertServerToClientEvent(event);
+			            		  $.when(DB.insertEvent(clientEvent)).then(
+			              	              function(data) {
+			              	                console.log("event saved successfully : " + JSON.stringify(clientEvent));
+			    	    	            	insertEventInDevice(clientEvent.title,clientEvent.location,clientEvent.notes,
+			    	    	            			clientEvent.start,clientEvent.end, clientEvent.remindBefore);
+			    	    	            	if(eventIndex === events.length -1){
+			    	    						returnEvents();
+			    	    	            	}
+			              	              },
+			              	              function(errorMsg) {
+			              	                console.log("Error while saving event");
+			              	            });
+			            	  }else {
+			            		  console.log("Event already created, no need to create again");
+			            		  if(eventIndex === events.length -1){
+    	    						  returnEvents();
+    	    	            	  }
+			            	  }
+			              },
+			              function(errorMsg) {
+			                console.log("Error while saving event");
+			            });
+					});
+				} else {
+					returnEvents();
+				}
+			}).error(function(error){
+                console.log("Error while fetching month event");
+                deferred.reject(errorMsg);				
+			});
 
             return deferred.promise;
 		},
@@ -293,6 +334,8 @@ angular.module('AppToDate.Services')
 				$.when(DB.saveStatusForEvent(event.id, userId, status))
 					.then(function(response){
 						console.log("Saved the status");
+						insertEventInDevice(event.title, { displayName: location_title},event.notes,
+		    					event.start,event.end, event.remindBefore);
 						deferred.resolve(response);
 					}, function(errorMsg){
 						console.log("Error while posting status of the attendee");

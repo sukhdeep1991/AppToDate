@@ -48,40 +48,51 @@ function onNotificationGCM(e) {
             	if(payload != null){
             		switch(payload.NotificationType){
 	            		case 'EventCreate':
+	            			var scope = angular.element('#appBody').scope();
 	            			eventService.insertEventFromNotification(payload.InformationId).then(function(title){
 		            			showNotificationInTray("Event Created", "A new event '" + title + "' has been created.");	
 		            			console.log("A new event '" + title + "' has been created.")
+		            			scope.$broadcast('events_refreshed');
 	            			});
 	            			break;
 	            		case 'EventEdit':
+	            			var scope = angular.element('#appBody').scope();
 	            			eventService.updateEventFromNotification(payload.InformationId).then(function(title){
 		            			showNotificationInTray("Event Updated", "'" + title + "' has been updated.");
 		            			console.log("'" + title + "' has been updated.");
+		            			scope.$broadcast('event_refreshed', payload.InformationId);
 	            			});
 	            			break;
 	            		case 'EventDelete':
+	            			var scope = angular.element('#appBody').scope();
 	            			eventService.getEvent(payload.InformationId, 0).then(function(event){
 		            			eventService.deleteEventFromNotification(payload.InformationId);
 		            			showNotificationInTray("Event Deleted", "'" + event.title + "' has been deleted.");	
 		            			console.log("'" + event.title + "' has been deleted.");
+		            			scope.$broadcast('events_refreshed');
 	            			});
 	        				break;
 	            		case 'EventAccepeted':
+	            			var scope = angular.element('#appBody').scope();
 	            			eventService.updateEventFromNotification(payload.InformationId).then(function(title){
 		            			showNotificationInTray("Attendee Accepted", "'" + title + "' has been accepted by an attendee.");		
-		            			console.log("'" + title + "' has been accepted by an attendee.");            				
+		            			console.log("'" + title + "' has been accepted by an attendee.");   
+		            			scope.$broadcast('event_refreshed', payload.InformationId);         				
 	            			});
 	        				break;
 	            		case 'EventRejected':
+	            			var scope = angular.element('#appBody').scope();
 	            			eventService.updateEventFromNotification(payload.InformationId).then(function(title){
 		            			showNotificationInTray("Attendee Accepted", "'" + title + "' has been rejected by an attendee.");
 		            			console.log("'" + title + "' has been rejected by an attendee.");				
+		            			scope.$broadcast('event_refreshed', payload.InformationId);
 	            			});
 	        				break;
 	            		case 'EventMayBe':
+	            			var scope = angular.element('#appBody').scope();
 	            			eventService.updateEventFromNotification(payload.InformationId).then(function(title){
 		            			showNotificationInTray("Attendee Accepted", "An attendee may or may not join the event '" + title + "'");
-		            			console.log();
+		            			scope.$broadcast('event_refreshed', payload.InformationId);
 	            			});
 	        				break;
 	            		case 'PersonJoined':
@@ -93,8 +104,10 @@ function onNotificationGCM(e) {
 	            			});
 	        				break;
 	            		case 'CommentAdded':
+	            			var scope = angular.element('#appBody').scope();
 	            			eventService.updateEventFromNotification(payload.InformationId).then(function(title){
 		            			showNotificationInTray("Comment added", "A new comment added to event "+ title);
+		            			scope.$broadcast('event_refreshed', payload.InformationId);
 	            			});
 	        				break;
 	            		case 'ProfilePicUpdated':
