@@ -13,9 +13,6 @@ function($scope, $filter, $location, imageService,
 	$scope.eventStatus = eventStatus;
 	$scope.attendeeImageUrl = "";
 	$scope.userImages = {};
-	
-	$scope.showEditButton();	
-	$scope.showDeleteButton();
 
 	if ($scope.userDetails && $scope.userDetails.user_id) {
 		eventService
@@ -24,6 +21,10 @@ function($scope, $filter, $location, imageService,
 						function(data) {
 							$scope.event = data
 							$scope.event.start = new Date($scope.event.start);
+							if($scope.event.user_Id === $scope.userDetails.user_id){
+								$scope.showEditButton();	
+								$scope.showDeleteButton();
+							}
 						},
 						function(error) {
 							console

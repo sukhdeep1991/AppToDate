@@ -157,7 +157,7 @@ angular.module('AppToDate.Services')
 		deleteEvent: function(eventId){
 			var deferred = $q.defer();
 			deleteEventInDevice(eventId).then(function(response){
-				httpResource.loadUrl("Calendar/Delete?appEventId="+eventId, "DELETE", null).success(function(response){
+				httpResource.loadUrl("Calendar/RemoveEvent/"+eventId, "POST", null).success(function(response){
 					$.when(DB.deleteEvent(eventId)).then(
 		              function(data) {
 		                console.log("event deleted successfully : " + JSON.stringify(response));
