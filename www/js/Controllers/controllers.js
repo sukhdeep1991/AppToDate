@@ -11,9 +11,8 @@ angular.module('AppToDate.Controllers',['AppToDate.Services'])
 	//Keep pushing into the history
 	$scope.$on("$locationChangeStart", function(e, currentLocation, previousLocation){
 		var hashUrl = currentLocation.substring(currentLocation.lastIndexOf('#/')+1);
-		if(hashUrl == "/login" && $scope.userDetails != undefined){
-			e.preventDefault();
-			return;
+		if(hashUrl == "/login"){
+			history = [hashUrl];
 		}
 		history.push(hashUrl);
 		$scope.isEditVisible = false;
