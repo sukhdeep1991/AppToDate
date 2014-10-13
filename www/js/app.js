@@ -166,6 +166,7 @@ angular.module('AppToDate', [
               })
               .state('logout', {
                   url: "/logout",
+                  template: "<h1></h1>",
                   controller: 'logoutCtrl'
                 });
 
