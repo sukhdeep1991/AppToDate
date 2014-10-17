@@ -100,4 +100,15 @@ angular.module('AppToDate.Controllers',['AppToDate.Services'])
 	$scope.showDeleteButton = function(){
 		$scope.isDeleteVisible = true;
 	}
+	
+	document.addEventListener("deviceready", function(){
+		document.addEventListener("backbutton", function(e){
+			console.log("back button event found");
+			if($scope.showLoader){
+				console.log("Showing loader... canceling back button event");
+				e.preventDefault();
+				return false;
+			}
+		}, true);
+	}, false);
 });
