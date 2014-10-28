@@ -143,7 +143,7 @@ angular.module('AppToDate.Services')
 				}
 			}).error(function(error){
                 console.log("Error while fetching month event");
-                deferred.reject(errorMsg);				
+                deferred.reject(error);				
 			});
 
             return deferred.promise;

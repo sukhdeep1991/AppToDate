@@ -342,41 +342,29 @@ angular.module('AppToDate.Services')
 		getUserImage: function(userId){
 			var deferred = $q.defer();
 			var userService = this;
-			//console.log("Error while requesting file system: " + JSON.stringify(error));
-			console.log("Error while getting the file from file system. Downloading from server.");
-			userService.updateUserImage(userId).then(function(filePath){
-				console.log("File found" + filePath);
-				deferred.resolve(filePath);						
-			}, function(error){
-				console.log("Error while updating user image: " + JSON.stringify(error));
-				deferred.reject(error);	
-			});
-			/*var fileName = userId + ".jpg";
-			var fp = "file:///storage/sdcard0" + "/" + appConfig.userImagesFolder + "/" + fileName;
-			console.log("The path of file to get is : " + fp)
-			window.resolveLocalFileSystemURI(fp, function(fileSystem){
-				console.log("File found :" + fp);
-				deferred.resolve(fp);
-				
-				console.log("Error while getting the file from file system. Downloading from server.");
-				userService.updateUserImage(userId).then(function(filePath){
-					console.log("File found" + filePath);
-					deferred.resolve(filePath);						
+			
+			window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem){
+				var fileName = userId + ".jpg";
+				var fp = fileSystem.root.toURL() + "/" + appConfig.userImagesFolder + "/" + fileName;
+				console.log("The path of file to get is : " + fp)
+				window.resolveLocalFileSystemURI(fp, function(fileSystem){
+					console.log("File found :" + fp);
+					deferred.resolve(fp);
 				}, function(error){
-					console.log("Error while updating user image: " + JSON.stringify(error));
-					deferred.reject(error);	
+					console.log("Error while getting the file from file system: " + JSON.stringify(error));
+					console.log("Downloading from server.");
+					userService.updateUserImage(userId).then(function(filePath){
+						console.log("File found" + filePath);
+						deferred.resolve(filePath);						
+					}, function(error){
+						console.log("Error while updating user image: " + JSON.stringify(error));
+						deferred.reject(error);	
+					});
 				});
 			}, function(error){
 				console.log("Error while requesting file system: " + JSON.stringify(error));
-				console.log("Error while getting the file from file system. Downloading from server.");
-				userService.updateUserImage(userId).then(function(filePath){
-					console.log("File found" + filePath);
-					deferred.resolve(filePath);						
-				}, function(error){
-					console.log("Error while updating user image: " + JSON.stringify(error));
-					deferred.reject(error);	
-				});
-			});*/
+                deferred.reject(error);
+			});
 			return deferred.promise;
 		},
 		
