@@ -1795,8 +1795,8 @@ left: 28%; */
 }
 .hideMsg{display:none;}
 .group{height: 400px;overflow: auto;}
-#calendar{min-height: 300px; overflow: auto;}	
-.fc-content { height: 250px;}
+#calendar{min-height: 475px; overflow: auto;}	
+.fc-content { height: 475px }
 .fc-header{ bottom: 0;
     position: absolute;
     width: 100%;

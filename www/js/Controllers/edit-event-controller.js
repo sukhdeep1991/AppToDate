@@ -86,6 +86,7 @@ function($scope, $filter, $location, imageService,
 		console.log("Edit event map loading");
 		if (!$scope.mapLoaded) {
 			googleMapService.showMapInDiv('map', function() {
+				googleMapService.setLocationSearchbox('enterlocation');
 				$scope.mapLoaded = true;
 			}, $scope.event);
 		}

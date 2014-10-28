@@ -111,6 +111,7 @@ html .fc,
 	position: relative;
 	width: 100%;
 	overflow: hidden;
+	height:100%;
 	}
 	
 	
@@ -445,6 +446,7 @@ table.fc-border-separate {
 
 .fc-agenda table {
 	border-collapse: separate;
+	height: 100%;
 	}
 	
 .fc-agenda-days th {

@@ -1,6 +1,6 @@
 angular.module('AppToDate.Controllers',['AppToDate.Services'])
 .controller('parentController', function($scope, imageService, $location, $timeout, userService, adService){
-	$scope.imageSrc = "images/profile-icon.png";
+	$scope.imageSrc = "images/spinner.gif";
 	$scope.spinnerImgSrc = "images/spinner.gif";
 	$scope.showLoader = false;
 	var history = [];

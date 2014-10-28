@@ -52,8 +52,13 @@ span.glyphicon.form-control-feedback.input-invalid {
 background-image: url('../images/cross-red.png');
 background-repeat: no-repeat;
 }
+div.fc-view > div > div:last-child {
+	height: 390px !important;
+}
 
-
+table.fc-border-separate{
+	height:100%;
+}
 /* .has-feedback.no-label .form-control-feedback{ */
 /* 	top: 15px; */
 /* } */
