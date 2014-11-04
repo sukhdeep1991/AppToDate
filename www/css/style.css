@@ -52,6 +52,12 @@ span.glyphicon.form-control-feedback.input-invalid {
 background-image: url('../images/cross-red.png');
 background-repeat: no-repeat;
 }
+span.glyphicon.form-control-feedback.input-date {
+background-image: url('../images/btn-calendar.jpg');
+background-repeat: no-repeat;
+top: 5px;
+right: 8px;
+}
 div.fc-view > div > div:last-child {
 	height: 390px !important;
 }
