@@ -10,13 +10,20 @@ angular.module('AppToDate.Controllers',['AppToDate.Services'])
 	 }
 	//Keep pushing into the history
 	$scope.$on("$locationChangeStart", function(e, currentLocation, previousLocation){
+		var previousHashUrl = previousLocation.substring(currentLocation.lastIndexOf('#/')+1);
 		var hashUrl = currentLocation.substring(currentLocation.lastIndexOf('#/')+1);
-		if(hashUrl == "/login"){
+		if(hashUrl == "/home"){
 			history = [hashUrl];
 		}
 		history.push(hashUrl);
 		$scope.isEditVisible = false;
 		$scope.isDeleteVisible = false;
+		if(hashUrl === "/register"){
+			 $scope.msg = {
+					 'success' : '',
+					 'error' : ''
+			 }
+		}
 	});
 	
 	$scope.goBack = function(){
@@ -104,7 +111,8 @@ angular.module('AppToDate.Controllers',['AppToDate.Services'])
 	document.addEventListener("deviceready", function(){
 		document.addEventListener("backbutton", function(e){
 			console.log("back button event found");
-			if($scope.showLoader){
+			$scope.goBack();
+			if($scope.showLoader || $location.path() == "/home"){
 				console.log("Showing loader... canceling back button event");
 				e.preventDefault();
 				return false;

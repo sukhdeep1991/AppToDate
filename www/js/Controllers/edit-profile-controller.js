@@ -1,6 +1,7 @@
 angular.module('AppToDate.Controllers')
 
 .controller('editProfileCtrl', function($scope, $location, userService) {
+    $scope.setNavTitle("View Profile");
 	$scope.user = angular.copy($scope.userDetails);
 	$scope.user.phone = isNaN($scope.user.phone) ? 0 : parseInt($scope.user.phone);
 	

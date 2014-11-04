@@ -20,7 +20,8 @@
 
                 <div class="form-group has-feedback search-top">
                 <label for="textinput"></label>                  
-                <input type="text" class="form-control search" id="Text1" placeholder="Search by event name" required="">
+                <input type="text" class="form-control search" id="Text1" placeholder="Search by event name" required="" 
+                	data-ng-model="eventSearch" data-ng-change="filterEvents(eventSearch)">
                 <span class="glyphicon glyphicon-search margin-right form-control-feedback"></span>
                 <a href="#/event/new"><span class="glyphicon glyphicon-plus plus form-control-feedback"></span></a>
 

@@ -12,6 +12,7 @@ function($scope, $filter, $location, eventService) {
 	}
 
 	$scope.events = [];
+	$scope.allEvents = [];
 
 	$scope.changeView = function(view) {
 		$scope.view = view;
@@ -22,6 +23,14 @@ function($scope, $filter, $location, eventService) {
 	// angular.element(document.querySelector('#calendar'))
 	var calendar = angular.element(document
 			.querySelector('#calendar'));
+	
+	$scope.filterEvents = function(searchKey){
+		console.log("Filtering events");
+		$scope.events = $filter('filter')($scope.allEvents, {title: searchKey});
+		calendar.fullCalendar('removeEvents');
+        $('#calendar').fullCalendar('addEventSource', $scope.events);
+		calendar.fullCalendar('rerenderEvents');
+	};
 
 	var loadEvents = function(someFunction){
 		if ($scope.userDetails && $scope.userDetails.user_id) {
@@ -32,6 +41,7 @@ function($scope, $filter, $location, eventService) {
 								console.log("Events fetched : "
 										+ JSON.stringify(data));
 								$scope.events = data;
+								$scope.allEvents = $scope.events;
 								$scope.events.map(function(event){
 									event.start = new Date(event.start);
 									event.url = "#/event/" + event.id;
@@ -95,6 +105,8 @@ function($scope, $filter, $location, eventService) {
 				editable : true,
 				events : $scope.events
 			});
+
+			$scope.allEvents = $scope.events;
 		}
 	}
 	

@@ -12,7 +12,8 @@
    </div>
        </form>
   <br />
-<a id="invite" name="Invite" class="btn btn-primary btn-lg btn-block2 btn-skyblue" data-ng-click="sendInvites(contacts)">Invite</a>
+<a id="invite" name="Invite" class="btn btn-primary btn-lg btn-block2 btn-skyblue" data-ng-click="sendInvites(contacts)" 
+	data-ng-disabled="!isAnySelected">Invite</a>
  </section>
 </div>
 <div role="main" class="margin-top130">
@@ -29,11 +30,11 @@
 									{{contact.displayName}}
 									<div class="inner padded">
 										<div class="phone" ng-repeat="phone in contact.phoneNumbers">
-											<input type="checkbox" id="{{phone.value}}" data-ng-model="phone.isSelected">
+											<input type="checkbox" id="{{phone.value}}" data-ng-model="phone.isSelected" data-ng-change="checkboxClicked()">
 											<label for="{{phone.value}}">{{phone.value}}</label>
 										</div>
 										<div class="email" ng-repeat="email in contact.emails">
-											<input type="checkbox" id="{{email.value}}" data-ng-model="email.isSelected">
+											<input type="checkbox" id="{{email.value}}" data-ng-model="email.isSelected" data-ng-change="checkboxClicked()">
 											<label for="{{email.value}}">{{email.value}}</label>
 										</div>
 									</div>

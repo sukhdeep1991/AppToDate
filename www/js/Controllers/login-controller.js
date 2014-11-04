@@ -1,9 +1,16 @@
 angular.module('AppToDate.Controllers')
 
 .controller('loginCtrl', 
-		function($scope,$state,$rootScope,LoaderService,sessionService,Authentication, $location, registerService, userService) {
+		function($scope,$state,$rootScope,LoaderService,sessionService,Authentication, $location, registerService, userService, $timeout) {
 	$scope.register = function(){
 		$location.path('/register');
+	}
+	if($scope.userDetails){
+		$location.path('/login');
+		$timeout(function(){
+			console.log("User details found... redirecting to home")
+			$location.path('/home');		
+		}, 20)
 	}
 	$scope.navTitle = "Login";
 

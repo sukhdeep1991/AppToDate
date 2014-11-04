@@ -15,6 +15,20 @@ angular
 			$scope.loadMore = function(){
 				$scope.limit += 20;
 			}
+
+			$scope.isAnySelected = false;
+			$scope.checkboxClicked = function(){
+				$scope.isAnySelected = false;
+				$filter('filter')($scope.contacts, $scope.searchKey).map(function(contact) {
+					var selectedPhoneNumbers = $filter('filter')(contact.phoneNumbers, {isSelected: true});
+					var selectedEmails = $filter('filter')(contact.emails, {isSelected: true});
+					
+					if((selectedPhoneNumbers && selectedPhoneNumbers.length > 0) 
+						|| selectedEmails && selectedEmails.length > 0){
+						$scope.isAnySelected = true;
+					}
+				});
+			}
 			
 			var fetchContacts = function (searchKey) {
 			    if ($scope.userDetails && $scope.userDetails.user_id) {

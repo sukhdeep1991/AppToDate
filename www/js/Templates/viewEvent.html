@@ -19,7 +19,7 @@
 					<div class="event-detail">
 						<h4 class="margin-top" data-ng-bind="event.title"></h4>
 						<p class="margin-top" data-ng-bind="event.notes"></p>
-						<img class="img-responsive"
+						<img class="img-responsive" data-ng-hide="!event.image_url || event.image_url == 'undefined'"
 							ng-src="{{eventImageSource+event.server_id}}" />
 					</div>
 					<div class="event-box">
