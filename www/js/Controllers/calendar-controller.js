@@ -2,13 +2,22 @@ angular
 .module('AppToDate.Controllers')
 .controller(
 		'calendarCtrl',
-function($scope, $filter, $location, eventService) {
+function($scope, $filter, $location, eventService, userService) {
 	$scope.setNavTitle("Calendar");
 			
 	$scope.view = 'month';
 
 	$scope.createEvent = function() {
-		$location.path("/event/new")
+		$scope.setShowLoader(true);
+		console.log("Calling user service");
+		userService.processUninvitedContacts($scope.userDetails.user_id).then(function(){
+			console.log("User service call completed");
+			$location.path("/event/new");
+			$scope.setShowLoader(false);
+		}, function(error){
+			console.log("Error occured: " + JSON.stringify(error));
+			$scope.setShowLoader(false);
+		});
 	}
 
 	$scope.events = [];

@@ -261,8 +261,11 @@ angular.module('AppToDate.Services')
 		},
 		
 		processUninvitedContacts: function(userId){
+			var deferred = $q.defer();
+			var emailListDone = false;
+			var phoneListDone = false;
 			userService = this;
-			
+						
 			userService.getUninvitedFriends(userId, "").then(function(contacts){
 				if(contacts && contacts.length > 0){
 					var emails = [];
@@ -281,24 +284,64 @@ angular.module('AppToDate.Services')
 					});
 					httpResource.loadUrl("Person/GetFriendsByEmailList", "POST", emails).success(function(clientIds){
 						console.log("Email client ids: " + JSON.stringify(clientIds));
-						clientIds.map(function(clientId){
-							userService.insertPersonDetailsFromNotification(clientId);
-						});
+						if(clientIds && clientIds.length > 0){
+							clientIds.map(function(clientId, index){
+								userService.insertPersonDetailsFromNotification(clientId, userId).then(function(){
+									if(index == clientIds.length-1){
+	
+										emailListDone = true;
+										if(emailListDone && phoneListDone){
+											deferred.resolve(true);
+										}
+									}
+								}, function(error){
+									
+								});
+							});
+						} else {
+							emailListDone = true;
+							if(emailListDone && phoneListDone){
+								deferred.resolve(true);
+							}
+						}
 					}).error(function(error){
 						console.log("Error while calling emails api call: " + JSON.stringify(error));
+						deferred.reject(error);
 					});
 					httpResource.loadUrl("Person/GetFriendsByPhoneList", "POST", phones).success(function(clientIds){
 						console.log("Email client ids: " + JSON.stringify(clientIds));
-						clientIds.map(function(clientId){
-							userService.insertPersonDetailsFromNotification(clientId);
-						});
+						if(clientIds && clientIds.length > 0){
+							clientIds.map(function(clientId, index){
+								userService.insertPersonDetailsFromNotification(clientId, userId).then(function(){
+									if(index == clientIds.length-1){
+										phoneListDone = true;
+										if(emailListDone && phoneListDone){
+											deferred.resolve(true);
+										}
+									}
+								}, function(error){
+									
+								});
+							});
+						} else {
+							phoneListDone = true;
+							if(emailListDone && phoneListDone){
+								deferred.resolve(true);
+							}
+						}
 					}).error(function(error){
 						console.log("Error while calling emails api call: " + JSON.stringify(error));
+						deferred.reject(error);
 					});
+				} else {
+					console.log("No uninvited friends found")
+					deferred.resolve(false);
 				}
 			}, function(error){
 				console.log("Error getting uninvited frieds from contacts");
+				deferred.reject(error);
 			});
+			return deferred.promise;
 		},
 		
 		updateUserImage: function(userId){

@@ -8,7 +8,7 @@ appConfig = {
 	paypalProductionId: "AZkMxRARvbnrwt4KWwZfDrY6A8QeXuEPf1KcWL-1xcoGxUhAJ3TCkg5AXDpi",
 	paypalSanboxId: "ATto4BCPHEtoWOthn7ARgAwtMtp7l2Z1Vzxx1wLSm77NGU3vQhNFwnAlUbHI",
 	adMobPublisherId: "ca-app-pub-9570512162432804/8372030973",
-	userImagesFolder: "user-images"
+	userImagesFolder: "apptodate-images"
 };
 
 eventStatus = {
