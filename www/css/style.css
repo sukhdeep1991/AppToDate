@@ -65,6 +65,9 @@ div.fc-view > div > div:last-child {
 table.fc-border-separate{
 	height:100%;
 }
+.bordered{
+	border: 1px solid #bbbbbb;
+}
 /* .has-feedback.no-label .form-control-feedback{ */
 /* 	top: 15px; */
 /* } */

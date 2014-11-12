@@ -252,6 +252,23 @@ angular.module('AppToDate.Services')
             return deferred.promise;			
 		},
 		
+		updateEventFromClientId: function(eventClientId){
+			var deferred = $q.defer();
+			var eventService = this;
+			$.when(DB.getEventServerIdFromClientId(eventClientId)).then(
+		              function(serverId) {
+		            	  eventService.updateEventFromNotification(serverId).then(function(title){
+		            		  deferred.resolve(title);
+		            	  }, function(error){
+			            	 deferred.reject(error); 
+		            	  });
+		              }, function(error){
+		            	  console.log("Error: " + JSON.stringify(error));
+		            	 deferred.reject(error); 
+		              });
+            return deferred.promise;	
+		},
+		
 		updateEventFromNotification: function(eventId){
 			var deferred = $q.defer();
 			deleteEventInDevice(eventId).then(function(response){

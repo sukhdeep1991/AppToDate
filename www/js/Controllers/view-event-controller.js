@@ -83,7 +83,12 @@ function($scope, $filter, $location, imageService,
 			$scope.event.start = new Date($scope.event.start);
 		}
 	}
-	loadEvent();
+	
+	eventService.updateEventFromClientId($scope.eventId).then(function(){
+		loadEvent();
+	}, function(error){
+		console.log("Error while updating event");
+	});
 	
 	$scope.loadEventDetails = function() {
 		$scope.tab = 'details';
