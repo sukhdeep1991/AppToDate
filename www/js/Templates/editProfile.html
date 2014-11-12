@@ -9,7 +9,7 @@
 			<!-- Text input-->
 			<div class="form-group has-feedback">
 				<input type="text" class="form-control" id="name" placeholder="Name"
-					required="" ng-model="user.first_name" name="name"> <span
+					required="" ng-model="user.first_name" name="name" ng-pattern="/^[0-9A-Za-z_]*$/"> <span
 					class="glyphicon form-control-feedback"
 					data-ng-class="{'input-invalid': editProfile.name.$invalid, 'input-valid': !editProfile.name.$invalid}"></span>
 			</div>

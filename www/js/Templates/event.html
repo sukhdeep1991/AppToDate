@@ -63,8 +63,8 @@
 							data-provides="fileinput">
 							<div class="form-control margin-bottom" data-trigger="fileinput">
 								<i class="glyphicon glyphicon-file"
-									data-ng-class="{'fileinput-exists': !event.file}"></i> <span
-									class="fileinput-filename">{{event.file}}</span>
+									data-ng-class="{'fileinput-exists': !event.file}"></i> 
+									<img ng-show="event.file" ng-src="{{event.file}}" height="25"/>
 							</div>
 							<span class="input-group-addon btn btn-default btn-file">
 								<span data-ng-hide="event.file">Upload Image</span> <span
