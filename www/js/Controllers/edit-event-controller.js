@@ -71,12 +71,15 @@ function($scope, $filter, $location, imageService,
 		$scope.event.id = parseInt($scope.event.server_id);
 		var startDate = new Date($scope.event.start);
 		var month = startDate.getMonth() + 1;
-		$scope.event.date = month + "/" + startDate.getDate() + "/" + startDate.getFullYear();
-		$scope.event.startTime = startDate.getHours() + ":" + startDate.getMinutes();
+		$scope.event.date = $filter("date")(new Date(month + "/" + startDate.getDate() + "/" + startDate.getFullYear()), "yyyy-MM-dd");
+		
+		$scope.event.startTime = startDate; //startDate.getHours() + ":" + startDate.getMinutes() + ":00";
 		var endDate = new Date($scope.event.end);
-		$scope.event.endTime = endDate.getHours() + ":" + endDate.getMinutes();
+		$scope.event.endTime = endDate; //endDate.getHours() + ":" + endDate.getMinutes() + ":00";
 		$scope.event.file = $scope.event.imageUrl;
 		angular.element("#enterlocation").val($scope.event.location_title);
+		document.getElementById("startTime").valueAsDate = startDate;
+		document.getElementById("endTime").valueAsDate = endDate;
 		$scope.event.start = undefined;
 		$scope.event.end = undefined;
 	}

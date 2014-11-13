@@ -2,8 +2,10 @@ angular.module('AppToDate.Services')
 .factory('googleMapService', function($q) {
 	var map;
 	var markers = [];
+	var latlng = {};
 	
-	var loadMap = function(divId, event){
+	var loadMap = function(divId, latlng){
+		latlng = latlng;
 		console.log("Showing map in div: "+ divId);
 		var mapcanvas = document.createElement('div');
 	    mapcanvas.id = 'mapcanvas';
@@ -11,50 +13,44 @@ angular.module('AppToDate.Services')
 	    mapcanvas.style.width = '100%';
 	    
 	    document.getElementById(divId).appendChild(mapcanvas);
-	    var latlng = new google.maps.LatLng(28.38, 77.12);
-	    if(event){
-	    	latlng = new google.maps.LatLng(event.lat, event.lng);
-	    }
 	    var myOptions = {
-	      zoom: 15,
-	      mapTypeControl: false,
-		  center: latlng,
-	      navigationControlOptions: {style: google.maps.NavigationControlStyle.SMALL},
-	      mapTypeId: google.maps.MapTypeId.ROADMAP
-	    };
-	    map = new google.maps.Map(document.getElementById("mapcanvas"), myOptions);
-		console.log("Shown map in div: "+ divId);
+		    zoom: 15,
+		    center: latlng,
+		    mapTypeControl: false,
+		    navigationControlOptions: {style: google.maps.NavigationControlStyle.SMALL},
+		    mapTypeId: google.maps.MapTypeId.ROADMAP
+		  };
+		  map = new google.maps.Map(document.getElementById("mapcanvas"), myOptions);
+		  
+		  console.log("placing marker for lnglng: " + JSON.stringify(latlng));
+		  
+		  var marker = new google.maps.Marker({
+		      position: latlng, 
+		      map: map, 					      
+		      title:"You are here!"
+		  });
+	      markers.push(marker);
 	}
 	
 	return {
 		showMapInDiv: function(divId, onSuccess, event){
 			if (navigator.geolocation) {
-				  loadMap(divId, event);
 				  console.log("Shown map in div: "+ divId);
-				  onSuccess();
 				  if(!event){
 					  var service = this;
 					  navigator.geolocation.getCurrentPosition(function(position){
 						  var latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-	 					  var myOptions = {
-						    zoom: 15,
-						    center: latlng,
-						    mapTypeControl: false,
-						    navigationControlOptions: {style: google.maps.NavigationControlStyle.SMALL},
-						    mapTypeId: google.maps.MapTypeId.ROADMAP
-						  };
-						  map = new google.maps.Map(document.getElementById("mapcanvas"), myOptions);
-						  
-						  var marker = new google.maps.Marker({
-						      position: latlng, 
-						      map: map, 					      
-						      title:"You are here! (at least within a "+position.coords.accuracy+" meter radius)"
-						  });
-					      markers.push(marker);
+
+						  loadMap(divId, latlng);
+						  onSuccess();
 					  }, function(error){
 						  console.log("Error occured while getting the location: " + JSON.stringify(error));
 					  });  
-				  }				  
+				  }	else {
+					  var latlng = new google.maps.LatLng(event.lat, event.lng);
+					  loadMap(divId, latlng);
+					  onSuccess();
+				  }	  
 			} else {
 			  error('not supported');
 			}
@@ -106,20 +102,26 @@ angular.module('AppToDate.Services')
 		  google.maps.event.addListener(map, 'bounds_changed', function() {
 		    var bounds = map.getBounds();
 		    searchBox.setBounds(bounds);
+			latlng = undefined;
 		  });
 		},
 		
 		getCurrentMapLocation: function(){
-			if(!map || !map.getBounds()){
+			if(latlng){
+				return {
+					lat: latlng.k,
+					lng: latlng.B
+				}
+			}
+			if(!map || !map.getCenter()){
 				return {
 					lat: 0,
 					lng: 0
 				}
 			}
-			var bounds = map.getBounds();
 			return {
-				lat: bounds.getCenter().lat(),
-				lng: bounds.getCenter().lng()
+				lat: map.getCenter().k,
+				lng: map.getCenter().B
 			}
 		},
 		

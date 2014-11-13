@@ -39,6 +39,8 @@ angular.module('AppToDate.Controllers')
 		console.log("Event to create : " +JSON.stringify(event));
 		event.location = "Home";
 		//Prepare the start date
+		event.startTime = document.getElementById("startTime").value;
+		event.endTime = document.getElementById("endTime").value;
 		var time = event.startTime.split(":");
 		event.start.setHours(time[0], time[1]);
 		console.log("setting hours to start date" + JSON.stringify(time));

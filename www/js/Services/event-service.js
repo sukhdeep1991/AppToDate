@@ -351,7 +351,7 @@ angular.module('AppToDate.Services')
 				$.when(DB.saveStatusForEvent(event.id, userId, status))
 					.then(function(response){
 						console.log("Saved the status");
-						insertEventInDevice(event.title, { displayName: location_title},event.notes,
+						insertEventInDevice(event.title, { displayName: event.location_title},event.notes,
 		    					event.start,event.end, event.remindBefore);
 						deferred.resolve(response);
 					}, function(errorMsg){

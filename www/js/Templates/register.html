@@ -10,7 +10,7 @@
               <form role="form" class="margin-top80" name="register">
                 <!-- Text input-->
                  <div class="form-group has-feedback">
-                  <input type="text" class="form-control" name="name" id="name" placeholder="Name" required="" ng-model="user.person.FirstName" ng-pattern="/^[0-9A-Za-z_]*$/">
+                  <input type="text" class="form-control" name="name" id="name" placeholder="Name" required="" ng-model="user.person.FirstName" ng-pattern="/^[0-9A-Za-z_\s]*$/">
                   <span
 					class="glyphicon form-control-feedback" data-ng-class="{'input-invalid': register.name.$invalid, 'input-valid': !register.name.$invalid}"></span>
                 </div>
