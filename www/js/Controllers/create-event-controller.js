@@ -17,6 +17,11 @@ angular.module('AppToDate.Controllers')
 			googleMapService.showMapInDiv('map', function(){
 				googleMapService.setLocationSearchbox('enterlocation');
 				$scope.mapLoaded = true;
+			}, null, function(){
+				$scope.showResponseMessage("Location services not available. Please search location in the text box.", false);	
+				googleMapService.setLocationSearchbox('enterlocation');
+				$scope.mapLoaded = true;
+				$scope.$apply();
 			});
 		}
 	}

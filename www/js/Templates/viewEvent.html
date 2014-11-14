@@ -50,11 +50,11 @@
 										<tr
 											data-ng-repeat="attendee in event.attendees | filter : {'first_name': attendeeSearch}"
 											data-ng-click="attendeeClicked(attendee)">
-											<td class="contact-text-left">{{attendee.first_name}}</td>
-											<td
-												data-ng-class="{'contact-text-right-registered': attendee.status == 1}">
+											<td class="attendee-name contact-text-left" width="40">{{attendee.first_name}}</td>
+											<td class="floated-right"
+												data-ng-class="{'contact-text-right-registered': attendee.status == 1, 'background': attendee.status == 0, 'blue': attendee.status == 2, 'red': attendee.status == 3}">
 												{{statusMessages[attendee.status]}} <span class="glyphicon"
-												data-ng-class="{'glyphicon-time': attendee.status == 0.0, 'glyphicon-thumbs-up': attendee.status == 1, 'glyphicon-thumbs-down': attendee.status == 3}"></span>
+												data-ng-class="{'glyphicon-time': attendee.status == 0, 'glyphicon-thumbs-up': attendee.status == 1, 'glyphicon-thumbs-down': attendee.status == 3, 'glyphicon-question-sign': attendee.status == 2}"></span>
 											</td>
 										</tr>
 										<tr

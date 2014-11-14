@@ -359,7 +359,7 @@ angular.module('AppToDate.Services')
 					});
 			}).error(function(error){
 				console.log("Error while calling post status API ")
-				deferred.reject(errorMsg);
+				deferred.reject(error);
 			});
             return deferred.promise;
 		}

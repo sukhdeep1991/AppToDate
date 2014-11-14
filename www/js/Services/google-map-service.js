@@ -2,10 +2,8 @@ angular.module('AppToDate.Services')
 .factory('googleMapService', function($q) {
 	var map;
 	var markers = [];
-	var latlng = {};
 	
 	var loadMap = function(divId, latlng){
-		latlng = latlng;
 		console.log("Showing map in div: "+ divId);
 		var mapcanvas = document.createElement('div');
 	    mapcanvas.id = 'mapcanvas';
@@ -33,7 +31,7 @@ angular.module('AppToDate.Services')
 	}
 	
 	return {
-		showMapInDiv: function(divId, onSuccess, event){
+		showMapInDiv: function(divId, onSuccess, event, onError){
 			if (navigator.geolocation) {
 				  console.log("Shown map in div: "+ divId);
 				  if(!event){
@@ -45,6 +43,9 @@ angular.module('AppToDate.Services')
 						  onSuccess();
 					  }, function(error){
 						  console.log("Error occured while getting the location: " + JSON.stringify(error));
+						    var latlng = new google.maps.LatLng(28.38, 77.12);
+						  loadMap(divId, latlng);
+						  onError();
 					  });  
 				  }	else {
 					  var latlng = new google.maps.LatLng(event.lat, event.lng);
@@ -52,7 +53,9 @@ angular.module('AppToDate.Services')
 					  onSuccess();
 				  }	  
 			} else {
-			  error('not supported');
+			    var latlng = new google.maps.LatLng(28.38, 77.12);
+			    loadMap(divId, latlng);
+			    onSuccess();
 			}
 		},
 		
@@ -102,17 +105,10 @@ angular.module('AppToDate.Services')
 		  google.maps.event.addListener(map, 'bounds_changed', function() {
 		    var bounds = map.getBounds();
 		    searchBox.setBounds(bounds);
-			latlng = undefined;
 		  });
 		},
 		
 		getCurrentMapLocation: function(){
-			if(latlng){
-				return {
-					lat: latlng.k,
-					lng: latlng.B
-				}
-			}
 			if(!map || !map.getCenter()){
 				return {
 					lat: 0,

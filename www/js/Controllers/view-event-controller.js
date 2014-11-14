@@ -8,7 +8,7 @@ function($scope, $filter, $location, imageService,
 	$scope.mapLoaded = false;
 	$scope.tab = 'details';
 	$scope.eventId = $stateParams.id
-	$scope.statusMessages = {"0.0": "Wating for response"};
+	$scope.statusMessages = {"0": "Wating for response", "1": "Attending", "2": "May Be", "3": "No"};
 	$scope.eventImageSource = appConfig.apiUrl + "Image/GetEventImage?eventId=";
 	$scope.eventStatus = eventStatus;
 	$scope.attendeeImageUrl = "";
@@ -56,7 +56,7 @@ function($scope, $filter, $location, imageService,
 					      "login_time": "undefined",
 					      "expires_in": "undefined",
 					      "refresh_token": "undefined",
-					      "status": "0.0"
+					      "status": "0"
 					    },
 					    {
 					      "person": {},
@@ -68,7 +68,31 @@ function($scope, $filter, $location, imageService,
 					      "login_time": "undefined",
 					      "expires_in": "undefined",
 					      "refresh_token": "undefined",
-					      "status": "0.0"
+					      "status": "1"
+					    },
+					    {
+					      "person": {},
+					      "username": "undefined",
+					      "first_name": "Sumit",
+					      "last_name": "test",
+					      "access_token": "testAccessToken",
+					      "user_id": "2c3d480e-62d5-4aeb-9240-ce001222b593",
+					      "login_time": "undefined",
+					      "expires_in": "undefined",
+					      "refresh_token": "undefined",
+					      "status": "2"
+					    },
+					    {
+					      "person": {},
+					      "username": "undefined",
+					      "first_name": "Sumit",
+					      "last_name": "test",
+					      "access_token": "testAccessToken",
+					      "user_id": "2c3d480e-62d5-4aeb-9240-ce001222b593",
+					      "login_time": "undefined",
+					      "expires_in": "undefined",
+					      "refresh_token": "undefined",
+					      "status": "3"
 					    }
 					  ],
 					  "comments": [
@@ -84,11 +108,15 @@ function($scope, $filter, $location, imageService,
 		}
 	}
 	
-	eventService.updateEventFromClientId($scope.eventId).then(function(){
+	if ($scope.userDetails && $scope.userDetails.user_id) {
+		eventService.updateEventFromClientId($scope.eventId).then(function(){
+			loadEvent();
+		}, function(error){
+			console.log("Error while updating event");
+		});
+	} else {
 		loadEvent();
-	}, function(error){
-		console.log("Error while updating event");
-	});
+	}
 	
 	$scope.loadEventDetails = function() {
 		$scope.tab = 'details';

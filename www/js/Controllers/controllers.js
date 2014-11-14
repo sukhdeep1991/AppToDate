@@ -42,7 +42,11 @@ angular.module('AppToDate.Controllers',['AppToDate.Services'])
 	//$scope.userDetails = {first_name: "Zufir"};
 	
 	$scope.setUserDetails = function(userData){
+		var previousDetails = $scope.userDetails;
 		$scope.userDetails = userData;
+		if(previousDetails){
+			return;
+		}
 		if($scope.userDetails && $scope.userDetails.user_id){
 			//$scope.setUserImage(appConfig.apiUrl + "Image/Get?clientId=" + $scope.userDetails.user_id);
 			userService.processUninvitedContacts($scope.userDetails.user_id);

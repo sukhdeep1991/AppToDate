@@ -68,6 +68,12 @@ table.fc-border-separate{
 .bordered{
 	border: 1px solid #bbbbbb;
 }
+.floated-right{
+	float:right;
+}
+.attendee-name{
+	width:42%;
+}
 /* .has-feedback.no-label .form-control-feedback{ */
 /* 	top: 15px; */
 /* } */

@@ -82,6 +82,9 @@ function($scope, $filter, $location, imageService,
 		document.getElementById("endTime").valueAsDate = endDate;
 		$scope.event.start = undefined;
 		$scope.event.end = undefined;
+		if(event.image_url){
+			$scope.event.file = appConfig.apiUrl + "Image/GetEventImage?eventId=" + $scope.event.server_id;
+		}
 	}
 	
 	//Set the map
