@@ -74,6 +74,24 @@ table.fc-border-separate{
 .attendee-name{
 	width:42%;
 }
+
+.fc-header-left span{
+	line-height: 2em !important;
+}
+
+.fc-header-left span:first-child{
+	margin-left:45px;
+}
+
+.fc-header-left .ui-icon-circle-triangle-w{
+	padding: 0 .6em;	
+}
+.fc-header-left .ui-icon-circle-triangle-w{
+	padding: 0 .6em;
+}
+.fc-header-right{
+	line-height: 65px !important;
+}
 /* .has-feedback.no-label .form-control-feedback{ */
 /* 	top: 15px; */
 /* } */

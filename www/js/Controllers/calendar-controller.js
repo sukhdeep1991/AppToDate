@@ -22,6 +22,7 @@ function($scope, $filter, $location, eventService, userService) {
 
 	$scope.events = [];
 	$scope.allEvents = [];
+	$scope.bottonsRendered = false;
 
 	$scope.changeView = function(view) {
 		$scope.view = view;
@@ -103,17 +104,8 @@ function($scope, $filter, $location, eventService, userService) {
 				end : new Date(y, m, 29),
 				url : 'http://google.com/'
 			} ];
-			calendar.fullCalendar({
-			    theme: true,
-			    header: {
-			        left: "prev, next",
-			        center: false,
-			        right: 'agendaDay,agendaWeek,month'
-			    },
-				defaultDate : new Date(),
-				editable : true,
-				events : $scope.events
-			});
+
+			someFunction();
 
 			$scope.allEvents = $scope.events;
 		}
@@ -123,9 +115,24 @@ function($scope, $filter, $location, eventService, userService) {
 		calendar.fullCalendar({
 		    theme: true,
 		    header: {
-		        left: false,
+		        left: "prev, next",
 		        center: false,
 		        right: 'agendaDay,agendaWeek,month'
+		    },
+		    buttonText: {
+		    	prev: "Prev",
+		    	next: "Next"
+		    },
+		    viewRender: function(view){
+		    	if(!$scope.bottonsRendered){
+			    	var left = $('.fc-header-right');
+			    	var headerBody = $('.fc-header').find('tbody');
+			    	var tr = $('<tr/>');
+			    	tr.prepend(left.clone(true));
+			    	headerBody.append(tr);
+			    	left.remove();
+			    	$scope.bottonsRendered = true;
+		    	}
 		    },
 			defaultDate : new Date(),
 			editable : true,
