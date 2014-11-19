@@ -593,7 +593,7 @@ AppToDateDB.prototype = function() {
 		console.log("Fetching friends data for userId : " + userId);
 		var deferred = $.Deferred();
     	db.transaction(function(tx) {
-            tx.executeSql('SELECT friend_id FROM user_friends where user_id = ?', [userId], 
+            tx.executeSql('SELECT friend_id FROM user_friends where user_id = ? and friend_id <> ?', [userId, userId], 
               function(t,r){
                 if(r.rows.length){
                 	console.log("friends found");

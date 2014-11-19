@@ -10,7 +10,9 @@ angular.module('AppToDate.Services')
 	    mapcanvas.style.height = '100%';
 	    mapcanvas.style.width = '100%';
 	    
-	    document.getElementById(divId).appendChild(mapcanvas);
+	    var div = document.getElementById(divId);
+	    div.innerHTML = "";
+	    div.appendChild(mapcanvas);
 	    var myOptions = {
 		    zoom: 15,
 		    center: latlng,
@@ -36,17 +38,19 @@ angular.module('AppToDate.Services')
 				  console.log("Shown map in div: "+ divId);
 				  if(!event){
 					  var service = this;
+					  console.log("Event null, fetching current position");
+					  var latlng = new google.maps.LatLng(28.38, 77.12);
+					  loadMap(divId, latlng);
 					  navigator.geolocation.getCurrentPosition(function(position){
+						  console.log("Current position found");
 						  var latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
 
 						  loadMap(divId, latlng);
 						  onSuccess();
 					  }, function(error){
-						  console.log("Error occured while getting the location: " + JSON.stringify(error));
-						    var latlng = new google.maps.LatLng(28.38, 77.12);
-						  loadMap(divId, latlng);
 						  onError();
 					  });  
+					  console.log("End of line");
 				  }	else {
 					  var latlng = new google.maps.LatLng(event.lat, event.lng);
 					  loadMap(divId, latlng);

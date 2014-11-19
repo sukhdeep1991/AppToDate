@@ -286,17 +286,26 @@ angular.module('AppToDate.Services')
 						console.log("Email client ids: " + JSON.stringify(clientIds));
 						if(clientIds && clientIds.length > 0){
 							clientIds.map(function(clientId, index){
-								userService.insertPersonDetailsFromNotification(clientId, userId).then(function(){
+								if(clientId != userId){
+									userService.insertPersonDetailsFromNotification(clientId, userId).then(function(){
+										if(index == clientIds.length-1){
+		
+											emailListDone = true;
+											if(emailListDone && phoneListDone){
+												deferred.resolve(true);
+											}
+										}
+									}, function(error){
+										
+									});
+								} else {
 									if(index == clientIds.length-1){
-	
 										emailListDone = true;
 										if(emailListDone && phoneListDone){
 											deferred.resolve(true);
 										}
 									}
-								}, function(error){
-									
-								});
+								}
 							});
 						} else {
 							emailListDone = true;
@@ -312,16 +321,25 @@ angular.module('AppToDate.Services')
 						console.log("Email client ids: " + JSON.stringify(clientIds));
 						if(clientIds && clientIds.length > 0){
 							clientIds.map(function(clientId, index){
-								userService.insertPersonDetailsFromNotification(clientId, userId).then(function(){
+								if(clientId != userId){
+									userService.insertPersonDetailsFromNotification(clientId, userId).then(function(){
+										if(index == clientIds.length-1){
+											phoneListDone = true;
+											if(emailListDone && phoneListDone){
+												deferred.resolve(true);
+											}
+										}
+									}, function(error){
+										
+									});
+								} else {
 									if(index == clientIds.length-1){
-										phoneListDone = true;
+										emailListDone = true;
 										if(emailListDone && phoneListDone){
 											deferred.resolve(true);
 										}
 									}
-								}, function(error){
-									
-								});
+								}
 							});
 						} else {
 							phoneListDone = true;
