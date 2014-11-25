@@ -78,9 +78,12 @@ table.fc-border-separate{
 .fc-header-left span{
 	line-height: 2em !important;
 }
+.fc-header-left span.fc-button-prev, .fc-header-left span.fc-button-next{
+	width:22% !important;
+}
 
 .fc-header-left span:first-child{
-	margin-left:45px;
+	margin-left:15px;
 }
 
 .fc-header-left .ui-icon-circle-triangle-w{
@@ -91,6 +94,16 @@ table.fc-border-separate{
 }
 .fc-header-right{
 	line-height: 65px !important;
+}
+
+.fc-header-title h2{
+font-size: 14px;
+margin: 0;
+line-height: 26px;
+}
+
+.fc-header-title{
+	width: 42%;
 }
 /* .has-feedback.no-label .form-control-feedback{ */
 /* 	top: 15px; */

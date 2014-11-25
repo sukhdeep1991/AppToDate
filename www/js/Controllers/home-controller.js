@@ -14,4 +14,16 @@ angular.module('AppToDate.Controllers')
  $scope.invitePeopleClicked = function(){
 	 $location.path('/invite');
  };
+	
+	$scope.shareOnFacebook = function(){
+		facebookConnectPlugin.showDialog({
+			method: "feed",
+		    link: "http://google.com",
+		    caption: "AppToDate Invitation"
+		}, function(){
+			$scope.showResponseMessage('Successfully posted on facebook!', true);
+		}, function(){
+			$scope.showResponseMessage('Error occured while posting to facebook', false);
+		});
+	};
 });

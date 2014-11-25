@@ -115,7 +115,7 @@ function($scope, $filter, $location, eventService, userService) {
 		calendar.fullCalendar({
 		    theme: true,
 		    header: {
-		        left: "prev, next",
+		        left: "prev, title, next",
 		        center: false,
 		        right: 'agendaDay,agendaWeek,month'
 		    },
