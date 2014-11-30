@@ -95,19 +95,22 @@ angular.module('AppToDate.Services')
 		getEvents : function(userId){
 			var deferred = $q.defer();
 			var currentMonth = new Date().getMonth()+1;
+			
+			var returnEvents = function(){
+	            $.when(DB.getUserEvents(userId)).then(
+	              function(data) {
+	                console.log("events found successfully : " + JSON.stringify(data));
+	                deferred.resolve(data);
+	              },
+	              function(errorMsg) {
+	                console.log("Error while fetching event");
+	                deferred.reject(errorMsg);
+	            });
+			}
+			
 			httpResource.loadUrl("Calendar/GetUserEventsForMonth?clientId="+ userId + "&month=" + currentMonth, "GET", null).success(function(events){
 				console.log("found events: " + JSON.stringify(events));
-				var returnEvents = function(){
-		            $.when(DB.getUserEvents(userId)).then(
-		              function(data) {
-		                console.log("events found successfully : " + JSON.stringify(data));
-		                deferred.resolve(data);
-		              },
-		              function(errorMsg) {
-		                console.log("Error while fetching event");
-		                deferred.reject(errorMsg);
-		            });
-				}
+				
 				if(events.length > 0){
 					events.map(function(event, eventIndex){
 						$.when(DB.getEventClientIdFromServerId(event.Id)).then(
@@ -143,7 +146,7 @@ angular.module('AppToDate.Services')
 				}
 			}).error(function(error){
                 console.log("Error while fetching month event");
-                deferred.reject(error);				
+                returnEvents();			
 			});
 
             return deferred.promise;

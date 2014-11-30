@@ -69,6 +69,7 @@ function($scope, $filter, $location, imageService,
 		$scope.event = angular.copy(event);
 		$scope.event.client_id = $scope.event.id;
 		$scope.event.id = parseInt($scope.event.server_id);
+		
 		var startDate = new Date($scope.event.start);
 		var month = startDate.getMonth() + 1;
 		$scope.event.date = $filter("date")(new Date(month + "/" + startDate.getDate() + "/" + startDate.getFullYear()), "yyyy-MM-dd");
@@ -78,8 +79,8 @@ function($scope, $filter, $location, imageService,
 		$scope.event.endTime = endDate; //endDate.getHours() + ":" + endDate.getMinutes() + ":00";
 		$scope.event.file = $scope.event.imageUrl;
 		angular.element("#enterlocation").val($scope.event.location_title);
-		document.getElementById("startTime").valueAsDate = startDate;
-		document.getElementById("endTime").valueAsDate = endDate;
+		document.getElementById("startTime").valueAsDate = new Date(startDate.getTime() - startDate.getTimezoneOffset()*60000);
+		document.getElementById("endTime").valueAsDate = new Date(endDate.getTime() - endDate.getTimezoneOffset()*60000);
 		$scope.event.start = undefined;
 		$scope.event.end = undefined;
 		if(event.image_url){

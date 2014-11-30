@@ -526,6 +526,7 @@ AppToDateDB.prototype = function() {
 		          function(t,r){
 		            if(r.rows.length){
 		            	console.log("Group already present");
+						deferred.resolve(group);
 		            } else {
 		    			console.log("Inserting group: " + JSON.stringify(group));
 						tx.executeSql('INSERT INTO AttendeeGroup (group_name, owner_id, server_id) VALUES (?, ?, ?)', [group.title, group.Owner.ClientId, group.server_id], 
