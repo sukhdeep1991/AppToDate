@@ -16,14 +16,25 @@ angular.module('AppToDate.Controllers')
  };
 	
 	$scope.shareOnFacebook = function(){
-		facebookConnectPlugin.showDialog({
-			method: "feed",
-		    link: "http://google.com",
-		    caption: "AppToDate Invitation"
-		}, function(){
-			$scope.showResponseMessage('Successfully posted on facebook!', true);
-		}, function(){
-			$scope.showResponseMessage('Error occured while posting to facebook', false);
+		
+		window.plugins.socialsharing.shareVia('com.facebook.orca', appConfig.inviteMessage /* message */, null/*subject*/, null /* img */, null /* url */, 
+			function() {
+				$scope.showResponseMessage('Successfully posted on facebook!', true);
+				if (!$scope.$$phase) $scope.$apply();
+			}, function(errormsg){
+				console.log(JSON.stringify(errormsg));
+				$scope.showResponseMessage('Error occured while posting to facebook', false);
+				if (!$scope.$$phase) $scope.$apply();
 		});
+		
+//		facebookConnectPlugin.showDialog({
+//			method: "feed",
+//		    link: "http://google.com",
+//		    caption: "AppToDate Invitation"
+//		}, function(){
+//			$scope.showResponseMessage('Successfully posted on facebook!', true);
+//		}, function(){
+//			$scope.showResponseMessage('Error occured while posting to facebook', false);
+//		});
 	};
 });
