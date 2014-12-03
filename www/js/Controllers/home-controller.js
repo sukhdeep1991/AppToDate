@@ -23,7 +23,7 @@ angular.module('AppToDate.Controllers')
 				if (!$scope.$$phase) $scope.$apply();
 			}, function(errormsg){
 				console.log(JSON.stringify(errormsg));
-				$scope.showResponseMessage('Error occured while posting to facebook', false);
+				$scope.showResponseMessage('Please install Facebook Messenger App to use this feature.', false);
 				if (!$scope.$$phase) $scope.$apply();
 		});
 		
