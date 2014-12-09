@@ -107,6 +107,10 @@
                         {
                             "xml": "<feature name=\"SocialSharing\"><param name=\"android-package\" value=\"nl.xservices.plugins.SocialSharing\" /></feature>",
                             "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"NetworkStatus\"><param name=\"android-package\" value=\"org.apache.cordova.networkinformation.NetworkManager\" /></feature>",
+                            "count": 1
                         }
                     ],
                     "/widget": []
@@ -145,7 +149,7 @@
                         },
                         {
                             "xml": "<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\" />",
-                            "count": 1
+                            "count": 2
                         }
                     ],
                     "/manifest": [
@@ -382,6 +386,9 @@
             "PACKAGE_NAME": "com.example.AppToDate"
         },
         "nl.x-services.plugins.socialsharing": {
+            "PACKAGE_NAME": "com.example.AppToDate"
+        },
+        "org.apache.cordova.network-information": {
             "PACKAGE_NAME": "com.example.AppToDate"
         }
     },
